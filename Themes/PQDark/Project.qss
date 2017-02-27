@@ -1,0 +1,50 @@
+QMainWindow {
+    background: #46474b;
+    font-family: FontAwesome;
+}
+QMainWindow::separator {
+    width: 0px;
+    height: 0px;
+}
+QToolBar {
+    background: #3c3f41;
+    spacing: 3px;
+    border-right: 1px solid #282828;
+}
+QScrollArea#ElementsArea {
+    border: 0px;
+    background: #46474b;
+}
+QFrame#WorkArea {
+    background: #393939;
+}
+QMenuBar {
+    background: #3c3f41;
+    color: #c4c4c4;
+    border: none;
+    border-bottom: 1px solid #333;
+}
+QMenuBar::item {
+    spacing: 4px;
+    padding: 4px 10px 6px 10px;
+    background: transparent;
+    margin-bottom: -4px;
+}
+QMenuBar::item:selected {
+    background: #8a3b16;
+}
+QMenu {
+    background: #3c3f41;
+    color: #c4c4c4;
+    border: 1px solid #555555;
+}
+QMenu::item {
+    padding: 4px 20px 6px 20px;
+}
+QMenu::item:selected {
+    background: #8a3b16;
+}
+QMenu::separator {
+    height: 1px;
+    background: #555555;
+}

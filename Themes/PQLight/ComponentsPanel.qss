@@ -1,0 +1,21 @@
+QDockWidget {
+    background: #46474b;
+    color: #c4c4c4;
+    font-size: 12px;
+    titlebar-normal-icon: url(Themes/PQDark/normal.png);
+    titlebar-close-icon: url(Themes/PQDark/close.png);
+}
+QDockWidget::close-button, QDockWidget::float-button {
+    color: #c4c4c4;
+}
+QDockWidget::close-button:hover, QDockWidget::float-button:hover {
+    background: transparent;
+    border: 0px;
+    padding: 0px;
+}
+QScrollArea {
+    border: none;
+}
+QFrame {
+    background: #46474b;
+}

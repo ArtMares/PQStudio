@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pqenginetr lang="Russia">
+    <unit>
+        <source>Loading components</source>
+        <tr>Загрузка компонентов</tr>
+    </unit>
+    <unit>
+        <source>Loading component</source>
+        <tr>Загрзука компонента</tr>
+    </unit>
+    <unit>
+        <source>Version</source>
+        <tr>Версия</tr>
+    </unit>
+    <unit>
+        <source>Create Project</source>
+        <tr>Создать проект</tr>
+    </unit>
+    <unit>
+        <source>Open Project File</source>
+        <tr>Открыть Файл проекта</tr>
+    </unit>
+    <unit>
+        <source>Settings</source>
+        <tr>Настройки</tr>
+    </unit>
+    <unit>
+        <source>Back</source>
+        <tr>Назад</tr>
+    </unit>
+    <unit>
+        <source>View</source>
+        <tr>Обзор</tr>
+    </unit>
+    <unit>
+        <source>Create</source>
+        <tr>Создать</tr>
+    </unit>
+    <unit>
+        <source>Project Name</source>
+        <tr>Название проекта</tr>
+    </unit>
+    <unit>
+        <source>Project Path</source>
+        <tr>Путь к проекту</tr>
+    </unit>
+    <unit>
+        <source>Directory for all projects by default</source>
+        <tr>Каталог для всех проектов по умолчанию</tr>
+    </unit>
+</pqenginetr>

@@ -1,0 +1,19 @@
+{
+  "PQLight" : [
+    "about.json",
+    "close.png",
+    "normal.png"
+  ],
+  "PQDark"  : [
+    "about.json",
+    "CheckBox.qss",
+    "close.png",
+    "ComponentBtn.qss",
+    "ComponentsPanel.qss",
+    "Designer.qss",
+    "Loader.qss",
+    "normal.png",
+    "ProjectsListBtn.qss",
+    "ProjectWindow.qss"
+  ]
+}

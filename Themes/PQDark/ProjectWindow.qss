@@ -1,0 +1,18 @@
+QMainWindow {
+    background: #46474b;
+}
+QMainWindow::separator {
+    width: 0px;
+    height: 0px;
+}
+QToolBar {
+    background: #46474b;
+    border: 0px;
+}
+QScrollArea#ElementsArea {
+    border: 0px;
+    background: #46474b;
+}
+QFrame#WorkArea {
+    background: #393939;
+}

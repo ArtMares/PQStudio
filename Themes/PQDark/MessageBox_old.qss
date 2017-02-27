@@ -1,0 +1,24 @@
+QDialog {
+    background: #46474b;
+    font-family: FontAwesome;
+}
+
+QDialog QLabel {
+     color: #c4c4c4;
+     font-size: 14px;
+}
+
+QDialog QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5c5c5c, stop: 1 #515151);
+    color: #c4c4c4;
+    font-size: 14px;
+    border: 1px solid #393939;
+    border-radius: 3px;
+    height: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+QDialog QPushButton:hover {
+    background: #8a3b16;
+}

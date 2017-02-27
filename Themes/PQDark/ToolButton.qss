@@ -1,0 +1,14 @@
+#ToolBtn {
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+#ToolBtnHover {
+    background: #8a3b16;
+    border-top: 1px solid #333;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+}
+QLabel {
+    color: #c4c4c4;
+}

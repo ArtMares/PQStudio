@@ -1,0 +1,31 @@
+QFrame QPushButton {
+    background: none;
+    outline: none;
+
+}
+#ProjectButton QLabel {
+    color: #c4c4c4;
+}
+#ProjectButton QLabel#Name {
+    font: bold 13px;
+}
+#ProjectButton QPushButton#Delete {
+    font: bold 18px;
+    color: #393939;
+    border: none;
+}
+#ProjectButtonHover {
+    background: #8a3b16;
+}
+#ProjectButtonHover QLabel {
+    color: #c4c4c4;
+}
+#ProjectButtonHover QLabel#Name {
+    font: bold 13px;
+}
+#ProjectButtonHover QPushButton#Delete {
+    font-size: 18px;
+    color: #c4c4c4;
+    border: none;
+    padding-right: 12px;
+}

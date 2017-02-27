@@ -1,0 +1,9 @@
+QFrame QLabel {
+    font-size: 14px;
+}
+#WelcomeProjectBtn QLabel {
+    color: #c4c4c4;
+}
+#WelcomeProjectBtnHover QLabel {
+    color: #f16327;
+}

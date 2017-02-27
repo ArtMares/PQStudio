@@ -1,0 +1,30 @@
+QPushButton QLabel {
+    padding-left: 1px;
+    color: #c4c4c4;
+    font-size: 14px;
+}
+QPushButton QCheckBox {
+    font-size: 14px;
+    color: #c4c4c4;
+}
+QPushButton QCheckBox::indicator {
+    width: 0px;
+    height: 0px;
+}
+QPushButton:hover QLabel {
+    color: #f16327;
+}
+
+QFrame#Hover QLabel {
+    padding-left: 1px;
+    color: #f16327;
+    font-size: 14px;
+}
+QFrame#Hover QCheckBox {
+    font-size: 14px;
+    color: #f16327;
+}
+QFrame#Hover QCheckBox::indicator {
+    width: 0px;
+    height: 0px;
+}

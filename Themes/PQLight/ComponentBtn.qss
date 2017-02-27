@@ -1,0 +1,11 @@
+QPushButton {
+    font-family: pqstudio;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5c5c5c, stop: 1 #515151);
+    color: #c4c4c4;
+    font-size: 14px;
+    text-align: left;
+    border: none;
+}
+QPushButton#Pressed {
+    background: #8a3b16;
+}

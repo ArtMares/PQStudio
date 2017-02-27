@@ -1,0 +1,18 @@
+{
+  "author"      : "ArtMares",
+  "version"     : "0.1",
+  "description" : "Dark Theme for PQStudio",
+  "files"       : [
+    "CheckBox.qss",
+    "ComponentBtn.qss",
+    "ComponentsPanel.qss",
+    "Designer.qss",
+    "Loader.qss",
+    "ProjectsListBtn.qss",
+    "ProjectWindow.qss",
+    "PropertyPanel.qss",
+    "WelcomeWindow.qss",
+    "close.png",
+    "normal.png"
+  ]
+}

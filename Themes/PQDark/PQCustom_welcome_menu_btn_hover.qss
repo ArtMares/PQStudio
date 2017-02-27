@@ -1,0 +1,23 @@
+// Old
+QPushButton {
+    border: none;
+    font-size: 14px;
+    color: #f16327;
+}
+
+
+// New
+QPushButton {
+    border: none;
+}
+QLabel {
+    font-size: 14px;
+    color: #c4c4c4;
+}
+QPushButton:hover {
+    background: #4f4f4f;
+    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop :   0.0 #46474b,
+                    stop :   0.5 #4f4f4f, stop :   1.0 #46474b);
+    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop :   0.0 #46474b,
+                    stop :   0.5 #8a3b16, stop :   1.0 #46474b);
+}
