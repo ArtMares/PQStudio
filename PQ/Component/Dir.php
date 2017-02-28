@@ -1,16 +1,25 @@
 <?php
 /**
  * @author              Dmitriy Dergachev (ArtMares)
- * @date                27.02.2017
+ * @date                28.02.2017
  * @copyright           artmares@influ.su
  */
-namespace PQStudio\Core;
-class Dir {
+namespace PQ\Component;
+use PQ\Component;
+use PQ\Core;
+
+class Dir extends Component {
+
+    const All = \QDir::AllEntries;
+    const Dirs = \QDir::Dirs | \QDir::NoDotAndDotDot;
+    const Files = \QDir::Files;
+    const Drives = \QDir::Drives;
 
     private $dir = false;
 
-    public function __construct() {
-        $this->dir = new QDir();
+    public function __construct(Core &$core) {
+        parent::__construct($core);
+        $this->dir = new \QDir();
     }
 
     public function exists($dirPath) {

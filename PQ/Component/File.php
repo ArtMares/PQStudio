@@ -1,16 +1,20 @@
 <?php
 /**
  * @author              Dmitriy Dergachev (ArtMares)
- * @date                27.02.2017
+ * @date                28.02.2017
  * @copyright           artmares@influ.su
  */
-namespace PQStudio\Core;
-class File {
+namespace PQ\Component;
+use PQ\Component;
+use PQ\Core;
+
+class File extends Component {
 
     private $file = false;
 
-    public function __construct() {
-        $this->file = new QFile();
+    public function __construct(Core &$core) {
+        parent::__construct($core);
+        $this->file = new \QFile();
     }
 
     public function exists($pathToFile) {
@@ -20,7 +24,7 @@ class File {
 
     public function read($pathToFile) {
         $this->file->setFileName($pathToFile);
-        $this->file->open(QIODevice::ReadOnly);
+        $this->file->open(\QIODevice::ReadOnly);
         $data = $this->file->readAll();
         $this->file->close();
         return $data;
@@ -38,10 +42,10 @@ class File {
         $this->file->setFileName($pathToFile);
         switch($type) {
             case 'rewrite':
-                $this->file->open(QIODevice::WriteOnly);
+                $this->file->open(\QIODevice::WriteOnly);
                 break;
             case 'write':
-                $this->file->open(QIODevice::Append);
+                $this->file->open(\QIODevice::Append);
                 break;
         }
         $this->file->write($data);

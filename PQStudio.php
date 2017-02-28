@@ -6,25 +6,34 @@
  * @copyright           artmares@influ.su
  */
 
-$app = new QApplication($argc, $argv);
-$app->applicationName = 'PQBuilder';
-$app->applicationVersion = '0.6';
-$app->organizationName = 'PHPQt5 Team';
-$app->organizationDomain = 'phpqt.ru';
+require_once 'PQ/Core.php';
+
+$core = \PQ\Core::getInstance();
 
 define('RELEASE_VERSION', 'testing');
 define('BUILD_VERSION', '100');
 
 $title = sprintf('%1$s %2$s [build: %3$s]',
-    $app->applicationName,
-    $app->applicationVersion,
+    $core->applicationName(),
+    $core->applicationVersion(),
     BUILD_VERSION);
 
 define('PQSTUDIO_TITLE', $title);
 
-class PQStudio extends QObject {
+class PQStudio extends QWidget {
 
+    use \PQ\Widget;
 
+    public $bootstrap;
+
+    public function initComponents() {
+        $this->windowTitle = PQSTUDIO_TITLE;
+    }
+
+    private function initBootstrap() {
+        $this->bootstrap = new QFrame();
+
+    }
 }
 
-return $app->exec();
+return $core->exec(new PQStudio());
