@@ -43,7 +43,7 @@ class Lib extends Component {
             return false;
         }
 
-        require_once(str_replace(':/', 'qrc://', $file));
+        require_once(preg_replace('/^:\//', 'qrc://', $file));
         $class = ucfirst($name);
         if(!class_exists($class)) {
             $this->_error('Class "'.$class.'", "'.$name.'" library not found');
