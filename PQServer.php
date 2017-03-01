@@ -1,6 +1,12 @@
 <?php
 
+require_once 'PQ/Core.php';
+
+$core = \PQ\Core::getInstance('Core');
+
 class PQServer extends QObject {
+
+    use \PQ\Widget;
 
     private $server;
 
@@ -8,15 +14,16 @@ class PQServer extends QObject {
 
     private $clients = [];
 
-    public function __construct() {
-        parent::__construct();
-
+    public function init() {
         $this->server = new QLocalServer($this);
+        $this->core->log->info('Initialize LocalServer', 'PQServer');
         $this->server->listen('PQStudio Worker');
+        $this->core->log->info('Listen...', 'PQServer');
         connect($this->server, 'newConnection()', $this, 'incomingConnection()');
     }
 
     public function incomingConnection() {
+        $this->core->log->info('Detected new connected', 'PQServer');
         $socket = $this->server->nextPendingConnection();
         connect($socket, 'readyRead()', $this, 'readData()');
         $this->sockets[] = $socket;
@@ -27,8 +34,10 @@ class PQServer extends QObject {
     }
 }
 
-$app = new QCoreApplication($argc, $argv);
+return $core->exec(new PQServer(), 'init');
 
-$PQServer = new PQServer();
-
-return $app->exec();
+//$app = new QCoreApplication($argc, $argv);
+//
+//$PQServer = new PQServer();
+//
+//return $app->exec();

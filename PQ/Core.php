@@ -80,10 +80,23 @@ class Core {
      * The list of Core components
      */
     private $components = [
-        'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
-        'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
-        'style' => 'Style',
-        'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network'
+        'app' => [
+            'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
+            'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
+            'style' => 'Style',
+            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network'
+        ],
+        'gui' => [
+            'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
+            'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
+            'style' => 'Style',
+            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network'
+        ],
+        'core' => [
+            'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
+            'dir' => 'Dir', 'file' => 'File', 'lib' => 'Lib',
+            'storage' => 'Storage', 'network' => 'Network'
+        ]
     ];
 
     private $object;
@@ -104,9 +117,10 @@ class Core {
             die('Error! Core not run!'.PHP_EOL.'Please assemble the project using QCoreApplication and QStandardPaths of Core library');
         }
         if(self::$APP === false) {
+            $type = strtolower($type);
             self::$APP = new self();
             self::$APP->WIN = stripos(PHP_OS, 'win') === false ? false : true;
-            switch(strtolower($type)) {
+            switch($type) {
                 case 'gui':
                     self::$APP->QApp = new \QGuiApplication($argc, $argv);
                     break;
@@ -133,7 +147,7 @@ class Core {
 
             }
             require_once self::$APP->PATH.'Component.php';
-            foreach(self::$APP->components as $alias => $component) {
+            foreach(self::$APP->components[$type] as $alias => $component) {
                 self::$APP->load_component($component, $alias);
             }
             require_once self::$APP->PATH.'Widget.php';
@@ -214,18 +228,17 @@ class Core {
      * Инициализируем запуск петли
      * Initialize the run loop
      * @param string $object
+     * @param string $method
      * @return mixed
      */
-    public function exec($object = '') {
+    public function exec($object = '', $method = 'show') {
         if($object !== '') {
             if($this->var->is_object($object)) $this->object = $object;
             if($this->var->is_str($object)) $this->object = new $object();
-            if($this->QApp instanceof \QApplication) {
-                if (method_exists($this->object, 'show')) {
-                    $this->object->show();
-                } elseif (isset(\pqMethods($this->object)['show'])) {
-                    $this->object->show();
-                }
+            if(method_exists($this->object, $method)) {
+                $this->object->$method();
+            } elseif (isset(\pqMethods($this->object)[$method])) {
+                $this->object->$method();
             }
         }
         return $this->QApp->exec();
