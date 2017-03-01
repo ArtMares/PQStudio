@@ -98,7 +98,7 @@ class Core {
      */
     protected function __clone() {}
 
-    static public function &getInstance() {
+    static public function &getInstance($type = 'app') {
         global $argc, $argv;
         if(!class_exists('QApplication') && !class_exists('QCoreApplication') && !class_exists('QStandardPaths')) {
             die('Error! Core not run!'.PHP_EOL.'Please assemble the project using QCoreApplication and QStandardPaths of Core library');
@@ -106,7 +106,16 @@ class Core {
         if(self::$APP === false) {
             self::$APP = new self();
             self::$APP->WIN = stripos(PHP_OS, 'win') === false ? false : true;
-            self::$APP->QApp = new \QApplication($argc, $argv);
+            switch(strtolower($type)) {
+                case 'gui':
+                    self::$APP->QApp = new \QGuiApplication($argc, $argv);
+                    break;
+                case 'core':
+                    self::$APP->QApp = new \QCoreApplication($argc, $argv);
+                    break;
+                default:
+                    self::$APP->QApp = new \QApplication($argc, $argv);
+            }
             self::$APP->PATH = __DIR__.'/';
             self::$APP->QT_PATH = stripos(self::$APP->PATH, 'qrc://') === false ? self::$APP->PATH : str_replace('qrc://', ':/', self::$APP->PATH);
             self::$APP->APP_PATH = \QCoreApplication::applicationDirPath().'/';
@@ -211,10 +220,12 @@ class Core {
         if($object !== '') {
             if($this->var->is_object($object)) $this->object = $object;
             if($this->var->is_str($object)) $this->object = new $object();
-            if(method_exists($this->object, 'show')) {
-                $this->object->show();
-            } elseif(isset(\pqMethods($this->object)['show'])) {
-                $this->object->show();
+            if($this->QApp instanceof \QApplication) {
+                if (method_exists($this->object, 'show')) {
+                    $this->object->show();
+                } elseif (isset(\pqMethods($this->object)['show'])) {
+                    $this->object->show();
+                }
             }
         }
         return $this->QApp->exec();

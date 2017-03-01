@@ -26,8 +26,27 @@ class PQStudio extends QWidget {
 
     public $bootstrap;
 
+    public $btn = [];
+
+    public $socket = false;
+
     public function initComponents() {
         $this->windowTitle = PQSTUDIO_TITLE;
+        $this->btn['connect'] = new QPushButton($this);
+        $this->btn['connect']->text = 'Connect';
+        $this->btn['connect']->onClicked = function() {
+            if($this->socket === false) {
+                $this->socket = new QLocalSocket($this);
+            }
+            $this->socket->abort();
+            $this->socket->connectToServer('PQStudio Worker');
+            if($this->socket->waitForConnected(1000)) {
+                echo "Connected!";
+                $this->socket->write('brefefdef');
+            }
+        };
+        $this->btn['send'] = new QPushButton($this);
+
     }
 
     private function initBootstrap() {
