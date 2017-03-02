@@ -12,6 +12,9 @@ use PQ\Component\File;
 use PQ\Component\Font;
 use PQ\Component\Lib;
 use PQ\Component\Log;
+use PQ\Component\Process;
+use PQ\Component\Single;
+use PQ\Component\Style;
 use PQ\Component\Variable;
 use PQ\Component\Variant;
 
@@ -33,6 +36,9 @@ use PQ\Component\Variant;
  * @property        File            $file
  * @property        Font            $font
  * @property        Lib             $lib
+ * @property        Style           $style
+ * @property        Single          $single
+ * @property        Process         $process
  */
 class Core {
     /**
@@ -83,23 +89,27 @@ class Core {
         'app' => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
             'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
-            'style' => 'Style',
-            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network'
+            'style' => 'Style', 'icon' => 'Icon',
+            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network',
+            'single' => 'Single', 'process' => 'Process'
         ],
         'gui' => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
             'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
             'style' => 'Style',
-            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network'
+            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network',
+            'single' => 'Single', 'process' => 'Process'
         ],
         'core' => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
             'dir' => 'Dir', 'file' => 'File', 'lib' => 'Lib',
-            'storage' => 'Storage', 'network' => 'Network'
+            'storage' => 'Storage', 'network' => 'Network', 'single' => 'Single', 'process' => 'Process'
         ]
     ];
 
     private $object;
+
+    private $descructor;
     /**
      * Класс может быть инициализирован только самим классом
      * A class can only be initialized by the class
@@ -113,7 +123,7 @@ class Core {
 
     static public function &getInstance($type = 'app') {
         global $argc, $argv;
-        if(!class_exists('QApplication') && !class_exists('QCoreApplication') && !class_exists('QStandardPaths')) {
+        if((!class_exists('QApplication') || !class_exists('QCuiApplication') || !class_exists('QCoreApplication')) && !class_exists('QStandardPaths')) {
             die('Error! Core not run!'.PHP_EOL.'Please assemble the project using QCoreApplication and QStandardPaths of Core library');
         }
         if(self::$APP === false) {
@@ -150,7 +160,10 @@ class Core {
             foreach(self::$APP->components[$type] as $alias => $component) {
                 self::$APP->load_component($component, $alias);
             }
-            require_once self::$APP->PATH.'Widget.php';
+            require_once self::$APP->PATH.'QtObject.php';
+            require_once self::$APP->PATH.'Destructor.php';
+            self::$APP->descructor = new Destructor(self::$APP);
+            connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->descructor, 'onDestruct()');
         }
         echo 'return Core'.PHP_EOL;
         return self::$APP;
@@ -242,5 +255,9 @@ class Core {
             }
         }
         return $this->QApp->exec();
+    }
+
+    public function quit() {
+        $this->descructor->onDestruct();
     }
 }

@@ -5,7 +5,7 @@
  * @copyright           artmares@influ.su
  */
 namespace PQ;
-trait Widget {
+trait QtObject {
 
     protected $core;
 
@@ -14,13 +14,13 @@ trait Widget {
         $parent = get_parent_class($this);
         if(preg_match('/^Q[a-zA-Z]+$/', $parent)) {
             $ref = new \ReflectionMethod($parent, '__construct');
-            if (!empty($args)) {
+            if(!empty($args)) {
                 $ref->invokeArgs($this, $args);
             } else {
                 $ref->invoke($this);
             }
             $this->core = Core::getInstance();
-            if (method_exists($this, 'initComponents')) {
+            if(method_exists($this, 'initComponents')) {
                 $this->initComponents();
             }
         }

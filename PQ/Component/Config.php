@@ -111,8 +111,8 @@ class Config extends Component {
                 $conf = array('file' => $scope);
                 break;
         }
-        $this->_info($str);
         if($this->_is_load($name)) return $this->_loaded[$name];
+        $this->_info($str);
         $this->_loaded[$name] = new $class($this->core, $name, $conf);
         return $this->_loaded[$name];
     }
