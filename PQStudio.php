@@ -38,29 +38,46 @@ class PQStudio extends QFrame {
 
     private $timer = false;
 
-    private $components = [];
+    private $components = [
+        [
+            'title' => 'Windows',
+            'class' => 'WelcomeWidget',
+            'init' => true
+        ]
+    ];
 
-    private $now = 1;
+    private $now = 0;
 
     private $count = 0;
 
     public function initComponents() {
+        /** Проверяем запущен ли уже экземпляр приложения */
         $single = $this->core->single->check($this->core->applicationName());
+
+        /** Если запущен то закрываем текущее приложение */
         if($single) $this->core->quit();
+
+        /** Проверяем задана ли тема оформления. Если нет то задаем дефолтовую */
         if($this->core->var->is_null($this->core->config->ini()->theame)) $this->core->config->ini()->theame = 'PQDark';
         $this->core->style->setSkin($this->core->config->ini()->theame);
-        if(isset($config['hidden'])) $this->hidden = (bool)$config['hidden'];
+
+        /** Получаем колличество компонетов приложения которые необходимо подключить */
         $this->count = count($this->components);
+
         /** Задаем флаги и атрибуты для прозрачного фона QFrame */
         $this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
         $this->setAttribute(Qt::WA_TranslucentBackground);
+
         /** Убираем автоматическую заливку фона QFrame */
         $this->setAutoFillBackground(false);
+
         /** Создаем слой */
         $this->setLayout(new QVBoxLayout());
+
         /** Убираем отступы от края окна */
         $this->layout()->setContentsMargins(0, 0, 0, 0);
         $this->layout()->setSpacing(0);
+
         /** Задаем максимальную шируну для QFrame */
         $imgWidth = (isset($config['imageWidth']) && $config['imageWidth'] > 400 ? $config['imageWidth'] : 400);
         /** Задаем макстмальную высоту для QFrame */
@@ -88,7 +105,7 @@ class PQStudio extends QFrame {
         /** Создаем QProgressBar для вывода полосы загрузки компонентов */
         $this->progress = new QProgressBar($this);
         $this->progress->setMaximum($this->count);
-        $this->progress->setValue(1);
+        $this->progress->setValue(0);
         $this->progress->textVisible = false;
         $this->layout()->addWidget($this->progress);
 
@@ -143,21 +160,17 @@ class PQStudio extends QFrame {
         }
     }
 
-    public function load($sender) {
+    public function load() {
         if(isset($this->components[$this->now]) && $this->now <= $this->count) {
             $data = $this->components[$this->now];
             $this->now++;
-            $this->message->text = tr('Loading component')." : ".$data['display'];
-            $data['type'] = strtolower($data['type']);
-            $data['name'] = $data['module'].'_'.$data['class'];
-            $path = $data['module'].'/'.$data['type'].'/'.$data['class'].'.php';
-            $file = ':/Components/'.$path;
-            $data['class'] = 'PQ'.ucwords($data['type']).'_'.$data['name'];
+            $this->message->text = tr('Loading component')." : ".$data['title'];
+            $file = ':/Components/'.$data['class'].'.php';
             $this->core->log->info('Loading component "'.$data['class'].'"');
             if(!$this->core->file->exists($file)) {
-                $file = $this->core->APP_PATH.'Components/'.$path;
+                $file = $this->core->APP_PATH.'Components/'.$data['class'].'.php';
                 if(!$this->core->file->exists($file)) {
-                    $this->core->log->error('No component file "'.$data['name'].'"');
+                    $this->core->log->error('No component file "'.$data['class'].'"');
                 } else {
                     $data['path'] = $file;
                 }
@@ -165,9 +178,7 @@ class PQStudio extends QFrame {
                 $data['path'] = $file;
             }
             if(isset($data['path'])) {
-                if($this->_load($data)) {
-                    $this->progress->setValue($this->now);
-                }
+                if($this->_load($data)) $this->progress->setValue($this->now);
             }
         } else {
             $this->timer->stop();
@@ -177,8 +188,13 @@ class PQStudio extends QFrame {
 
     public function completed() {
         sleep(2);
-        $this->emit('completed()', []);
-//        $this->close();
+//        if($this->now > $this->count)
+        $args = $this->core->args();
+        if(count($args) === 1) {
+            $this->core->widgets->get('WelcomeWidget')->show();
+        }
+//        $this->emit('completed()', []);
+        $this->close();
     }
 
     private function _load($data) {
@@ -186,7 +202,7 @@ class PQStudio extends QFrame {
         $class = $data['class'];
         if(!class_exists($class)) return false;
         if($data['init'] === true) {
-            $this->pqcore->mvc->{$data['type']}->{$data['name']} = new $class();
+            $this->core->widgets->set($class, new $class());
         }
         return true;
     }

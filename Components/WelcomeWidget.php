@@ -4,12 +4,9 @@
  * @date                02.03.2017
  * @copyright           artmares@influ.su
  */
-namespace Components;
-use PQ\Widget;
-
 class WelcomeWidget extends QWidget {
 
-    use Widget;
+    use \PQ\QtObject;
 
     public $stack;
 

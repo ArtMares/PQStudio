@@ -14,9 +14,11 @@ use PQ\Component\Lib;
 use PQ\Component\Log;
 use PQ\Component\Process;
 use PQ\Component\Single;
+use PQ\Component\Storage;
 use PQ\Component\Style;
 use PQ\Component\Variable;
 use PQ\Component\Variant;
+use PQ\Component\Widgets;
 
 /**
  * Class Core
@@ -37,6 +39,8 @@ use PQ\Component\Variant;
  * @property        Font            $font
  * @property        Lib             $lib
  * @property        Style           $style
+ * @property        Storage         $storage
+ * @property        Widgets         $widgets
  * @property        Single          $single
  * @property        Process         $process
  */
@@ -235,6 +239,10 @@ class Core {
             return null;
         }
         return $this->QApp->organizationDomain;
+    }
+
+    public function args() {
+        return $this->QApp->arguments();
     }
 
     /**
