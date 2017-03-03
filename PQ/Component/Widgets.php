@@ -6,18 +6,24 @@
  */
 namespace PQ\Component;
 use PQ\Component;
+use PQ\WidgetsInterface;
 
 class Widgets extends Component {
 
+    /** @var WidgetsInterface[] */
     private $widgets = [];
 
     private $title;
 
-    public function set($name, $widget) {
+    public function set($name, WidgetsInterface $widget) {
         $this->widgets[$name] = $widget;
     }
 
-    public function &get($name) {
+    /**
+     * @param $name
+     * @return null|WidgetsInterface
+     */
+    public function get($name) {
         if(isset($this->widgets[$name])) {
             return $this->widgets[$name];
         }

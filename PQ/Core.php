@@ -10,6 +10,7 @@ use PQ\Component\Config;
 use PQ\Component\Dir;
 use PQ\Component\File;
 use PQ\Component\Font;
+use PQ\Component\Icon;
 use PQ\Component\Lib;
 use PQ\Component\Log;
 use PQ\Component\Process;
@@ -39,6 +40,7 @@ use PQ\Component\Widgets;
  * @property        Font            $font
  * @property        Lib             $lib
  * @property        Style           $style
+ * @property        Icon            $icon
  * @property        Storage         $storage
  * @property        Widgets         $widgets
  * @property        Single          $single
@@ -100,7 +102,6 @@ class Core {
         'gui' => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
             'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
-            'style' => 'Style',
             'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network',
             'single' => 'Single', 'process' => 'Process'
         ],
@@ -164,12 +165,13 @@ class Core {
             foreach(self::$APP->components[$type] as $alias => $component) {
                 self::$APP->load_component($component, $alias);
             }
+            require_once self::$APP->PATH.'WidgetsInterface.php';
             require_once self::$APP->PATH.'QtObject.php';
             require_once self::$APP->PATH.'Destructor.php';
             self::$APP->descructor = new Destructor(self::$APP);
             connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->descructor, 'onDestruct()');
         }
-        echo 'return Core'.PHP_EOL;
+//        echo 'return Core'.PHP_EOL;
         return self::$APP;
     }
 

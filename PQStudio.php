@@ -18,7 +18,7 @@ $title = sprintf('%1$s %2$s [build: %3$s]',
     $core->applicationVersion(),
     BUILD_VERSION);
 
-$core->widgets->setDefaulttitle($title);
+$core->widgets->setDefaultTitle($title);
 
 define('PQSTUDIO_TITLE', $title);
 
@@ -26,23 +26,47 @@ class PQStudio extends QFrame {
 
     use \PQ\QtObject;
 
-    private $signals = [
-        'completed()'
-    ];
-
     private $progress;
 
     private $message;
 
     private $hidden = false;
 
-    private $timer = false;
-
     private $components = [
         [
+            'title' => 'Custom Elements',
+            'class' => 'Custom\\IconBtn',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Custom\\MenuBtn',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Custom\\BackBtn',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Custom\\CheckBox',
+            'init'  => false
+        ],
+        [
             'title' => 'Windows',
-            'class' => 'WelcomeWidget',
-            'init' => true
+            'class' => 'Pages\\Main',
+            'init'  => false
+        ],
+        [
+            'title' => 'Windows',
+            'class' => 'Pages\\Create',
+            'init'  => false
+        ],
+        [
+            'title' => 'Windows',
+            'class' => 'Widgets\\Welcome',
+            'init'  => true
         ]
     ];
 
@@ -114,10 +138,6 @@ class PQStudio extends QFrame {
         $this->setMinimumWidth($imgWidth);
         /** Делаем ресайз QFrame */
         $this->resize($imgWidth, $imgHeight);
-
-        $this->timer = new QTimer($this);
-        $this->timer->setInterval(600);
-        connect($this->timer, 'timeout()', $this, 'load()');
     }
 
     public function show() {
@@ -156,53 +176,53 @@ class PQStudio extends QFrame {
                 ';
             }
             parent::show();
-            $this->timer->start();
+            $this->core->QApp->processEvents();
+            sleep(1);
+            while(isset($this->components[$this->now]) && $this->now <= $this->count) {
+                $this->load();
+            }
+            $this->completed();
         }
     }
 
     public function load() {
-        if(isset($this->components[$this->now]) && $this->now <= $this->count) {
-            $data = $this->components[$this->now];
-            $this->now++;
-            $this->message->text = tr('Loading component')." : ".$data['title'];
-            $file = ':/Components/'.$data['class'].'.php';
-            $this->core->log->info('Loading component "'.$data['class'].'"');
+        $data = $this->components[$this->now];
+        $this->now++;
+        $this->message->text = tr('Loading component') . " : " . $data['title'];
+        $file = ':/Components/' . $data['class'] . '.php';
+        $this->core->log->info('Loading component "' . $data['class'] . '"');
+        if(!$this->core->file->exists($file)) {
+            $file = $this->core->APP_PATH . 'Components/' . $data['class'] . '.php';
             if(!$this->core->file->exists($file)) {
-                $file = $this->core->APP_PATH.'Components/'.$data['class'].'.php';
-                if(!$this->core->file->exists($file)) {
-                    $this->core->log->error('No component file "'.$data['class'].'"');
-                } else {
-                    $data['path'] = $file;
-                }
+                $this->core->log->error('No component file "' . $data['class'] . '"');
             } else {
                 $data['path'] = $file;
             }
-            if(isset($data['path'])) {
-                if($this->_load($data)) $this->progress->setValue($this->now);
-            }
         } else {
-            $this->timer->stop();
-            $this->completed();
+            $data['path'] = $file;
+        }
+        if(isset($data['path'])) {
+            $data['path'] = preg_replace('/^:\//', 'qrc://', $data['path']);
+            $data['path'] = str_replace('\\', '/', $data['path']);
+            if($this->_load($data)) $this->progress->setValue($this->now);
         }
     }
 
     public function completed() {
         sleep(2);
-//        if($this->now > $this->count)
         $args = $this->core->args();
         if(count($args) === 1) {
-            $this->core->widgets->get('WelcomeWidget')->show();
+            if(!$this->core->var->is_null($this->core->widgets->get('Widgets/Welcome'))) $this->core->widgets->get('Widgets/Welcome')->show();
         }
-//        $this->emit('completed()', []);
         $this->close();
     }
 
     private function _load($data) {
         require_once($data['path']);
-        $class = $data['class'];
+        $class = 'Components\\'.$data['class'];
         if(!class_exists($class)) return false;
         if($data['init'] === true) {
-            $this->core->widgets->set($class, new $class());
+            $this->core->widgets->set(str_replace('\\', '/', $data['class']), new $class());
         }
         return true;
     }
