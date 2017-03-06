@@ -23,7 +23,7 @@ class Icon extends Component {
         $this->path = $this->core->APP_DATA.'icon_fonts';
         $this->core->dir->mkdir($this->path);
         $this->_load();
-        foreach(['Char'] as $item) {
+        foreach(['Char', 'Svg'] as $item) {
             require_once $this->core->PATH.'Component/Icon/'.$item.'.php';
         }
     }
@@ -103,5 +103,9 @@ class Icon extends Component {
             if((is_int($param1) || is_float($param1)) && is_string($param2)) $icon->size((int)$param1)->color($param2);
         }
         return $icon;
+    }
+
+    public function svg($name) {
+        $icon = new Component\Icon\Svg();
     }
 }

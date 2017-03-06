@@ -8,7 +8,7 @@ namespace Components\Custom;
 use PQ\Component\Icon\Char;
 use PQ\Core;
 
-class IconBtn extends \QPushButton {
+class IconBtn extends Btn {
 
     protected $iconLabel;
 

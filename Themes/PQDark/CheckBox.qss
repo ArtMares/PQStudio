@@ -11,5 +11,4 @@ QLabel {
 }
 QLabel#Icon {
     margin-top: 5px;
-    color: #ff0000;
 }

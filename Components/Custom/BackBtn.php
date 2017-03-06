@@ -13,8 +13,9 @@ class BackBtn extends IconBtn {
     protected $iconSize = 16;
 
     public function __construct($parent, $text) {
-
-        $this->icon = Core::getInstance()->icon->font('fa-arrow-left', $this->iconSize);
-        parent::__construct($parent, $this->icon, $text);
+        /** Задаем шрифтовую иконку для кнопки */
+        $icon = Core::getInstance()->icon->font('fa-arrow-left', $this->iconSize);
+        parent::__construct($parent, $icon, $text);
+        $this->setMinimumWidth(70);
     }
 }

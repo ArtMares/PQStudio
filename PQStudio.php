@@ -35,6 +35,11 @@ class PQStudio extends QFrame {
     private $components = [
         [
             'title' => 'Custom Elements',
+            'class' => 'Custom\\Btn',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
             'class' => 'Custom\\IconBtn',
             'init'  => false
         ],
@@ -46,6 +51,11 @@ class PQStudio extends QFrame {
         [
             'title' => 'Custom Elements',
             'class' => 'Custom\\BackBtn',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Custom\\NextBtn',
             'init'  => false
         ],
         [
@@ -73,6 +83,17 @@ class PQStudio extends QFrame {
     private $now = 0;
 
     private $count = 0;
+
+    private function initConfiguration() {
+        $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
+    }
+
+    private function changeLang($lang, $accept = false) {
+        if($lang !== 'en') {
+            if($accept === true) set_tr_lang($lang, 'languages');
+            $this->core->config->ini()->set('language', $lang);
+        }
+    }
 
     public function initComponents() {
         /** Проверяем запущен ли уже экземпляр приложения */
