@@ -35,47 +35,47 @@ class PQStudio extends QFrame {
     private $components = [
         [
             'title' => 'Custom Elements',
-            'class' => 'Custom\\Btn',
+            'class' => 'Components\\Custom\\Btn',
             'init'  => false
         ],
         [
             'title' => 'Custom Elements',
-            'class' => 'Custom\\IconBtn',
+            'class' => 'Components\\Custom\\IconBtn',
             'init'  => false
         ],
         [
             'title' => 'Custom Elements',
-            'class' => 'Custom\\MenuBtn',
+            'class' => 'Components\\Custom\\MenuBtn',
             'init'  => false
         ],
         [
             'title' => 'Custom Elements',
-            'class' => 'Custom\\BackBtn',
+            'class' => 'Components\\Custom\\BackBtn',
             'init'  => false
         ],
         [
             'title' => 'Custom Elements',
-            'class' => 'Custom\\NextBtn',
+            'class' => 'Components\\Custom\\NextBtn',
             'init'  => false
         ],
         [
             'title' => 'Custom Elements',
-            'class' => 'Custom\\CheckBox',
+            'class' => 'Components\\Custom\\CheckBox',
             'init'  => false
         ],
         [
             'title' => 'Windows',
-            'class' => 'Pages\\Main',
+            'class' => 'Components\\Pages\\Main',
             'init'  => false
         ],
         [
             'title' => 'Windows',
-            'class' => 'Pages\\Create',
+            'class' => 'Components\\Pages\\Create',
             'init'  => false
         ],
         [
             'title' => 'Windows',
-            'class' => 'Widgets\\Welcome',
+            'class' => 'Components\\Widgets\\Welcome',
             'init'  => true
         ]
     ];
@@ -86,6 +86,7 @@ class PQStudio extends QFrame {
 
     private function initConfiguration() {
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
+        $this->core->storage->defaultProjectPath = $this->core->config->ini()->get('project_path', $this->core->APP_PATH.'Projects/');
     }
 
     private function changeLang($lang, $accept = false) {
@@ -96,15 +97,17 @@ class PQStudio extends QFrame {
     }
 
     public function initComponents() {
+        /** Инициализируем загрузку всех основных конфигураций приложени */
+        $this->initConfiguration();
+        
         /** Проверяем запущен ли уже экземпляр приложения */
         $single = $this->core->single->check($this->core->applicationName());
 
         /** Если запущен то закрываем текущее приложение */
         if($single) $this->core->quit();
 
-        /** Проверяем задана ли тема оформления. Если нет то задаем дефолтовую */
-        if($this->core->var->is_null($this->core->config->ini()->theame)) $this->core->config->ini()->theame = 'PQDark';
-        $this->core->style->setSkin($this->core->config->ini()->theame);
+        /** Задаем тему оформления */
+        $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
 
         /** Получаем колличество компонетов приложения которые необходимо подключить */
         $this->count = count($this->components);
@@ -163,7 +166,7 @@ class PQStudio extends QFrame {
 
     public function show() {
         if(!$this->hidden) {
-            $this->message->text = tr('Loading components');
+            $this->message->text = tr('Loading components').'...';
             /** Получаем стиль для окна */
             $style = $this->core->style->Bootstrap;
             /** Проверяем существует ли стиль в теме оформления */
@@ -173,9 +176,12 @@ class PQStudio extends QFrame {
             } else {
                 /** В противном случае задаем стиль по умолчанию */
                 $this->styleSheet = '
+                    QFrame {
+                        font-family: "Akrobat";
+                        font-size: 16px;
+                    }
                     QLabel {
                         color: #323232;
-                        font-size: 12px;
                     }
                     QLabel#Message {
                         padding-left: 5px;
@@ -210,10 +216,10 @@ class PQStudio extends QFrame {
         $data = $this->components[$this->now];
         $this->now++;
         $this->message->text = tr('Loading component') . " : " . $data['title'];
-        $file = ':/Components/' . $data['class'] . '.php';
+        $file = ':/' . $data['class'] . '.php';
         $this->core->log->info('Loading component "' . $data['class'] . '"');
         if(!$this->core->file->exists($file)) {
-            $file = $this->core->APP_PATH . 'Components/' . $data['class'] . '.php';
+            $file = $this->core->APP_PATH . $data['class'] . '.php';
             if(!$this->core->file->exists($file)) {
                 $this->core->log->error('No component file "' . $data['class'] . '"');
             } else {
@@ -233,14 +239,14 @@ class PQStudio extends QFrame {
         sleep(2);
         $args = $this->core->args();
         if(count($args) === 1) {
-            if(!$this->core->var->is_null($this->core->widgets->get('Widgets/Welcome'))) $this->core->widgets->get('Widgets/Welcome')->show();
+            if(!$this->core->var->is_null($this->core->widgets->get('Components/Widgets/Welcome'))) $this->core->widgets->get('Components/Widgets/Welcome')->show();
         }
         $this->close();
     }
 
     private function _load($data) {
         require_once($data['path']);
-        $class = 'Components\\'.$data['class'];
+        $class = $data['class'];
         if(!class_exists($class)) return false;
         if($data['init'] === true) {
             $this->core->widgets->set(str_replace('\\', '/', $data['class']), new $class());

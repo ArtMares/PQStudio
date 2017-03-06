@@ -1,6 +1,9 @@
+QFrame {
+    font-family: "Akrobat";
+    font-size: 16px;
+}
 QLabel#Message {
     color: #c4c4c4;
-    font-size: 12px;
     padding-left: 5px;
     background: #46474b;
     border-top-left-radius: 6px;

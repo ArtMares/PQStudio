@@ -29,4 +29,13 @@ class Storage extends Component {
     public function __unset($name) {
         unset($this->data[$name]);
     }
+    
+    public function set($name, $value) {
+        $this->__set($name, $value);
+    }
+    
+    public function get($name) {
+        $result = $this->__get($name);
+        return $result;
+    }
 }

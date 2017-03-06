@@ -50,14 +50,22 @@ class Manager {
         if($class == 'QSettings') return true;
         return false;
     }
-
+    
     /**
      * Магический метод для получения данныйх из объекта QSettings по ключу
      * @param $name
-     * @return mixed
+     * @return null
      */
     public function __get($name) {
-        $variant = $this->settings->value($name);
+        /** Получаем все аргументы переданные функции */
+        $args = func_get_args();
+        /** Если было передано больше одного аргумента то второй записываем как дефолтовое значение */
+        $default = (count($args) > 1 ? $args[1] : null);
+        if(!is_null($default)) {
+            $variant = $this->settings->value($name, $default);
+        } else {
+            $variant = $this->settings->value($name);
+        }
         return $this->core->variant->get($variant);
     }
 
@@ -69,14 +77,15 @@ class Manager {
     public function __set($name, $value) {
         $this->settings->setValue($name, $value);
     }
-
+    
     /**
      * Получает значение объекта QSettings по ключу
      * @param $name
-     * @return mixed
+     * @param string $default
+     * @return null
      */
-    public function get($name) {
-        return $this->__get($name);
+    public function get($name, $default = '') {
+        return $this->__get($name, $default);
     }
 
     /**

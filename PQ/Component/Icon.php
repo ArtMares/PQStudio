@@ -66,7 +66,7 @@ class Icon extends Component {
     }
 
     private function _load_ttf($path) {
-        $this->core->font->db_add_font($path);
+        $this->core->font->add($path);
     }
 
     private function _load_css($name, $path) {

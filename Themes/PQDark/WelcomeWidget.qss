@@ -1,5 +1,6 @@
 QWidget {
-    font-family: "FontAwesome";
+    font-family: "FontAwesome", "Akrobat";
+    font-size: 16px;
 }
 
 QFrame#MainPage QLabel#AppName {
@@ -22,23 +23,24 @@ QFrame#CreatePage {
 }
 QFrame#CreatePage QLabel {
     color: #c4c4c4;
-    font-size: 14px;
 }
 QFrame#CreatePage QLineEdit {
     background: #393939;
     color: #c4c4c4;
     border: 1px solid #515151;
     padding: 0px;
-    font-size: 14px;
     height: 26px;
 }
 QFrame#CreatePage QLineEdit:focus {
     border: 1px solid #8a3b16;
 }
+QFrame#CreatePage QLineEdit[error="true"] {
+    color: #c43737;
+    border: 1px solid #c43737;
+}
 QFrame#CreatePage QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5c5c5c, stop: 1 #515151);
     color: #c4c4c4;
-    font-size: 14px;
     border: 1px solid #393939;
     border-radius: 3px;
     height: 26px;
@@ -92,6 +94,10 @@ QFrame#ImportPage QPushButton {
 QFrame#ImportPage QPushButton:focus {
     outline: none;
 }
+QFrame QPushButton {
+    outline: none;
+}
+
 QScrollArea#ScrollProjects {
     background: #393939;
     border: none;
@@ -165,14 +171,6 @@ QScrollBar::down-arrow:horizontal {
 }
 QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     background: none;
-}
-QCheckBox {
-    font-size: 14px;
-    color: #c4c4c4;
-}
-QCheckBox::indicator {
-    width: 0px;
-    height: 0px;
 }
 
 QMessageBox {

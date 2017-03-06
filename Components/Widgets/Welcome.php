@@ -14,7 +14,9 @@ class Welcome extends \QWidget implements WidgetsInterface {
 
     use QtObject;
 
-    public $stack;
+    private $stack;
+    
+    private $page;
 
     public function initComponents() {
         /** Задаем фиксированный размер окна */
@@ -27,7 +29,7 @@ class Welcome extends \QWidget implements WidgetsInterface {
         $this->core->style->set($this, 'WelcomeWidget');
 
         /** Создаем слой */
-        $this->setLayout(new \QHBoxLayout);
+        $this->setLayout(new \QHBoxLayout());
 
         /** Убираем отступы от края окна */
         $this->layout()->setContentsMargins(0, 0, 0, 0);
@@ -37,21 +39,27 @@ class Welcome extends \QWidget implements WidgetsInterface {
         $this->stack = new \QStackedWidget($this);
 
         /** Инициализируем основные страницы виджета */
-        $this->core->widgets->set('Pages/Main', new Main($this->stack));
-        $this->core->widgets->set('Pages/Create', new Create($this->stack));
+        $this->core->widgets->set('Components/Pages/Main', new Main($this->stack));
+        $this->core->widgets->set('Components/Pages/Create', new Create($this->stack));
 
         /** Добавляем страницы виджета в стаковый виджет */
-        $this->stack->addWidget($this->core->widgets->get('Pages/Main'));
-        $this->stack->addWidget($this->core->widgets->get('Pages/Create'));
+        $this->stack->addWidget($this->core->widgets->get('Components/Pages/Main'));
+        $this->stack->addWidget($this->core->widgets->get('Components/Pages/Create'));
 //        $this->stack->addWidget($this->pqcore->mvc->view->welcome_import_page);
 
         $this->layout()->addWidget($this->stack);
 
         /** Указываем текущую страницу */
-        $this->stack->setCurrentWidget($this->core->widgets->get('Pages/Main'));
+        $this->stack->setCurrentWidget($this->core->widgets->get('Components/Pages/Main'));
+    }
+    
+    public function setPage($pageName) {
+        if(!$this->core->var->is_null($this->core->widgets->get($pageName))) {
+            $this->stack->setCurrentWidget($this->core->widgets->get($pageName));
+        }
     }
 
     public function Back() {
-        $this->stack->setCurrentWidget($this->core->widgets->get('Pages/Main'));
+        $this->stack->setCurrentWidget($this->core->widgets->get('Components/Pages/Main'));
     }
 }

@@ -1,0 +1,13 @@
+QLineEdit {
+    background: #393939;
+    color: #c4c4c4;
+    border: 1px solid #515151;
+    padding: 0px;
+    height: 26px;
+}
+QLineEdit:focus {
+    border: 1px solid #8a3b16;
+}
+QLineEdit[error="true"] {
+    color: #c43737;
+}

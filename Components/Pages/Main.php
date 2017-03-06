@@ -101,9 +101,7 @@ class Main extends \QFrame implements WidgetsInterface {
         /** Создаем кнопку основного меню для создания проекта */
         $createBtn = new MenuBtn($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), 'Create Project', 'CreateProjectBtn');
         $createBtn->onClicked = function($sender) {
-            $this->core->widgets->get('Widgets/Welcome')->stack->setCurrentWidget(
-                $this->core->widgets->get('Pages/Create')
-            );
+            $this->core->widgets->get('Components/Widgets/Welcome')->setPage('Components/Pages/Create');
         };
 //        $createBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 //        $createBtn = new QToolButton($this);
@@ -140,7 +138,7 @@ class Main extends \QFrame implements WidgetsInterface {
         $menu->layout()->addWidget($settingBtn);
 
         /** Создаем пустой QFrame для отсупа от верха окна */
-        $topSpacer = new \QFrame;
+        $topSpacer = new \QFrame($this);
         $topSpacer->setMinimumHeight(50);
         $this->general->layout()->addWidget($topSpacer);
 
@@ -153,7 +151,7 @@ class Main extends \QFrame implements WidgetsInterface {
         $this->general->layout()->addWidget($menu);
         $this->general->layout()->setAlignment($menu, \Qt::AlignHCenter);
 
-        $spacer = new \QFrame;
+        $spacer = new \QFrame($this);
         $spacer->setSizePolicy(\QSizePolicy::Expanding, \QSizePolicy::Expanding);
         $this->general->layout()->addWidget($spacer);
 

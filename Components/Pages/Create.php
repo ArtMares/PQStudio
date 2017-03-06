@@ -42,7 +42,18 @@ class Create extends \QFrame implements WidgetsInterface {
         /** Создаем поле ввода для Навзвания проекта */
         $this->name = new \QLineEdit($this);
         $this->name->setPlaceholderText(tr('Enter the Project Name') . '...');
-//        connect($this->name, 'textChanged(string)', $this->core->)
+        $this->name->setProperty('error', false);
+        $this->name->onTextChanged = function($sender, $name) {
+            if($name !== '') {
+                if(!$this->checkProject($name)) {
+                    $this->name->setProperty('error', true);
+                } else {
+                    $this->name->setProperty('error', false);
+                }
+            }
+            $this->name->styleSheet = $this->core->style->LineEdit;
+        };
+//        connect($this->name, 'textChanged(string)', $this, '')
 //        $this->name->connect(SIGNAL('textChanged(string)'), $this->pqcore->mvc->controller->welcome_main, SLOT('changeNewProjectName(string)'));
 
         /** Создаем QLabel для названия поля ввода */
@@ -51,7 +62,7 @@ class Create extends \QFrame implements WidgetsInterface {
 
         /** Создаем поле ввода для директории проекта */
         $this->path = new \QLineEdit($this);
-//        $this->path->text = $this->pqcore->
+        $this->path->text = $this->core->storage->defaultProjectPath;
         $this->path->setPlaceholderText(tr('Enter path to Project') . '...');
         $this->path->readOnly = true;
 
@@ -96,7 +107,7 @@ class Create extends \QFrame implements WidgetsInterface {
 
         $BackBtn = new BackBtn($this, tr('Back'));
         $BackBtn->onClicked = function() {
-            $this->core->widgets->get('Widgets/Welcome')->Back();
+            $this->core->widgets->get('Components/Widgets/Welcome')->Back();
         };
 
         $CreateBtn = new NextBtn($this, tr('Create'));
@@ -172,5 +183,12 @@ class Create extends \QFrame implements WidgetsInterface {
 
     public function setDefaultPath($sender) {
         var_dump($sender->checked);
+    }
+    
+    private function checkProject($name) {
+        if(!$this->core->dir->exists($this->core->storage->defaultProjectPath.$name)) {
+            return true;
+        }
+        return false;
     }
 }
