@@ -1,0 +1,6 @@
+QFrame {
+    background: #3c3f41;
+}
+QFrame QLabel {
+    color: #c4c4c4;
+}

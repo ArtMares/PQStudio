@@ -8,6 +8,8 @@ namespace Components\Pages;
 use Components\Custom\BackBtn;
 use Components\Custom\Btn;
 use Components\Custom\CheckBox;
+use Components\Custom\Input;
+use Components\Custom\InputValidate;
 use Components\Custom\NextBtn;
 use PQ\QtObject;
 use PQ\WidgetsInterface;
@@ -40,28 +42,21 @@ class Create extends \QFrame implements WidgetsInterface {
         $labelName->text = tr('Project Name') . ':';
 
         /** Создаем поле ввода для Навзвания проекта */
-        $this->name = new \QLineEdit($this);
-        $this->name->setPlaceholderText(tr('Enter the Project Name') . '...');
-        $this->name->setProperty('error', false);
+        $this->name = new InputValidate($this);
+        $this->name->setPlaceholderText(tr('Enter Project Name') . '...');
+        $this->name->onValidate(function($text) {
+            return $this->checkProject($text);
+        });
         $this->name->onTextChanged = function($sender, $name) {
-            if($name !== '') {
-                if(!$this->checkProject($name)) {
-                    $this->name->setProperty('error', true);
-                } else {
-                    $this->name->setProperty('error', false);
-                }
-            }
-            $this->name->styleSheet = $this->core->style->LineEdit;
+            echo $name.PHP_EOL;
         };
-//        connect($this->name, 'textChanged(string)', $this, '')
-//        $this->name->connect(SIGNAL('textChanged(string)'), $this->pqcore->mvc->controller->welcome_main, SLOT('changeNewProjectName(string)'));
 
         /** Создаем QLabel для названия поля ввода */
         $labelPath = new \QLabel($this);
         $labelPath->text = tr('Project Path') . ':';
 
         /** Создаем поле ввода для директории проекта */
-        $this->path = new \QLineEdit($this);
+        $this->path = new Input($this);
         $this->path->text = $this->core->storage->defaultProjectPath;
         $this->path->setPlaceholderText(tr('Enter path to Project') . '...');
         $this->path->readOnly = true;
@@ -82,23 +77,23 @@ class Create extends \QFrame implements WidgetsInterface {
 
         $labelAppName = new \QLabel($this);
         $labelAppName->text = tr('Application Name') . ':';
-        $this->appName = new \QLineEdit($this);
+        $this->appName = new Input($this);
         $this->appName->setPlaceholderText(tr('Enter Application Name') . '...');
 
         $labelAppVersion = new \QLabel($this);
         $labelAppVersion->text = tr('Application Version') . ':';
-        $this->appVersion = new \QLineEdit($this);
+        $this->appVersion = new Input($this);
         $this->appVersion->text = '0.1';
         $this->appVersion->setPlaceholderText(tr('Enter Version') . '...');
 
         $labelOrgName = new \QLabel($this);
         $labelOrgName->text = tr('Organization Name') . ':';
-        $this->orgName = new \QLineEdit($this);
+        $this->orgName = new Input($this);
         $this->orgName->setPlaceholderText(tr('Enter Organization Name') . '...');
 
         $labelOrgDomain = new \QLabel($this);
         $labelOrgDomain->text = tr('Domain') . ':';
-        $this->orgDomain = new \QLineEdit($this);
+        $this->orgDomain = new Input($this);
         $this->orgDomain->setPlaceholderText(tr('Enter Domain') . '...');
 
 

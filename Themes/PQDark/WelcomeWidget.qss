@@ -24,20 +24,6 @@ QFrame#CreatePage {
 QFrame#CreatePage QLabel {
     color: #c4c4c4;
 }
-QFrame#CreatePage QLineEdit {
-    background: #393939;
-    color: #c4c4c4;
-    border: 1px solid #515151;
-    padding: 0px;
-    height: 26px;
-}
-QFrame#CreatePage QLineEdit:focus {
-    border: 1px solid #8a3b16;
-}
-QFrame#CreatePage QLineEdit[error="true"] {
-    color: #c43737;
-    border: 1px solid #c43737;
-}
 QFrame#CreatePage QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5c5c5c, stop: 1 #515151);
     color: #c4c4c4;

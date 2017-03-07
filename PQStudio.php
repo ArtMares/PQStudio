@@ -64,6 +64,26 @@ class PQStudio extends QFrame {
             'init'  => false
         ],
         [
+            'title' => 'Custom Elements',
+            'class' => 'Components\\Custom\\Events\\Input',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Components\\Custom\\Input',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Components\\Custom\\InputValidate',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Components\\Custom\\ToolTip',
+            'init'  => false
+        ],
+        [
             'title' => 'Windows',
             'class' => 'Components\\Pages\\Main',
             'init'  => false
@@ -217,11 +237,11 @@ class PQStudio extends QFrame {
         $this->now++;
         $this->message->text = tr('Loading component') . " : " . $data['title'];
         $file = ':/' . $data['class'] . '.php';
-        $this->core->log->info('Loading component "' . $data['class'] . '"');
+        $this->core->log->info('Loading component "' . $data['class'] . '"', 'App');
         if(!$this->core->file->exists($file)) {
             $file = $this->core->APP_PATH . $data['class'] . '.php';
             if(!$this->core->file->exists($file)) {
-                $this->core->log->error('No component file "' . $data['class'] . '"');
+                $this->core->log->error('No component file "' . $data['class'] . '"', 'App');
             } else {
                 $data['path'] = $file;
             }
