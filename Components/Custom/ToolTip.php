@@ -14,21 +14,23 @@ class ToolTip extends \QFrame {
     protected $message;
 
     public function __construct($target) {
-        parent::__construct();
+        parent::__construct($target);
+        $this->objectName = 'ToolTip';
         $this->setWindowFlags(\Qt::WindowStaysOnTopHint | \Qt::FramelessWindowHint);
         $this->setAttribute(\Qt::WA_ShowWithoutActivating);
         $target->connect(SIGNAL('focus()'), $this, SLOT('showText()'));
         $target->connect(SIGNAL('blur()'), $this, SLOT('hideText()'));
-//        $this->message = new \QLabel($this);
-//        $this->setLayout(new \QHBoxLayout());
-//        $this->layout()->setContentsMargins(1, 1, 1, 1);
-//        $this->layout()->setSpacing(0);
-//        $this->layout()->addWidget($this->message);
-//        $this->styleSheet = Core::getInstance()->style->ToolTip;
+        $this->message = new \QLabel($this);
+        $this->setLayout(new \QHBoxLayout());
+        $this->layout()->setContentsMargins(1, 1, 1, 1);
+        $this->layout()->setSpacing(0);
+        $this->layout()->addWidget($this->message);
+        $this->styleSheet = Core::getInstance()->style->ToolTip;
+        parent::hide();
     }
-
+    
     public function message($str) {
-        $this->message = $str;
+        $this->message->text = $str;
     }
 
     private function getRect($target) {
@@ -41,15 +43,15 @@ class ToolTip extends \QFrame {
     }
 
     public function showText($sender) {
-        if($this->message !== '') {
+        echo __METHOD__.PHP_EOL;
+        if($this->message->text() !== '') {
             $rect = $this->getRect($sender);
-            \QToolTip::showText($sender->mapToGlobal(new \QPaint(0, $rect['h'])), $this->message, )
-//            $this->move($sender->mapToGlobal(new \QPoint(0, 0 + $rect['h'])));
-//            parent::show();
+            $this->move(0, $rect['h']);
+            parent::show();
         }
     }
 
     public function hideText($sender) {
-//        if($this->isVisible()) parent::hide();
+        parent::hide();
     }
 }

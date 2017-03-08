@@ -44,8 +44,10 @@ class Create extends \QFrame implements WidgetsInterface {
         /** Создаем поле ввода для Навзвания проекта */
         $this->name = new InputValidate($this);
         $this->name->setPlaceholderText(tr('Enter Project Name') . '...');
-        $this->name->onValidate(function($text) {
-            return $this->checkProject($text);
+        $this->name->onValidate(function($sender, $text) {
+            $result = $this->checkProject($text);
+//            if($result === false) $sender->setToolTip(tr('Project directory already exists'));
+            return $result;
         });
         $this->name->onTextChanged = function($sender, $name) {
             echo $name.PHP_EOL;

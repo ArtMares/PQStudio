@@ -35,6 +35,11 @@ class PQStudio extends QFrame {
     private $components = [
         [
             'title' => 'Custom Elements',
+            'class' => 'Components\\Custom\\EventCtrl',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
             'class' => 'Components\\Custom\\Btn',
             'init'  => false
         ],
@@ -81,6 +86,11 @@ class PQStudio extends QFrame {
         [
             'title' => 'Custom Elements',
             'class' => 'Components\\Custom\\ToolTip',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
+            'class' => 'Components\\Custom\\ErrorToolTip',
             'init'  => false
         ],
         [

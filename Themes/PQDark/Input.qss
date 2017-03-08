@@ -4,7 +4,14 @@ QLineEdit {
     border: 1px solid #515151;
     padding: 0px;
     height: 26px;
+    selection-background-color: #8a3b16;
 }
 QLineEdit:focus {
     border: 1px solid #8a3b16;
+}
+QLineEdit[readOnly="true"] {
+    color: #949494;
+}
+QLineEdit[readOnly="true"]:focus {
+    border: 1px solid #515151;
 }

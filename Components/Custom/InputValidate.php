@@ -14,7 +14,9 @@ class InputValidate extends Input {
     protected $onValidate;
 
     public function __construct($parent) {
+//        $this->signals[] = 'invalid()';
         parent::__construct($parent);
+//        $this->tooltip = new ErrorToolTip($this);
         /** Задаем свойсво которое указывает валидно поле или нет */
         $this->setProperty('invalid', false);
         /** Запоминаем стиль */
@@ -25,7 +27,6 @@ class InputValidate extends Input {
         $this->onTextChanged = function($sender, $value) {
             $this->validate($value);
         };
-        $this->tooltip->message(tr('Project name is the name of the directory'));
     }
 
     /**
@@ -38,8 +39,9 @@ class InputValidate extends Input {
 
     private function validate($value) {
         if(is_callable($this->onValidate)) {
-            $result = call_user_func($this->onValidate, $value);
+            $result = call_user_func_array($this->onValidate, [$this, $value]);
             if($result === false) {
+//                $this->emit('invalid()', []);
                 $this->setProperty('invalid', true);
             } else {
                 $this->setProperty('invalid', false);

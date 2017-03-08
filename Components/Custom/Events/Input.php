@@ -5,21 +5,22 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Custom\Events;
-class Input extends \PQEventFilter {
+use Components\Custom\EventCtrl;
 
+class Input extends EventCtrl {
+    
     protected $parent;
 
     public function __construct($parent = null) {
         parent::__construct($parent);
-        $this->parent = $parent;
         $this->addEventType(\QEvent::FocusIn);
         $this->addEventType(\QEvent::FocusOut);
-//        $this->addEventType(\QEvent::Move);
-        $parent->installEventFilter($this);
-//        $this->getParent($parent)->installEventFilter($this);
+        $parent->installEventFilter(self::$eventFilter);
+        return self::$eventFilter;
     }
 
     public function eventFilter($sender, $event) {
+        var_dump($event->type());
         $eventObject = get_class($event);
         if($eventObject === 'QFocusEvent') {
             if($event->gotFocus() && in_array('focus()', $sender->signals)) $sender->emit('focus()', []);
