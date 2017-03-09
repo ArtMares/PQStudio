@@ -14,10 +14,11 @@ class CheckBox extends EventCtrl {
         self::$eventFilter->addEventType(\QEvent::EnabledChange);
         $parent->installEventFilter(self::$eventFilter);
         $this->onEvent = function($sender, $event) {
-            echo __CLASS__;
-            echo get_class($event);
-            var_dump($event->type());
-            return false;
+            switch($event->type()) {
+                case \QEvent::EnabledChange:
+                    $sender->styleSheet = $sender->styleSheet();
+                    break;
+            }
         };
         return self::$eventFilter;
     }

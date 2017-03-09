@@ -112,7 +112,7 @@ class Main extends \QFrame implements WidgetsInterface {
         /** Создаем кнопку основного меню для открытия проекта */
         $openBtn = new MenuBtn($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), 'Open Project File', 'welcome_main-open_project');
         $openBtn->onClicked = function($sender) {
-            $this->core->mvc->controller->welcome_main->open_project_directory();
+//            $this->core->mvc->controller->welcome_main->open_project_directory();
         };
 //        $openBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
@@ -120,14 +120,14 @@ class Main extends \QFrame implements WidgetsInterface {
 //        $importBtn = new MainMenuBtn($this->Menu, Icon::get('fa-sign-in', '#c28a46', 16), tr('Import PQBuilder Project'));
         $importBtn = new MenuBtn($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), 'Import PQBuilder Project', 'welcome_main-import_page_show');
         $importBtn->onClicked = function($sender) {
-            $this->core->mvc->controller->welcome_main->import_project_show();
+//            $this->core->mvc->controller->welcome_main->import_project_show();
         };
 //        $importBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
         /** Создаем кнопку основного меню для открытия окна настроек приложения */
         $settingBtn = new MenuBtn($menu, $this->core->icon->font('fa-gears', '#999999', 16), 'Settings', 'settings_main-show');
         $settingBtn->onClicked = function($sender) {
-            $this->core->mvc->controller->settings_main->show();
+//            $this->core->mvc->controller->settings_main->show();
         };
 //        $settingBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 

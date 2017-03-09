@@ -1,10 +1,12 @@
 QPushButton {
     border: none;
     background: transparent;
-    color: #c4c4c4;
     font-size: 16px;
 }
-QPushButton[enabled="false"] {
+QPushButton[enabled="true"] QLabel {
+    color: #c4c4c4;
+}
+QPushButton[enabled="false"] QLabel {
     color: #949494;
 }
 QPushButton QLabel#Icon {

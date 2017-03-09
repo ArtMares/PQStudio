@@ -119,7 +119,7 @@ class PQStudio extends QFrame {
 
     private function initConfiguration() {
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
-        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('projects-path', $this->core->APP_PATH.'Projects/'), $this->core->WIN);
+        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('projects-path', $this->core->APP_PATH.'Projects'), $this->core->WIN);
     }
 
     private function changeLang($lang, $accept = false) {
@@ -271,6 +271,7 @@ class PQStudio extends QFrame {
     public function completed() {
         sleep(2);
         $args = $this->core->args();
+//        var_dump($args);
         if(count($args) === 1) {
             if(!$this->core->var->is_null($this->core->widgets->get('Components/Widgets/Welcome'))) $this->core->widgets->get('Components/Widgets/Welcome')->show();
         }

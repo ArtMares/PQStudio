@@ -37,8 +37,12 @@ class Create extends \QFrame implements WidgetsInterface {
         $this->ui['name']->onValidate(function($sender, $text) {
             $result = $this->checkProject($text);
 //            if($result === false) $sender->setToolTip(tr('Project directory already exists'));
+//            if($result === true) $this->ui['appName']->text = $text;
             return $result;
         });
+        $this->ui['name']->onBlur = function($sender) {
+            $this->ui['appName']->text = $this->ui['name']->text;
+        };
 //        $this->name->onTextChanged = function($sender, $name) {
 //            echo $name.PHP_EOL;
 //        };
@@ -59,8 +63,7 @@ class Create extends \QFrame implements WidgetsInterface {
             $this->setProjectsPath($this->ui['path']);
         };
 
-        $this->ui['defaultPath'] = new CheckBox($this, tr('Directory for all projects by default'), false);
-        $this->ui['defaultPath']->enabled = ($this->core->storage->defaultProjectsPath !== $this->core->preparePath($this->core->APP_PATH.'Projects/', $this->core->WIN) ? true : false);
+        $this->ui['defaultPath'] = new CheckBox($this, tr('Directory for all projects by default'), true);
         $this->ui['defaultPath']->onClicked = function($sender) {
             $this->setDefaultProjectsPath($sender, $this->ui['path']);
         };
@@ -171,8 +174,7 @@ class Create extends \QFrame implements WidgetsInterface {
         $path = $sender->text;
         $dir = \QFileDialog::getExistingDirectory($this, tr('Select directory'), $this->core->preparePath($path));
         if(!empty($dir)) {
-            $dir .= '/';
-            $this->ui['defaultPath']->enabled = ($dir !== $this->core->storage->defaultProjectsPath && $dir !== $this->core->APP_PATH.'Projects/' ? true : false);
+            if($this->ui['defaultPath']->checked === true) $this->ui['defaultPath']->checked = false;
             $this->ui['path']->text = $this->core->preparePath($dir, $this->core->WIN);
         }
     }
@@ -189,7 +191,7 @@ class Create extends \QFrame implements WidgetsInterface {
     
     private function checkProject($name) {
         echo $this->ui['path']->text.$name.PHP_EOL;
-        if(!$this->core->dir->exists($this->ui['path']->text.$name)) {
+        if(!$this->core->dir->exists($this->core->preparePath($this->ui['path']->text.'/'.$name))) {
             return true;
         }
         return false;

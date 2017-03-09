@@ -25,6 +25,8 @@ class CheckBox extends IconBtn {
 
         /** Задаем возможность использовать кнопку как checkbox */
         $this->checkable = true;
+        
+        $this->checked = $check;
 
         /** Залаем стиль оформления */
         Core::getInstance()->style->set($this, 'CheckBox');

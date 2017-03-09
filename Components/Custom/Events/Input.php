@@ -21,10 +21,15 @@ class Input extends EventCtrl {
 
     public function eventFilter($sender, $event) {
         var_dump($event->type());
-        $eventObject = get_class($event);
-        if($eventObject === 'QFocusEvent') {
-            if($event->gotFocus() && in_array('focus()', $sender->signals)) $sender->emit('focus()', []);
-            if($event->lostFocus() && in_array('blur()', $sender->signals)) $sender->emit('blur()', []);
+        switch($event->type()) {
+            case \QEvent::FocusIn:
+                if(in_array('focus()', $sender->signals)) $sender->emit('focus()', []);
+                break;
+            case \QEvent::FocusOut:
+                if(in_array('blur()', $sender->signals)) {
+                    $sender->emit('blur()', []);
+                }
+                break;
         }
     }
 
