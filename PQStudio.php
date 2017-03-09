@@ -20,8 +20,6 @@ $title = sprintf('%1$s %2$s [build: %3$s]',
 
 $core->widgets->setDefaultTitle($title);
 
-define('PQSTUDIO_TITLE', $title);
-
 class PQStudio extends QFrame {
 
     use \PQ\QtObject;
@@ -309,5 +307,4 @@ class PQStudio extends QFrame {
 //        $this->btn['terminal']->plainText = $sender->readAllStandardOutput();
 //    }
 }
-
-return $core->exec(new PQStudio());
+return $core->exec('PQStudio');

@@ -171,7 +171,6 @@ class Core {
             self::$APP->descructor = new Destructor(self::$APP);
             connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->descructor, 'onDestruct()');
         }
-//        echo 'return Core'.PHP_EOL;
         return self::$APP;
     }
 

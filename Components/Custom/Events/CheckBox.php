@@ -17,6 +17,7 @@ class CheckBox extends EventCtrl {
             echo __CLASS__;
             echo get_class($event);
             var_dump($event->type());
+            return false;
         };
         return self::$eventFilter;
     }
