@@ -50,7 +50,7 @@ class Config extends Component {
      * @param string $scope
      * @param bool $orgName
      * @param bool $appName
-     * @return Config\Manager
+     * @return Config\Native
      */
     public function &native($scope = 'user', $orgName = false, $appName = false) {
         $result = $this->_load('native', $scope, $orgName, $appName);
@@ -62,7 +62,7 @@ class Config extends Component {
      * @param string $scope
      * @param bool $orgName
      * @param bool $appName
-     * @return Config\Manager
+     * @return Config\Ini
      */
     public function &ini($scope = 'user', $orgName = false, $appName = false) {
         $result = $this->_load('ini', $scope, $orgName, $appName);
@@ -87,7 +87,7 @@ class Config extends Component {
      * @param $scope
      * @param $orgName
      * @param $appName
-     * @return Config\Manager
+     * @return mixed
      */
     private function _load($type, $scope, $orgName, $appName) {
         $tmp = strtolower($scope);

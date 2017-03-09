@@ -4,7 +4,10 @@ QPushButton {
     border-bottom-left-radius: 3px;
     background: transparent;
 }
-QLabel {
+QPushButton QLabel:hover {
+    color: #ff0000;
+}
+QPushButton QLabel {
     color: #c4c4c4;
     font-size: 16px;
 }

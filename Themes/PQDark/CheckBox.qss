@@ -1,14 +1,12 @@
 QPushButton {
     border: none;
     background: transparent;
-}
-QPushButton:hover {
-    background: transparent;
-}
-QLabel {
     color: #c4c4c4;
     font-size: 16px;
 }
-QLabel#Icon {
+QPushButton[enabled="false"] {
+    color: #949494;
+}
+QPushButton QLabel#Icon {
     margin-top: 5px;
 }

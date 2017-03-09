@@ -9,8 +9,6 @@ use PQ\Core;
 
 class InputValidate extends Input {
 
-    protected $qss;
-
     protected $onValidate;
 
     public function __construct($parent) {
@@ -19,10 +17,8 @@ class InputValidate extends Input {
 //        $this->tooltip = new ErrorToolTip($this);
         /** Задаем свойсво которое указывает валидно поле или нет */
         $this->setProperty('invalid', false);
-        /** Запоминаем стиль */
-        $this->qss = Core::getInstance()->style->InputValidate;
         /** Задаем стиль */
-        $this->styleSheet = $this->qss;
+        $this->styleSheet = Core::getInstance()->style->Input . Core::getInstance()->style->InputValidate;
         /** Задаем обработку по событию onTextChange */
         $this->onTextChanged = function($sender, $value) {
             $this->validate($value);
@@ -46,7 +42,7 @@ class InputValidate extends Input {
             } else {
                 $this->setProperty('invalid', false);
             }
-            $this->styleSheet = $this->qss;
+            $this->styleSheet = $this->styleSheet();
         }
     }
 }

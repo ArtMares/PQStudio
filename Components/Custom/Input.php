@@ -15,9 +15,9 @@ class Input extends \QLineEdit {
         'blur()'
     ];
     
-//    protected $eventFilter;
+    protected $eventFilter;
     
-//    protected $tooltip;
+    protected $tooltip;
 
     public function __construct($parent) {
         parent::__construct($parent);
@@ -25,6 +25,8 @@ class Input extends \QLineEdit {
         $this->styleSheet = Core::getInstance()->style->Input;
 
 //        $this->eventFilter = new Events\Input($this);
+//
+//        $this->tooltip = new ToolTip($this);
     }
     
 //    public function setToolTip($str) {

@@ -175,6 +175,26 @@ class Core {
         return self::$APP;
     }
 
+    static public function preparePath($path, $toWin = false) {
+        if(self::$APP !== false) {
+            if ($toWin && self::$APP->WIN) {
+                $search = '/';
+                $needle = '\\\\';
+                $replace = '\\';
+            } else {
+                $search = '\\';
+                $needle = '//';
+                $replace = '/';
+            }
+            $path = str_replace($search, $replace, $path);
+            // remove double slashes
+            while (strpos($path, $needle) !== false) {
+                $path = str_replace($needle, $replace, $path);
+            }
+        }
+        return $path;
+    }
+
     private function load_component($name = false, $alias = '') {
         if(!$name) return false;
         $file = 'Component/'.$name.'.php';

@@ -65,6 +65,11 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Custom Elements',
+            'class' => 'Components\\Custom\\Events\\CheckBox',
+            'init'  => false
+        ],
+        [
+            'title' => 'Custom Elements',
             'class' => 'Components\\Custom\\CheckBox',
             'init'  => false
         ],
@@ -116,14 +121,14 @@ class PQStudio extends QFrame {
 
     private function initConfiguration() {
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
-        $this->core->storage->defaultProjectPath = $this->core->config->ini()->get('project_path', $this->core->APP_PATH.'Projects/');
+        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('projects-path', $this->core->APP_PATH.'Projects/'), $this->core->WIN);
     }
 
     private function changeLang($lang, $accept = false) {
         if($lang !== 'en') {
             if($accept === true) set_tr_lang($lang, 'languages');
-            $this->core->config->ini()->set('language', $lang);
         }
+        $this->core->config->ini()->set('language', $lang);
     }
 
     public function initComponents() {
