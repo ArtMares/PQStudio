@@ -11,41 +11,41 @@ use Components\Custom\Events;
 class Input extends \QLineEdit {
 
     public $signals = [
-        'focus()',
-        'blur()'
+        'focused()',
+        'blured()'
     ];
     
-    protected $eventFilter;
-    
-    protected $tooltip;
-    
     protected $onBlur = [];
+
+    protected $onFocus = [];
 
     public function __construct($parent) {
         parent::__construct($parent);
 
-        $this->styleSheet = Core::getInstance()->style->Input;
+        Core::getInstance()->style->set($this, 'Input');
 
         $this->eventFilter = new Events\Input($this);
-        
-        $this->connect(SIGNAL('blur()'), $this, SLOT('blur()'));
-//
-//        $this->tooltip = new ToolTip($this);
+    }
+
+    public function onBlured(callable $callback) {
+        $this->onBlur[] = $callback;
+    }
+
+    public function onFocused(callable $callback) {
+        $this->onFocus[] = $callback;
     }
     
-    public function blur($sender) {
-        
-    }
-    
-    public function __set($name, $value) {
-        if($name === 'onBlur') {
-            $this->onBlur[] = $value;
-        } else {
-            parent::__set($name, $value);
+    public function blur() {
+        foreach($this->onBlur as $blur) {
+            if(is_callable($blur)) call_user_func_array($blur, [$this]);
         }
+        $this->emit('focused()', []);
     }
-    
-//    public function setToolTip($str) {
-//        $this->tooltip->message($str);
-//    }
+
+    public function focus() {
+        foreach($this->onFocus as $focus) {
+            if(is_callable($focus)) call_user_func_array($focus, [$this]);
+        }
+        $this->emit('blured()', []);
+    }
 }

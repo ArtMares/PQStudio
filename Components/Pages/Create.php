@@ -27,6 +27,8 @@ class Create extends \QFrame implements WidgetsInterface {
         /** Задаем имя объекту */
         $this->objectName = 'CreatePage';
 
+        $this->core->style->set($this, 'CreatePage');
+
         /** Создаем QLabel для названия поля ввода */
         $labelName = new \QLabel($this);
         $labelName->text = tr('Project Name') . ':';
@@ -34,18 +36,17 @@ class Create extends \QFrame implements WidgetsInterface {
         /** Создаем поле ввода для Навзвания проекта */
         $this->ui['name'] = new InputValidate($this);
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
+        /** Задаем функция для проверки валидности поля */
         $this->ui['name']->onValidate(function($sender, $text) {
-            $result = $this->checkProject($text);
-//            if($result === false) $sender->setToolTip(tr('Project directory already exists'));
-//            if($result === true) $this->ui['appName']->text = $text;
-            return $result;
+            if(preg_match('/[0-9a-zA-Z\-\.\_ ]+/', $text)) {
+                return $this->checkProject($text);
+            }
+            return false;
         });
-        $this->ui['name']->onBlur = function($sender) {
-            $this->ui['appName']->text = $this->ui['name']->text;
-        };
-//        $this->name->onTextChanged = function($sender, $name) {
-//            echo $name.PHP_EOL;
-//        };
+        /** Задаем функцию для кастомного события onBlur */
+        $this->ui['name']->onBlured(function($sender) {
+            if($this->core->variant->get($this->ui['name']->property('invalid')) === false) $this->ui['appName']->text = $sender->text;
+        });
 
         /** Создаем QLabel для названия поля ввода */
         $labelPath = new \QLabel($this);
@@ -54,7 +55,7 @@ class Create extends \QFrame implements WidgetsInterface {
         /** Создаем поле ввода для директории проекта */
         $this->ui['path'] = new Input($this);
         $this->ui['path']->text = $this->core->storage->defaultProjectsPath;
-        $this->ui['path']->setPlaceholderText(tr('Enter path to Project') . '...');
+        $this->ui['path']->setPlaceholderText(tr('Select directory for Project') . '...');
         $this->ui['path']->readOnly = true;
 
         $this->ui['ViewBtn'] = new Btn($this);
@@ -64,6 +65,7 @@ class Create extends \QFrame implements WidgetsInterface {
         };
 
         $this->ui['defaultPath'] = new CheckBox($this, tr('Directory for all projects by default'), true);
+        $this->ui['defaultPath']->enabled = false;
         $this->ui['defaultPath']->onClicked = function($sender) {
             $this->setDefaultProjectsPath($sender, $this->ui['path']);
         };
@@ -99,9 +101,9 @@ class Create extends \QFrame implements WidgetsInterface {
             $this->core->widgets->get('Components/Widgets/Welcome')->Back();
         };
 
-        $this->ui['CreateBtn'] = new NextBtn($this, tr('Create'));
-        $this->ui['CreateBtn']->onClicked = function($sender) {
-            $this->controller->createProject($this->ProjectName, $this->Message);
+        $this->ui['NextBtn'] = new NextBtn($this, tr('Next'));
+        $this->ui['NextBtn']->onClicked = function($sender) {
+//            $this->controller->createProject($this->ProjectName, $this->Message);
         };
 
         /** Создаем слой */
@@ -166,20 +168,23 @@ class Create extends \QFrame implements WidgetsInterface {
         $row++;
         $this->layout()->addWidget($this->ui['BackBtn'], $row, 0);
         $this->layout()->setAlignment($this->ui['BackBtn'], \Qt::AlignBottom);
-        $this->layout()->addWidget($this->ui['CreateBtn'], $row, 3);
-        $this->layout()->setAlignment($this->ui['CreateBtn'], \Qt::AlignRight | \Qt::AlignBottom);
+        $this->layout()->addWidget($this->ui['NextBtn'], $row, 3);
+        $this->layout()->setAlignment($this->ui['NextBtn'], \Qt::AlignRight | \Qt::AlignBottom);
     }
 
     private function setProjectsPath($sender) {
         $path = $sender->text;
         $dir = \QFileDialog::getExistingDirectory($this, tr('Select directory'), $this->core->preparePath($path));
         if(!empty($dir)) {
-            if($this->ui['defaultPath']->checked === true) $this->ui['defaultPath']->checked = false;
+            if($this->ui['defaultPath']->checked === true) {
+                $this->ui['defaultPath']->checked = false;
+                $this->ui['defaultPath']->enabled = true;
+            }
             $this->ui['path']->text = $this->core->preparePath($dir, $this->core->WIN);
         }
     }
 
-    public function setDefaultProjectsPath($sender, $path) {
+    private function setDefaultProjectsPath($sender, $path) {
         if($sender->checked) {
             $path = $path->text;
             if($this->core->storage->defaultProjectsPath !== $path) {
@@ -190,7 +195,6 @@ class Create extends \QFrame implements WidgetsInterface {
     }
     
     private function checkProject($name) {
-        echo $this->ui['path']->text.$name.PHP_EOL;
         if(!$this->core->dir->exists($this->core->preparePath($this->ui['path']->text.'/'.$name))) {
             return true;
         }

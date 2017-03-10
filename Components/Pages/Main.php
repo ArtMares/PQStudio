@@ -19,6 +19,8 @@ class Main extends \QFrame implements WidgetsInterface {
 
     public $general;
 
+    private $Animation;
+
     /** Инициализирует основные компоненты */
     public function initComponents() {
         /** Создаем слой */
@@ -33,6 +35,12 @@ class Main extends \QFrame implements WidgetsInterface {
         $this->initProjectsListArea();
         /** Инициализируем создание основной области */
         $this->initGeneralArea();
+
+//        $this->Animation = new \QPropertyAnimation($this, 'x');
+//        $this->Animation->duration = 100;
+//        $this->Animation->setEndValue($this->parentWidget()->width());
+
+//        $this->parentWidget()->connect(SIGNAL('currentChanged(int)'), $this->Animation, SLOT('start()'));
     }
 
     public function initProjectsListArea() {
@@ -72,7 +80,8 @@ class Main extends \QFrame implements WidgetsInterface {
         /** Создаем QLabel для логотипа */
         $labelLogo = new \QLabel($this->general);
         $labelLogo->setFixedSize(96, 100);
-        $pixmap = new \QIcon(':/img/logo_96x96.png');
+//        $pixmap = new \QIcon(':/img/logo_96x96.png');
+        $pixmap = new \QIcon($this->core->APP_PATH.'img/logo.svg');
         $labelLogo->setPixmap($pixmap->pixmap(96, 96));
         $labelLogo->objectName = 'AppLogo';
 
@@ -93,43 +102,28 @@ class Main extends \QFrame implements WidgetsInterface {
         $menu->setMaximumWidth(200);
         $menu->setLayout(new \QVBoxLayout());
         $menu->layout()->setSpacing(0);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::MouseButtonRelease);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::MouseButtonPress);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::Enter);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::Leave);
 
         /** Создаем кнопку основного меню для создания проекта */
-        $createBtn = new MenuBtn($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), 'Create Project', 'CreateProjectBtn');
+        $createBtn = new MenuBtn($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), tr('Create Project'), 'CreateProjectBtn');
         $createBtn->onClicked = function($sender) {
             $this->core->widgets->get('Components/Widgets/Welcome')->setPage('Components/Pages/Create');
         };
-//        $createBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
-//        $createBtn = new QToolButton($this);
-//        $createBtn->text = $this->pqcore->icon->font('fa-asterisk').' '.tr('Create Project');
-//        $createBtn->toolButtonStyle = Qt::ToolButtonTextOnly;
-//        $createBtn->setCursor(new QCursor(Qt::PointingHandCursor));
 
         /** Создаем кнопку основного меню для открытия проекта */
-        $openBtn = new MenuBtn($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), 'Open Project File', 'welcome_main-open_project');
+        $openBtn = new MenuBtn($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), tr('Open Project File'), 'welcome_main-open_project');
         $openBtn->onClicked = function($sender) {
-//            $this->core->mvc->controller->welcome_main->open_project_directory();
         };
-//        $openBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
 
 //        $importBtn = new MainMenuBtn($this->Menu, Icon::get('fa-sign-in', '#c28a46', 16), tr('Import PQBuilder Project'));
-        $importBtn = new MenuBtn($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), 'Import PQBuilder Project', 'welcome_main-import_page_show');
+        $importBtn = new MenuBtn($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), tr('Import Project'), 'welcome_main-import_page_show');
         $importBtn->onClicked = function($sender) {
-//            $this->core->mvc->controller->welcome_main->import_project_show();
         };
-//        $importBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
         /** Создаем кнопку основного меню для открытия окна настроек приложения */
-        $settingBtn = new MenuBtn($menu, $this->core->icon->font('fa-gears', '#999999', 16), 'Settings', 'settings_main-show');
+        $settingBtn = new MenuBtn($menu, $this->core->icon->font('fa-gears', '#999999', 16), tr('Settings'), 'settings_main-show');
         $settingBtn->onClicked = function($sender) {
-//            $this->core->mvc->controller->settings_main->show();
         };
-//        $settingBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
         /** Добавляем кнопки меню в слой QFrame основного меню */
         $menu->layout()->addWidget($createBtn);
@@ -156,5 +150,11 @@ class Main extends \QFrame implements WidgetsInterface {
         $this->general->layout()->addWidget($spacer);
 
         $this->layout()->addWidget($this->general);
+    }
+
+    public function show() {
+        parent::show();
+//        $this->Animation->start();
+        $this->move(40, 0);
     }
 }

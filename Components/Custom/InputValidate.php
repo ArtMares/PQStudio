@@ -42,12 +42,6 @@ class InputValidate extends Input {
     public function onValidate(callable $callback) {
         $this->onValidate = $callback;
     }
-    
-    public function blur($sender) {
-        foreach($this->onBlur as $blur) {
-            if(is_callable($blur)) call_user_func_array($blur, [$this]);
-        }
-    }
 
     private function validate($value) {
         if(is_callable($this->onValidate)) {

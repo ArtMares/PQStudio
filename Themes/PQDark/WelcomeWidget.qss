@@ -17,28 +17,6 @@ QFrame#MainPage QFrame#Projects {
 QFrame#MainPage QFrame#General {
     background: #46474b;
 }
-
-QFrame#CreatePage {
-    background: #46474b;
-}
-QFrame#CreatePage QLabel {
-    color: #c4c4c4;
-}
-QFrame#CreatePage QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5c5c5c, stop: 1 #515151);
-    color: #c4c4c4;
-    border: 1px solid #393939;
-    border-radius: 3px;
-    height: 26px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-QFrame#CreatePage QPushButton:hover {
-    background: #8a3b16;
-}
-QFrame#CreatePage QPushButton:focus {
-    outline: none;
-}
 QFrame#ImportPage {
     background: #46474b;
 }

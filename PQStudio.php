@@ -11,12 +11,14 @@ require_once 'PQ/Core.php';
 $core = \PQ\Core::getInstance();
 
 define('RELEASE_VERSION', 'testing');
-define('BUILD_VERSION', '100');
+define('BUILD_VERSION', (string)104);
 
 $title = sprintf('%1$s %2$s [build: %3$s]',
     $core->applicationName(),
     $core->applicationVersion(),
     BUILD_VERSION);
+
+var_dump(QSysInfo::productType());
 
 $core->widgets->setDefaultTitle($title);
 
@@ -32,82 +34,87 @@ class PQStudio extends QFrame {
 
     private $components = [
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\EventCtrl',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\Btn',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\IconBtn',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\MenuBtn',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\BackBtn',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\NextBtn',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\Events\\CheckBox',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\CheckBox',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\Events\\Input',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\Input',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\InputValidate',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\ToolTip',
             'init'  => false
         ],
         [
-            'title' => 'Custom Elements',
+            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\ErrorToolTip',
             'init'  => false
         ],
         [
-            'title' => 'Windows',
+            'title' => 'Building windows',
             'class' => 'Components\\Pages\\Main',
             'init'  => false
         ],
         [
-            'title' => 'Windows',
+            'title' => 'Building windows',
             'class' => 'Components\\Pages\\Create',
             'init'  => false
         ],
         [
-            'title' => 'Windows',
+            'title' => 'Building windows',
+            'class' => 'Components\\Pages\\Import',
+            'init'  => false
+        ],
+        [
+            'title' => 'Building windows',
             'class' => 'Components\\Widgets\\Welcome',
             'init'  => true
         ]
@@ -119,7 +126,7 @@ class PQStudio extends QFrame {
 
     private function initConfiguration() {
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
-        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('projects-path', $this->core->APP_PATH.'Projects'), $this->core->WIN);
+        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('defaultProjectsPath', $this->core->APP_PATH.'Projects'), $this->core->WIN);
     }
 
     private function changeLang($lang, $accept = false) {
@@ -132,15 +139,21 @@ class PQStudio extends QFrame {
     public function initComponents() {
         /** Инициализируем загрузку всех основных конфигураций приложени */
         $this->initConfiguration();
-        
+
+        /** Задаем тему оформления */
+        $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
+
         /** Проверяем запущен ли уже экземпляр приложения */
         $single = $this->core->single->check($this->core->applicationName());
 
         /** Если запущен то закрываем текущее приложение */
-        if($single) $this->core->quit();
-
-        /** Задаем тему оформления */
-        $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
+        if($single) {
+            $msgBox = new QMessageBox();
+            $this->core->style->set($msgBox, 'MessageBox');
+            $msgBox->setText(tr('The application is already running'));
+            $ret = $msgBox->exec();
+            if($ret === QMessageBox::Ok) $this->core->quit();
+        }
 
         /** Получаем колличество компонетов приложения которые необходимо подключить */
         $this->count = count($this->components);
@@ -160,23 +173,20 @@ class PQStudio extends QFrame {
         $this->layout()->setSpacing(0);
 
         /** Задаем максимальную шируну для QFrame */
-        $imgWidth = (isset($config['imageWidth']) && $config['imageWidth'] > 400 ? $config['imageWidth'] : 400);
-        /** Задаем макстмальную высоту для QFrame */
-        $imgHeight = (isset($config['imageHeight']) ? $config['imageHeight'] + 20 : 20);
+        $imgWidth = 400;
+        /** Задаем максимальную высоту для QFrame */
+        $imgHeight = 430;
 
-        /** Проверяем был ли передан путь для фонового изображения */
-        if(isset($config['imagePath']) && !empty($config['imagePath'])) {
-            /** Создаем QLabel в который вставим фоновое изображение */
-            $image = new QLabel($this);
-            /** Загружаем изображение */
-            $pixmap = new QIcon($config['imagePath']);
-            /** Добавляем изображение в QLabel с переданными шириной и высотой */
-            $image->setPixmap($pixmap->pixmap($imgWidth, $imgHeight));
-            /** Добавялем QLabel с изобаржением на слой */
-            $this->layout()->addWidget($image);
-            /** Выравниваем QLabel по центру */
-            $this->layout()->setAlignment($image, Qt::AlignCenter);
-        }
+//        /** Создаем QLabel в который вставим фоновое изображение */
+//        $image = new QLabel($this);
+//        /** Загружаем изображение */
+//        $pixmap = new QIcon($this->core->APP_PATH.'img/logo.svg');
+//        /** Добавляем изображение в QLabel с переданными шириной и высотой */
+//        $image->setPixmap($pixmap->pixmap($imgWidth, $imgHeight - 30));
+//        /** Добавялем QLabel с изобаржением на слой */
+//        $this->layout()->addWidget($image);
+//        /** Выравниваем QLabel по центру */
+//        $this->layout()->setAlignment($image, Qt::AlignCenter);
 
         /** Создаем QLabel для вывода сообщений о текущем состоянии загрузчика */
         $this->message = new QLabel($this);
@@ -194,47 +204,38 @@ class PQStudio extends QFrame {
         $this->setMaximumWidth($imgWidth);
         $this->setMinimumWidth($imgWidth);
         /** Делаем ресайз QFrame */
-        $this->resize($imgWidth, $imgHeight);
+        $this->resize($imgWidth, $imgHeight - 400);
     }
 
     public function show() {
         if(!$this->hidden) {
-            $this->message->text = tr('Loading components').'...';
-            /** Получаем стиль для окна */
-            $style = $this->core->style->Bootstrap;
-            /** Проверяем существует ли стиль в теме оформления */
-            if(!empty($style)) {
-                /** Если стиль существует то задаем стиль темы оформления */
-                $this->styleSheet = $style;
-            } else {
-                /** В противном случае задаем стиль по умолчанию */
-                $this->styleSheet = '
-                    QFrame {
-                        font-family: "Akrobat";
-                        font-size: 16px;
-                    }
-                    QLabel {
-                        color: #323232;
-                    }
-                    QLabel#Message {
-                        padding-left: 5px;
-                        background: #cfcfcf;
-                        border-top-left-radius: 6px;
-                        border-top-right-radius: 6px;
-                    }
-                    QProgressBar {
-                        background: #cfcfcf;
-                        height: 10px;
-                        border-bottom-left-radius: 6px;
-                        border-bottom-right-radius: 6px;
-                    }
-                    QProgressBar::chunk {
-                        background-color: #276ccc;
-                        border-bottom-left-radius: 6px;
-                        border-bottom-right-radius: 6px;
-                    }
-                ';
-            }
+            $this->message->text = tr('Wake up').'...';
+
+            /** В противном случае задаем стиль по умолчанию */
+            $this->styleSheet = '
+                QFrame {
+                    font-family: "Akrobat";
+                    font-size: 16px;
+                }
+                QLabel#Message {
+                    color: #c4c4c4;
+                    padding-left: 5px;
+                    background: #46474b;
+                    border-top-left-radius: 6px;
+                    border-top-right-radius: 6px;
+                }
+                QProgressBar {
+                    background: #46474b;
+                    height: 10px;
+                    border-bottom-left-radius: 6px;
+                    border-bottom-right-radius: 6px;
+                }
+                QProgressBar::chunk {
+                    background-color: #f16327;
+                    border-bottom-left-radius: 6px;
+                    border-bottom-right-radius: 6px;
+                }
+            ';
             parent::show();
             $this->core->QApp->processEvents();
             sleep(1);
@@ -248,7 +249,7 @@ class PQStudio extends QFrame {
     public function load() {
         $data = $this->components[$this->now];
         $this->now++;
-        $this->message->text = tr('Loading component') . " : " . $data['title'];
+        $this->message->text = tr($data['title']) . '...';
         $file = ':/' . $data['class'] . '.php';
         $this->core->log->info('Loading component "' . $data['class'] . '"', 'App');
         if(!$this->core->file->exists($file)) {
@@ -270,11 +271,7 @@ class PQStudio extends QFrame {
 
     public function completed() {
         sleep(2);
-        $args = $this->core->args();
-//        var_dump($args);
-        if(count($args) === 1) {
-            if(!$this->core->var->is_null($this->core->widgets->get('Components/Widgets/Welcome'))) $this->core->widgets->get('Components/Widgets/Welcome')->show();
-        }
+        $this->core->widgets->get('Components/Widgets/Welcome')->show();
         $this->close();
     }
 

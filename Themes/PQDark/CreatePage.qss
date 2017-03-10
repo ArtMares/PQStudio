@@ -1,26 +1,21 @@
-QMessageBox {
+QFrame#CreatePage {
     background: #46474b;
-    font-size: 16px;
-    font-family: "Akrobat";
 }
-
-QMessageBox QLabel {
+QFrame#CreatePage QLabel {
     color: #c4c4c4;
-    font-size: 16px;
 }
-
-QMessageBox QPushButton {
+QFrame#CreatePage QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5c5c5c, stop: 1 #515151);
     color: #c4c4c4;
-    font-family: "Akrobat";
-    font-size: 16px;
     border: 1px solid #393939;
     border-radius: 3px;
-    min-width: 50px;
     height: 26px;
     padding-left: 10px;
     padding-right: 10px;
 }
-QMessageBox QPushButton:hover {
+QFrame#CreatePage QPushButton:hover {
     background: #8a3b16;
+}
+QFrame#CreatePage QPushButton:focus {
+    outline: none;
 }

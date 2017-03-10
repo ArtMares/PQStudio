@@ -5,14 +5,13 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Custom\Events;
-use Components\Custom\EventCtrl;
 
-class CheckBox extends EventCtrl {
+class CheckBox extends \PQEventFilter {
 
     public function __construct($parent = null) {
         parent::__construct($parent);
-        self::$eventFilter->addEventType(\QEvent::EnabledChange);
-        $parent->installEventFilter(self::$eventFilter);
+        $this->addEventType(\QEvent::EnabledChange);
+        if(!is_null($parent) && is_object($parent)) $parent->installEventFilter($this);
         $this->onEvent = function($sender, $event) {
             switch($event->type()) {
                 case \QEvent::EnabledChange:
@@ -20,7 +19,6 @@ class CheckBox extends EventCtrl {
                     break;
             }
         };
-        return self::$eventFilter;
     }
 
 //    public function eventFilter($sender, $event){

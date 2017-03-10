@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<pqenginetr lang="Russia">
+<pqenginetr lang="ru">
     <unit>
-        <source>Loading components</source>
-        <tr>Загрузка компонентов</tr>
+        <source>The application is already running</source>
+        <tr>Приложение уже запущено</tr>
     </unit>
     <unit>
-        <source>Loading component</source>
-        <tr>Загрзука компонента</tr>
+        <source>Wake up</source>
+        <tr>Просыпаемся</tr>
+    </unit>
+    <unit>
+        <source>Collecting stones</source>
+        <tr>Собираем камни</tr>
+    </unit>
+    <unit>
+        <source>Building windows</source>
+        <tr>Строим окошки</tr>
     </unit>
     <unit>
         <source>Version</source>
@@ -29,6 +37,10 @@
         <tr>Назад</tr>
     </unit>
     <unit>
+        <source>Next</source>
+        <tr>Далее</tr>
+    </unit>
+    <unit>
         <source>View</source>
         <tr>Обзор</tr>
     </unit>
@@ -42,10 +54,50 @@
     </unit>
     <unit>
         <source>Project Path</source>
-        <tr>Путь к проекту</tr>
+        <tr>Каталог проекта</tr>
+    </unit>
+    <unit>
+        <source>Application Name</source>
+        <tr>Название приложения</tr>
+    </unit>
+    <unit>
+        <source>Application Version</source>
+        <tr>Версия приложения</tr>
+    </unit>
+    <unit>
+        <source>Organization Name</source>
+        <tr>Организация</tr>
+    </unit>
+    <unit>
+        <source>Domain</source>
+        <tr>Домен</tr>
     </unit>
     <unit>
         <source>Directory for all projects by default</source>
         <tr>Каталог для всех проектов по умолчанию</tr>
+    </unit>
+    <unit>
+        <source>Enter Project Name</source>
+        <tr>Введите название проекта</tr>
+    </unit>
+    <unit>
+        <source>Select directory for Project</source>
+        <tr>Выберите каталог для проекта</tr>
+    </unit>
+    <unit>
+        <source>Enter Application Name</source>
+        <tr>Введите название приложения</tr>
+    </unit>
+    <unit>
+        <source>Enter Version</source>
+        <tr>Введите версию приложения</tr>
+    </unit>
+    <unit>
+        <source>Enter Organization Name</source>
+        <tr>Введите название организации</tr>
+    </unit>
+    <unit>
+        <source>Enter Domain</source>
+        <tr>Введите доменное имя</tr>
     </unit>
 </pqenginetr>

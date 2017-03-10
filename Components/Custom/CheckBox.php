@@ -15,6 +15,9 @@ class CheckBox extends IconBtn {
     protected $iconSize = 18;
 
     public function __construct($parent, $text, $check = false) {
+        /** Конвертируем аргумент в булев тип */
+        $check = (bool)$check;
+
         /** Задаем иконку в зависимости от аргумента $check */
         $this->icon = Core::getInstance()->icon->font(($check ? 'fa-check-square-o' : 'fa-square-o'), $this->iconSize);
 
@@ -25,7 +28,8 @@ class CheckBox extends IconBtn {
 
         /** Задаем возможность использовать кнопку как checkbox */
         $this->checkable = true;
-        
+
+        /** Задаем свойство checked равное рагументу $check */
         $this->checked = $check;
 
         /** Залаем стиль оформления */
