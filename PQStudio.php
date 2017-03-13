@@ -11,7 +11,7 @@ require_once 'PQ/Core.php';
 $core = \PQ\Core::getInstance();
 
 define('RELEASE_VERSION', 'testing');
-define('BUILD_VERSION', (string)105);
+define('BUILD_VERSION', (string)107);
 
 $title = sprintf('%1$s %2$s [build: %3$s]',
     $core->applicationName(),
@@ -25,13 +25,7 @@ $core->widgets->setDefaultTitle($title);
 class PQStudio extends QFrame {
 
     use \PQ\QtObject;
-
-    private $progress;
-
-    private $message;
-
-    private $hidden = false;
-
+    
     private $components = [
         [
             'title' => 'Collecting stones',
@@ -99,6 +93,11 @@ class PQStudio extends QFrame {
             'init'  => false
         ],
         [
+            'title' => 'Collecting stones',
+            'class' => 'Components\\Custom\\Widget\\Slider',
+            'init'  => false
+        ],
+        [
             'title' => 'Building windows',
             'class' => 'Components\\Pages\\Main',
             'init'  => false
@@ -110,6 +109,11 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Building windows',
+            'class' => 'Components\\Pages\\Create\\Basic',
+            'init'  => false
+        ],
+        [
+            'title' => 'Building windows',
             'class' => 'Components\\Pages\\Import',
             'init'  => false
         ],
@@ -117,8 +121,14 @@ class PQStudio extends QFrame {
             'title' => 'Building windows',
             'class' => 'Components\\Widgets\\Welcome',
             'init'  => true
-        ]
+        ],
     ];
+    
+    private $progress;
+    
+    private $message;
+    
+    private $hidden = false;
 
     private $now = 0;
 
@@ -127,6 +137,7 @@ class PQStudio extends QFrame {
     private function initConfiguration() {
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
         $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('defaultProjectsPath', $this->core->APP_PATH.'Projects'), $this->core->WIN);
+        $this->loadAppTemplates();
     }
 
     private function changeLang($lang, $accept = false) {
@@ -173,20 +184,20 @@ class PQStudio extends QFrame {
         $this->layout()->setSpacing(0);
 
         /** Задаем максимальную шируну для QFrame */
-        $imgWidth = 400;
+        $Width = 400;
         /** Задаем максимальную высоту для QFrame */
-        $imgHeight = 430;
+        $Height = 230;
 
-//        /** Создаем QLabel в который вставим фоновое изображение */
-//        $image = new QLabel($this);
-//        /** Загружаем изображение */
-//        $pixmap = new QIcon($this->core->APP_PATH.'img/logo.svg');
-//        /** Добавляем изображение в QLabel с переданными шириной и высотой */
-//        $image->setPixmap($pixmap->pixmap($imgWidth, $imgHeight - 30));
-//        /** Добавялем QLabel с изобаржением на слой */
-//        $this->layout()->addWidget($image);
-//        /** Выравниваем QLabel по центру */
-//        $this->layout()->setAlignment($image, Qt::AlignCenter);
+        /** Создаем QLabel в который вставим фоновое изображение */
+        $image = new QLabel($this);
+        /** Загружаем изображение */
+        $pixmap = new QIcon($this->core->APP_PATH.'img/logo.svg');
+        /** Добавляем изображение в QLabel с переданными шириной и высотой */
+        $image->setPixmap($pixmap->pixmap($Width - 200, $Height - 30));
+        /** Добавялем QLabel с изобаржением на слой */
+        $this->layout()->addWidget($image);
+        /** Выравниваем QLabel по центру */
+        $this->layout()->setAlignment($image, Qt::AlignCenter);
 
         /** Создаем QLabel для вывода сообщений о текущем состоянии загрузчика */
         $this->message = new QLabel($this);
@@ -201,10 +212,10 @@ class PQStudio extends QFrame {
         $this->layout()->addWidget($this->progress);
 
         /** Устанавливаем максимальную и минимальную ширину QFrame */
-        $this->setMaximumWidth($imgWidth);
-        $this->setMinimumWidth($imgWidth);
+        $this->setMaximumWidth($Width);
+        $this->setMinimumWidth($Width);
         /** Делаем ресайз QFrame */
-        $this->resize($imgWidth, $imgHeight - 400);
+        $this->resize($Width, $Height);
     }
 
     public function show() {
@@ -272,6 +283,7 @@ class PQStudio extends QFrame {
     public function completed() {
         sleep(2);
         $this->core->widgets->get('Components/Widgets/Welcome')->show();
+//        $this->core->widgets->get('Components/Widgets/Pages')->show();
         $this->close();
     }
 
@@ -283,6 +295,20 @@ class PQStudio extends QFrame {
             $this->core->widgets->set(str_replace('\\', '/', $data['class']), new $class());
         }
         return true;
+    }
+    
+    private function loadAppTemplates() {
+        $path = $this->core->APP_PATH.'templates/';
+        if($this->core->dir->exists($path)) {
+            $result = $this->core->dir->ls($path, \PQ\Component\Dir::Dirs);
+            foreach($result as $dir) {
+                $file = $path.$dir.'/wizard.json';
+                if($this->core->file->exists($file)) {
+                    $data = json_decode($this->core->file->read($file), true);
+                    qDebug($data['trDisplayName']);
+                }
+            }
+        }
     }
 
 //    public function SocketConnect($sender) {

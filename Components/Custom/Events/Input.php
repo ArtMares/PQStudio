@@ -5,7 +5,6 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Custom\Events;
-
 class Input extends \PQEventFilter {
     
     protected $parent;

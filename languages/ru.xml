@@ -29,6 +29,10 @@
         <tr>Открыть Файл проекта</tr>
     </unit>
     <unit>
+        <source>Import Project</source>
+        <tr>Импорт проекта</tr>
+    </unit>
+    <unit>
         <source>Settings</source>
         <tr>Настройки</tr>
     </unit>

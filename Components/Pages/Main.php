@@ -25,14 +25,21 @@ class Main extends \QFrame implements WidgetsInterface {
     public function initComponents() {
         /** Создаем слой */
         $this->setLayout(new \QHBoxLayout());
+        
         /** Устанавливаем отступы от края в 0 */
         $this->layout()->setContentsMargins(0, 0, 0, 0);
+        
         /** Устанавливаем отступы между элементами на слое в 0 */
         $this->layout()->setSpacing(0);
+        
         /** Задаем имя для класса PQView_welcome_main_page */
         $this->objectName = 'MainPage';
+        
+        $this->core->style->set($this, 'MainPage');
+        
         /** Инициализируем создание области для списка проектов которые были созданы с IDE */
         $this->initProjectsListArea();
+        
         /** Инициализируем создание основной области */
         $this->initGeneralArea();
 
@@ -46,22 +53,30 @@ class Main extends \QFrame implements WidgetsInterface {
     public function initProjectsListArea() {
         /** Создаем QScrollArea для области проектов */
         $this->scrollArea = new \QScrollArea($this);
+        
         /** Задаем имя для QScrollArea */
         $this->scrollArea->objectName = 'ScrollProjects';
+        
         /** Запрещаем горизонтальное отображение скролла */
         $this->scrollArea->setHorizontalScrollBarPolicy(\Qt::ScrollBarAlwaysOff);
+        
         /** Создаем область для списка проектов */
         $this->projectsList = new \QFrame($this);
+        
         /** Задаем имя для QFrame */
         $this->projectsList->objectName = 'Projects';
+        
         /** Задаем минимальную и максимальную ширину области */
         $this->projectsList->setMinimumWidth(288);
         $this->projectsList->setMaximumWidth(300);
+        
         /** Создаем слой для области проектов */
         $this->projectsList->setLayout(new \QVBoxLayout());
+        
         /** Передаем область проектов в QScrollArea */
         $this->scrollArea->setWidget($this->projectsList);
-        /** Добавляем QScrollArea на основнйо слой */
+        
+        /** Добавляем QScrollArea на основной слой */
         $this->layout()->addWidget($this->scrollArea);
     }
 
@@ -80,7 +95,6 @@ class Main extends \QFrame implements WidgetsInterface {
         /** Создаем QLabel для логотипа */
         $labelLogo = new \QLabel($this->general);
         $labelLogo->setFixedSize(96, 100);
-//        $pixmap = new \QIcon(':/img/logo_96x96.png');
         $pixmap = new \QIcon($this->core->APP_PATH.'img/logo.svg');
         $labelLogo->setPixmap($pixmap->pixmap(96, 96));
         $labelLogo->objectName = 'AppLogo';
@@ -106,7 +120,7 @@ class Main extends \QFrame implements WidgetsInterface {
         /** Создаем кнопку основного меню для создания проекта */
         $createBtn = new MenuBtn($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), tr('Create Project'), 'CreateProjectBtn');
         $createBtn->onClicked = function($sender) {
-            $this->core->widgets->get('Components/Widgets/Welcome')->setPage('Components/Pages/Create');
+            $this->core->widgets->get('Components/Widgets/Welcome')->showPage('Components/Pages/Create');
         };
 
         /** Создаем кнопку основного меню для открытия проекта */
@@ -150,11 +164,5 @@ class Main extends \QFrame implements WidgetsInterface {
         $this->general->layout()->addWidget($spacer);
 
         $this->layout()->addWidget($this->general);
-    }
-
-    public function show() {
-        parent::show();
-//        $this->Animation->start();
-        $this->move(40, 0);
     }
 }
