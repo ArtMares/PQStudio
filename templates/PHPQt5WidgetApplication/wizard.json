@@ -1,0 +1,10 @@
+{
+    "id": "Z.PHPQt5WidgetApplication",
+    "name": "PHPQt5 Widget Application",
+    "description": "Creates a PHPQt5 application for the desktop. Includes a widget-based main window.",
+    "icon": "icon.png",
+    "files": [
+        "file.phpqt5",
+        "main.php"
+    ]
+}

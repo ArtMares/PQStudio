@@ -1,5 +1,6 @@
 QFrame#CreatePage {
     background: #46474b;
+    color: #c4c4c4;
 }
 QFrame#CreatePage QLabel {
     color: #c4c4c4;
@@ -17,5 +18,22 @@ QFrame#CreatePage QPushButton:hover {
     background: #8a3b16;
 }
 QFrame#CreatePage QPushButton:focus {
+    outline: none;
+}
+QFrame#CreatePage QListWidget {
+    background: #393939;
+    border: none;
+}
+QFrame#CreatePage QListWidget::item {
+    color: #c4c4c4;
+}
+QFrame#CreatePage QListWidget::item:hover {
+    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop : 0.0 #393939, stop : 0.5 #8a3b16, stop : 1.0 #393939);
+}
+QFrame#CreatePage QListWidget::item:selected {
+    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop : 0.0 #393939, stop : 0.5 #8a3b16, stop : 1.0 #393939);
+}
+QFrame#CreatePage QListWidget::item:focus {
+    border: none;
     outline: none;
 }

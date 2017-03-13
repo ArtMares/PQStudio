@@ -14,6 +14,8 @@ class Input extends \QLineEdit {
         'focused()',
         'blured()'
     ];
+
+    protected $eventFilter;
     
     protected $onBlur = [];
 
@@ -24,10 +26,21 @@ class Input extends \QLineEdit {
 
         Core::getInstance()->style->set($this, 'Input');
 
-        $this->eventFilter = new Events\Input($this);
+        $this->eventFilter = new \PQEventFilter($this);
+        $this->eventFilter->addEventType(\QEvent::FocusIn);
+        $this->eventFilter->addEventType(\QEvent::FocusOut);
+        $this->installEventFilter($this->eventFilter);
+        $this->eventFilter->onEvent = function($sender, $event) {
+            switch($event->type()) {
+                case \QEvent::FocusIn: $sender->focus();
+                    break;
+                case \QEvent::FocusOut: $sender->blur();
+                    break;
+            }
+        };
     }
 
-    public function onBlured(callable $callback) {
+    public function onBlurred(callable $callback) {
         $this->onBlur[] = $callback;
     }
 
@@ -36,13 +49,21 @@ class Input extends \QLineEdit {
     }
     
     public function blur() {
+        $this->slot_blur();
+    }
+
+    public function focus() {
+        $this->slot_focus();
+    }
+
+    protected function slot_blur() {
         foreach($this->onBlur as $blur) {
             if(is_callable($blur)) call_user_func_array($blur, [$this]);
         }
         $this->emit('focused()', []);
     }
 
-    public function focus() {
+    protected function slot_focus() {
         foreach($this->onFocus as $focus) {
             if(is_callable($focus)) call_user_func_array($focus, [$this]);
         }

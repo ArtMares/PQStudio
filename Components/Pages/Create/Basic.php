@@ -36,13 +36,13 @@ class Basic extends \QFrame implements WidgetsInterface {
             return false;
         });
         /** Задаем функцию для кастомного события onBlur */
-        $this->ui['name']->onBlured(function($sender) {
+        $this->ui['name']->onBlurred(function($sender) {
             if($this->core->variant->get($this->ui['name']->property('invalid')) === false) $this->ui['appName']->text = $sender->text;
         });
     
         /** Создаем QLabel для названия поля ввода */
         $labelPath = new \QLabel($this);
-        $labelPath->text = tr('Project Path') . ':';
+        $labelPath->text = tr('Create in') . ':';
     
         /** Создаем поле ввода для директории проекта */
         $this->ui['path'] = new Input($this);
@@ -95,7 +95,7 @@ class Basic extends \QFrame implements WidgetsInterface {
     
         $this->ui['NextBtn'] = new NextBtn($this, tr('Next'));
         $this->ui['NextBtn']->onClicked = function($sender) {
-//            $this->controller->createProject($this->ProjectName, $this->Message);
+            $this->core->widgets->get('Components/Pages/Create')->next();
         };
     
         /** Создаем слой */
@@ -162,5 +162,34 @@ class Basic extends \QFrame implements WidgetsInterface {
         $this->layout()->setAlignment($this->ui['BackBtn'], \Qt::AlignBottom);
         $this->layout()->addWidget($this->ui['NextBtn'], $row, 3);
         $this->layout()->setAlignment($this->ui['NextBtn'], \Qt::AlignRight | \Qt::AlignBottom);
+    }
+
+    private function setProjectsPath($sender) {
+        $path = $sender->text;
+        $dir = \QFileDialog::getExistingDirectory($this, tr('Select directory'), $this->core->preparePath($path));
+        if(!empty($dir)) {
+            if($this->ui['defaultPath']->checked === true) {
+                $this->ui['defaultPath']->checked = false;
+                $this->ui['defaultPath']->enabled = true;
+            }
+            $this->ui['path']->text = $this->core->preparePath($dir, $this->core->WIN);
+        }
+    }
+
+    private function setDefaultProjectsPath($sender, $path) {
+        if($sender->checked) {
+            $path = $path->text;
+            if($this->core->storage->defaultProjectsPath !== $path) {
+                $this->core->storage->defaultProjectsPath = $path;
+            }
+        }
+        $this->core->config->ini()->set('defaultProjectsPath', $this->core->storage->defaultProjectsPath);
+    }
+
+    private function checkProject($name) {
+        if(!$this->core->dir->exists($this->core->preparePath($this->ui['path']->text.'/'.$name))) {
+            return true;
+        }
+        return false;
     }
 }

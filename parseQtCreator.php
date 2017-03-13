@@ -12,7 +12,9 @@ switch($argc) {
         break;
     case 2:
         $QtCreator = new QtCreator();
-        $QtCreator->searchTemplates($argv[1]);
+        if($QtCreator->searchTemplates($argv[1])) {
+            $QtCreator->copy();
+        }
         break;
 }
 
@@ -48,9 +50,29 @@ class QtCreator {
                 }
             }
         }
-        print_r($this->objects);
         if(count($this->objects) > 0) return true;
         return false;
+    }
+
+    public function copy($path = '') {
+        $path = (string)$path;
+        if($path === '') $path = __DIR__.'/templates';
+        if(!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $path = $this->is_dir($path);
+        foreach($this->objects as $dirName => $data) {
+            $sourcePath = $data['path'];
+            unset($data['path']);
+            $tmpPath = $path.$dirName.'/';
+            if(!file_exists($tmpPath)) mkdir($tmpPath, 0777, true);
+            $json = json_encode($data, JSON_PRETTY_PRINT);
+            file_put_contents($tmpPath.'wizard.json', $json);
+            if($data['icon'] !== '') copy($sourcePath.$data['icon'], $tmpPath.$data['icon']);
+            foreach($data['files'] as $file) {
+                copy($sourcePath.$file, $tmpPath.$file);
+            }
+        }
     }
     
     private function existWizard($filePath) {
@@ -58,10 +80,13 @@ class QtCreator {
         if(file_exists($file)) {
             $wizard = $this->extractWizard($file);
             if($this->isProjectCategory($wizard)) {
-                $this->objects[$wizard['trDisplayName']] = [
+                $this->objects[preg_replace('/^[a-zA-Z]\./', '', $wizard['id'])] = [
+                    'id' => $wizard['id'],
                     'name' => $wizard['trDisplayName'],
                     'description' => $wizard['trDescription'],
-                    
+                    'icon' => $wizard['icon'],
+                    'files' => $this->rebuildGenerators(isset($wizard['generators']) ? $wizard['generators'] : []),
+                    'path' => $filePath
                 ];
             }
             return true;
@@ -75,10 +100,24 @@ class QtCreator {
     }
     
     private function isProjectCategory($data = [], $category = 'PHPQt5') {
-        if(isset($data['trDisplayCategory'])) {
-            if($data['trDisplayCategory'] === $category) return true;
+        if(isset($data['category'])) {
+            if($data['category'] === $category) return true;
         }
         return false;
+    }
+
+    private function rebuildGenerators($data = []) {
+        $result = [];
+        foreach($data as $row) {
+            if(isset($row['typeId']) && $row['typeId'] === 'File') {
+                if(isset($row['data'])) {
+                    foreach($row['data'] as $file) {
+                        $result[] = $file['source'];
+                    }
+                }
+            }
+        }
+        return $result;
     }
     
     private function is_dir($path) {

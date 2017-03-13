@@ -1,0 +1,12 @@
+{
+    "id": "Z.PHPQt5WidgetUiApplication",
+    "name": "PHPQt5 Widget Application (Ui)",
+    "description": "Creates a PHPQt5 application for the desktop. Includes a Qt Designer-based main window (QWidget).",
+    "icon": "icon.png",
+    "files": [
+        "file.phpqt5",
+        "main.php",
+        "widget.php",
+        "widget.ui"
+    ]
+}

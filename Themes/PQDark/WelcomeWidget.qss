@@ -41,9 +41,6 @@ QFrame#ImportPage QPushButton {
     padding-left: 10px;
     padding-right: 10px;
 }
-QFrame#ImportPage QPushButton:focus {
-    outline: none;
-}
 QFrame QPushButton {
     outline: none;
 }

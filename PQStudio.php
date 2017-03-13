@@ -28,6 +28,11 @@ class PQStudio extends QFrame {
     
     private $components = [
         [
+            'title' => 'Wake up',
+            'class' => 'Components\\Collector',
+            'init'  => true
+        ],
+        [
             'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\EventCtrl',
             'init'  => false
@@ -114,6 +119,11 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Building windows',
+            'class' => 'Components\\Pages\\Create\\Template',
+            'init'  => false
+        ],
+        [
+            'title' => 'Building windows',
             'class' => 'Components\\Pages\\Import',
             'init'  => false
         ],
@@ -135,9 +145,12 @@ class PQStudio extends QFrame {
     private $count = 0;
 
     private function initConfiguration() {
+        /** Задаем язык приложения */
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
+        /** Получаем директорию для размещения проектов */
         $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('defaultProjectsPath', $this->core->APP_PATH.'Projects'), $this->core->WIN);
-        $this->loadAppTemplates();
+        /** Задаем тему оформления */
+        $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
     }
 
     private function changeLang($lang, $accept = false) {
@@ -150,9 +163,6 @@ class PQStudio extends QFrame {
     public function initComponents() {
         /** Инициализируем загрузку всех основных конфигураций приложени */
         $this->initConfiguration();
-
-        /** Задаем тему оформления */
-        $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
 
         /** Проверяем запущен ли уже экземпляр приложения */
         $single = $this->core->single->check($this->core->applicationName());
@@ -295,20 +305,6 @@ class PQStudio extends QFrame {
             $this->core->widgets->set(str_replace('\\', '/', $data['class']), new $class());
         }
         return true;
-    }
-    
-    private function loadAppTemplates() {
-        $path = $this->core->APP_PATH.'templates/';
-        if($this->core->dir->exists($path)) {
-            $result = $this->core->dir->ls($path, \PQ\Component\Dir::Dirs);
-            foreach($result as $dir) {
-                $file = $path.$dir.'/wizard.json';
-                if($this->core->file->exists($file)) {
-                    $data = json_decode($this->core->file->read($file), true);
-                    qDebug($data['trDisplayName']);
-                }
-            }
-        }
     }
 
 //    public function SocketConnect($sender) {

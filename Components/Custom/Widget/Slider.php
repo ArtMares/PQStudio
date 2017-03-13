@@ -175,7 +175,11 @@ class Slider extends \QWidget {
     protected function resizeWidgets() {
         foreach($this->widgets as $index => $widget) {
             $widget->resize($this->size());
-            if($index !== $this->currentIndex) $widget->move(new \QPoint($this->width(), 0));
+            if($index !== $this->currentIndex) {
+                $widget->move(new \QPoint($this->width(), $this->pos()->y()));
+            } else {
+                $widget->move($this->pos());
+            }
         }
     }
     
@@ -199,16 +203,16 @@ class Slider extends \QWidget {
         $this->hideAnimator->setStartValue($this->pos());
         switch($this->direction) {
             case self::RightToLeft:
-                $this->hideAnimator->setEndValue(new \QPoint(-$this->width(), 0));
+                $this->hideAnimator->setEndValue(new \QPoint(-$this->width(), $this->pos()->y()));
                 break;
             case self::LeftToRight:
-                $this->hideAnimator->setEndValue(new \QPoint($this->width(), 0));
+                $this->hideAnimator->setEndValue(new \QPoint($this->width(), $this->pos()->y()));
                 break;
             case self::UpToDown:
-                $this->hideAnimator->setEndValue(new \QPoint(0, $this->height()));
+                $this->hideAnimator->setEndValue(new \QPoint($this->pos()->x(), $this->height()));
                 break;
             case self::DownToUp:
-                $this->hideAnimator->setEndValue(new \QPoint(0, -$this->height()));
+                $this->hideAnimator->setEndValue(new \QPoint($this->pos()->x(), -$this->height()));
                 break;
         }
     }
@@ -217,19 +221,19 @@ class Slider extends \QWidget {
         $this->showAnimator->setTargetObject($widget);
         switch($this->direction) {
             case self::RightToLeft:
-                $this->showAnimator->setStartValue(new \QPoint($this->width(), 0));
+                $this->showAnimator->setStartValue(new \QPoint($this->width(), $this->pos()->y()));
                 break;
             case self::LeftToRight:
-                $this->showAnimator->setStartValue(new \QPoint(-$this->width(), 0));
+                $this->showAnimator->setStartValue(new \QPoint(-$this->width(), $this->pos()->y()));
                 break;
             case self::UpToDown:
-                $this->showAnimator->setStartValue(new \QPoint(0, -$this->height()));
+                $this->showAnimator->setStartValue(new \QPoint($this->pos()->x(), -$this->height()));
                 break;
             case self::DownToUp:
-                $this->showAnimator->setStartValue(new \QPoint(0, $this->height()));
+                $this->showAnimator->setStartValue(new \QPoint($this->pos()->x(), $this->height()));
                 break;
         }
-        $this->showAnimator->setEndValue(new \QPoint(0, 0));
+        $this->showAnimator->setEndValue($this->pos());
     }
     
     protected function hideDirectionPrev($widget) {
@@ -237,16 +241,16 @@ class Slider extends \QWidget {
         $this->hideAnimator->setStartValue($this->pos());
         switch($this->direction) {
             case self::RightToLeft:
-                $this->hideAnimator->setEndValue(new \QPoint($this->width(), 0));
+                $this->hideAnimator->setEndValue(new \QPoint($this->width(), $this->pos()->y()));
                 break;
             case self::LeftToRight:
-                $this->hideAnimator->setEndValue(new \QPoint(-$this->width(), 0));
+                $this->hideAnimator->setEndValue(new \QPoint(-$this->width(), $this->pos()->y()));
                 break;
             case self::UpToDown:
-                $this->hideAnimator->setEndValue(new \QPoint(0, -$this->height()));
+                $this->hideAnimator->setEndValue(new \QPoint($this->pos()->x(), -$this->height()));
                 break;
             case self::DownToUp:
-                $this->hideAnimator->setEndValue(new \QPoint(0, $this->height()));
+                $this->hideAnimator->setEndValue(new \QPoint($this->pos()->x(), $this->height()));
                 break;
         }
     }
@@ -255,18 +259,18 @@ class Slider extends \QWidget {
         $this->showAnimator->setTargetObject($widget);
         switch($this->direction) {
             case self::RightToLeft:
-                $this->showAnimator->setStartValue(new \QPoint(-$this->width(), 0));
+                $this->showAnimator->setStartValue(new \QPoint(-$this->width(), $this->pos()->y()));
                 break;
             case self::LeftToRight:
-                $this->showAnimator->setStartValue(new \QPoint($this->width(), 0));
+                $this->showAnimator->setStartValue(new \QPoint($this->width(), $this->pos()->y()));
                 break;
             case self::UpToDown:
-                $this->showAnimator->setStartValue(new \QPoint(0, $this->height()));
+                $this->showAnimator->setStartValue(new \QPoint($this->pos()->x(), $this->height()));
                 break;
             case self::DownToUp:
-                $this->showAnimator->setStartValue(new \QPoint(0, -$this->height()));
+                $this->showAnimator->setStartValue(new \QPoint($this->pos()->x(), -$this->height()));
                 break;
         }
-        $this->showAnimator->setEndValue(new \QPoint(0, 0));
+        $this->showAnimator->setEndValue($this->pos());
     }
 }

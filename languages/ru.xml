@@ -57,8 +57,8 @@
         <tr>Название проекта</tr>
     </unit>
     <unit>
-        <source>Project Path</source>
-        <tr>Каталог проекта</tr>
+        <source>Create in</source>
+        <tr>Создать в</tr>
     </unit>
     <unit>
         <source>Application Name</source>
@@ -103,5 +103,13 @@
     <unit>
         <source>Enter Domain</source>
         <tr>Введите доменное имя</tr>
+    </unit>
+    <unit>
+        <source>Application Template</source>
+        <tr>Шаблон приложения</tr>
+    </unit>
+    <unit>
+        <source>Description</source>
+        <tr>Описание</tr>
     </unit>
 </pqenginetr>

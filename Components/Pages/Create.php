@@ -7,6 +7,7 @@
 namespace Components\Pages;
 use Components\Custom\Widget\Slider;
 use Components\Pages\Create\Basic;
+use Components\Pages\Create\Template;
 use PQ\QtObject;
 use PQ\WidgetsInterface;
 
@@ -14,9 +15,10 @@ class Create extends \QFrame implements WidgetsInterface {
 
     use QtObject;
 
-    public $ui = [];
+    /** @var Slider */
+    private $slider;
 
-    public $slider;
+    private $currentSlide = 0;
 
     public function initComponents() {
 
@@ -26,44 +28,36 @@ class Create extends \QFrame implements WidgetsInterface {
         $this->core->style->set($this, 'CreatePage');
 
         $this->slider = new Slider($this);
-        
-        $this->core->widgets->set('Components/Pages/Create/Basic', new Basic());
-        
-        $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Basic'));
-        
+        $this->slider->setDuration(350);
         $this->slider->setLoop(true);
         
+        $this->core->widgets->set('Components/Pages/Create/Basic', new Basic());
+        $this->core->widgets->set('Components/Pages/Create/Template', new Template());
+        
+        $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Basic'));
+        $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Template'));
+        
         $this->setLayout(new \QHBoxLayout());
+        $this->layout()->setContentsMargins(0, 0, 0, 0);
+        $this->layout()->setSpacing(0);
         
         $this->layout()->addWidget($this->slider);
+
+//        $this->slider->connect(SIGNAL('currentChanged(int)'), $this, SLOT('changeSlide(int)'));
     }
 
-    private function setProjectsPath($sender) {
-        $path = $sender->text;
-        $dir = \QFileDialog::getExistingDirectory($this, tr('Select directory'), $this->core->preparePath($path));
-        if(!empty($dir)) {
-            if($this->ui['defaultPath']->checked === true) {
-                $this->ui['defaultPath']->checked = false;
-                $this->ui['defaultPath']->enabled = true;
-            }
-            $this->ui['path']->text = $this->core->preparePath($dir, $this->core->WIN);
-        }
+    public function next() {
+        $this->slider->next();
     }
 
-    private function setDefaultProjectsPath($sender, $path) {
-        if($sender->checked) {
-            $path = $path->text;
-            if($this->core->storage->defaultProjectsPath !== $path) {
-                $this->core->storage->defaultProjectsPath = $path;
-            }
-        }
-        $this->core->config->ini()->set('defaultProjectsPath', $this->core->storage->defaultProjectsPath);
+    public function prev() {
+        $this->slider->prev();
     }
-    
-    private function checkProject($name) {
-        if(!$this->core->dir->exists($this->core->preparePath($this->ui['path']->text.'/'.$name))) {
-            return true;
-        }
-        return false;
-    }
+
+//    public function changeSlide($sender, $slideIndex) {
+//        if($slideIndex === 0) {
+//            $this->core->widgets->get('Components/Widgets/Welcome')->Back();
+//        }
+//        qDebug($slideIndex);
+//    }
 }

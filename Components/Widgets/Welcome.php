@@ -25,18 +25,20 @@ class Welcome extends \QWidget implements WidgetsInterface {
     private $hideAnimator;
     
     private $showAnimator;
+
+    private $duration = 350;
     
     private $eventFilter;
     
     public function initComponents() {
         
         $this->hideAnimator = new \QPropertyAnimation($this);
-        $this->hideAnimator->setDuration(500);
+        $this->hideAnimator->setDuration($this->duration);
         $this->hideAnimator->setPropertyName('pos');
         $this->hideAnimator->setEasingCurve(new \QEasingCurve(\QEasingCurve::InOutQuad));
         
         $this->showAnimator = new \QPropertyAnimation($this);
-        $this->showAnimator->setDuration(500);
+        $this->showAnimator->setDuration($this->duration);
         $this->showAnimator->setPropertyName('pos');
         $this->showAnimator->setEasingCurve(new \QEasingCurve(\QEasingCurve::InOutQuad));
     
