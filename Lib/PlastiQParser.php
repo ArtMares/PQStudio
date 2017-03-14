@@ -7,7 +7,7 @@ switch(count($argv)) {
     case 2:
         $includes = array();
         $p = new PlastiQParser();
-        if($p->parse_cpp($argv[1])) {
+        if($p->parse($argv[1])) {
             $p->generate();
         }
         break;
@@ -42,7 +42,7 @@ class PlastiQParser {
         $this->win = stripos(PHP_OS, 'win') === false ? false : true;
     }
 
-    public function parse_cpp($sourcePath = '') {
+    public function parse($sourcePath = '') {
         if($sourcePath == '') {
             echo "Please enter path to source PlastiQ".PHP_EOL;
             return false;

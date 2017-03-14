@@ -15,13 +15,14 @@ class Widgets extends Component {
 
     private $title;
 
-//    public function __destruct() {
-//        foreach($this->widgets as $name => $widget) {
-//            $widget->free();
-//            unset($this->widgets[$name]);
-//        }
-//        parent::__destruct();
-//    }
+    public function __destruct() {
+        foreach(array_reverse($this->widgets, true) as $name => $widget) {
+            $this->_info('Destruct widget "'.$name.'"');
+            $widget->deleteLater();
+            unset($this->widgets[$name]);
+        }
+        parent::__destruct();
+    }
 
     public function set($name, WidgetsInterface $widget) {
         $this->widgets[$name] = $widget;

@@ -16,6 +16,6 @@ class Destructor extends \QObject {
 
     public function onDestruct() {
         $this->core->log->info('Detected signal to close Application', 'Core');
-        die();
+        $this->core->quit(true);
     }
 }

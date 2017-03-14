@@ -11,7 +11,7 @@ require_once 'PQ/Core.php';
 $core = \PQ\Core::getInstance();
 
 define('RELEASE_VERSION', 'testing');
-define('BUILD_VERSION', (string)107);
+define('BUILD_VERSION', (string)109);
 
 $title = sprintf('%1$s %2$s [build: %3$s]',
     $core->applicationName(),

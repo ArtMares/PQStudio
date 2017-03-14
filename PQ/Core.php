@@ -91,7 +91,7 @@ class Core {
      * Список компонентов ядра
      * The list of Core components
      */
-    private $components = [
+    public $components = [
         'app' => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
             'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
@@ -114,7 +114,10 @@ class Core {
 
     private $object;
 
-    private $descructor;
+    /** @var Destructor */
+    private $destructor;
+    
+    private $initType = 'app';
     /**
      * Класс может быть инициализирован только самим классом
      * A class can only be initialized by the class
@@ -132,10 +135,10 @@ class Core {
             die('Error! Core not run!'.PHP_EOL.'Please assemble the project using QCoreApplication and QStandardPaths of Core library');
         }
         if(self::$APP === false) {
-            $type = strtolower($type);
             self::$APP = new self();
             self::$APP->WIN = stripos(PHP_OS, 'win') === false ? false : true;
-            switch($type) {
+            self::$APP->initType = strtolower($type);
+            switch(self::$APP->initType) {
                 case 'gui':
                     self::$APP->QApp = new \QGuiApplication($argc, $argv);
                     break;
@@ -162,14 +165,15 @@ class Core {
 
             }
             require_once self::$APP->PATH.'Component.php';
-            foreach(self::$APP->components[$type] as $alias => $component) {
+            foreach(self::$APP->components[self::$APP->initType] as $alias => $component) {
                 self::$APP->load_component($component, $alias);
             }
+            
             require_once self::$APP->PATH.'WidgetsInterface.php';
             require_once self::$APP->PATH.'QtObject.php';
             require_once self::$APP->PATH.'Destructor.php';
-            self::$APP->descructor = new Destructor(self::$APP);
-            connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->descructor, 'onDestruct()');
+            self::$APP->destructor = new Destructor(self::$APP);
+            connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->destructor, 'onDestruct()');
         }
         return self::$APP;
     }
@@ -286,7 +290,11 @@ class Core {
         return $this->QApp->exec();
     }
 
-    public function quit() {
-        $this->descructor->onDestruct();
+    public function quit($die = false) {
+        if((bool)$die === true) $this->log->info('Forced Core shutdown', 'Core');
+        foreach(array_reverse($this->components[$this->initType], true) as $key => $component) {
+            unset($this->{$key});
+        }
+//        die();
     }
 }

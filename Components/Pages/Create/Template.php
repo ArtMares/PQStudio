@@ -25,7 +25,7 @@ class Template extends \QFrame implements WidgetsInterface {
         $this->ui['listTemplate']->setIconSize(new \QSize(32, 32));
         foreach($this->core->storage->appTemplates as $t) {
             $iconPath = $this->core->APP_PATH . $t['icon'] == '' ? 'img/icons/unknown.png' : 'templates/'.$t['path'].'/'.$t['icon'];
-            new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
+            $this->ui['listItems'][] = new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
         }
         $this->ui['listTemplate']->onCurrentRowChanged = function($sender, $index) {
             var_dump(is_object($this->ui['description']));
@@ -74,9 +74,9 @@ class Template extends \QFrame implements WidgetsInterface {
         $this->layout()->setAlignment($this->ui['NextBtn'], \Qt::AlignRight | \Qt::AlignBottom);
     }
 
-    public function __destruct() {
-        qDebug(__METHOD__);
-        $this->ui['listTemplate']->free();
-        $this->ui['description']->free();
-    }
+//    public function __destruct() {
+//        qDebug(__METHOD__);
+//        $this->ui['listTemplate']->free();
+//        $this->ui['description']->free();
+//    }
 }
