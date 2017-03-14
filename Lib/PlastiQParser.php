@@ -80,7 +80,9 @@ class PlastiQParser {
         return false;
     }
 
-    public function generate($path) {
+    public function generate($path = '') {
+        $path = (string)$path;
+        if($path === '') $path = __DIR__ . DIRECTORY_SEPARATOR;
         $str = '<?php'.PHP_EOL.PHP_EOL;
         $str .= 'return array('.PHP_EOL;
         foreach($this->objects as $qobject => $values) {
@@ -97,7 +99,7 @@ class PlastiQParser {
             $str .= "    ),".PHP_EOL;
          }
          $str .= ");";
-         file_put_contents(__DIR__ . DIRECTORY_SEPARATOR, $str);
+         file_put_contents($path . 'PlastiQ_includes.php', $str);
     }
 
     private function is_dir($path) {

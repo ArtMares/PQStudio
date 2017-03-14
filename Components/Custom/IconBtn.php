@@ -46,6 +46,7 @@ class IconBtn extends Btn {
         /** Создаем элемент под текст кнопки */
         $this->textLabel = new \QLabel($this);
         $this->textLabel->text = $text;
+        $this->textLabel->objectName = 'Text';
 
         /** Добавляем элементы на слой */
         $this->layout()->addWidget($this->iconLabel);

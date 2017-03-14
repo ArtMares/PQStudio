@@ -21,38 +21,39 @@ class Template extends \QFrame implements WidgetsInterface {
         $labelTemplate = new \QLabel($this);
         $labelTemplate->text = tr('Application Template') . ':';
         
-        $this->ui['listTemplate'] = new \QListWidget();
+        $this->ui['listTemplate'] = new \QListWidget($this);
         $this->ui['listTemplate']->setIconSize(new \QSize(32, 32));
         foreach($this->core->storage->appTemplates as $t) {
             $iconPath = $this->core->APP_PATH . $t['icon'] == '' ? 'img/icons/unknown.png' : 'templates/'.$t['path'].'/'.$t['icon'];
-            $this->ui['listItems'][] = new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
+            $item = new \QListWidgetItem($this->ui['listTemplate']);
+            $item->setIcon(new \QIcon($iconPath));
+            $item->setText(tr($t['name']));
         }
         $this->ui['listTemplate']->onCurrentRowChanged = function($sender, $index) {
-            var_dump(is_object($this->ui['description']));
-            if(is_object($this->ui['description'])) {
-                if (isset($this->core->storage->appTemplates[$index])) {
-                    $this->ui['description']->text = tr($this->core->storage->appTemplates[$index]['description']);
-                } else {
-                    $this->ui['description']->text = '';
-                }
+            if(isset($this->core->storage->appTemplates[$index])) {
+                $this->ui['description']->plainText = tr($this->core->storage->appTemplates[$index]['description']);
+            } else {
+                $this->ui['description']->plainText = '';
             }
         };
 
         $labelDescription = new \QLabel($this);
         $labelDescription->text = tr('Description') . ':';
 
-        $this->ui['description'] = new \QLabel($this);
-        $this->ui['description']->wordWrap = true;
+        $this->ui['description'] = new \QTextEdit($this);
 
         $this->ui['BackBtn'] = new BackBtn($this, tr('Back'));
         $this->ui['BackBtn']->onClicked = function() {
             $this->core->widgets->get('Components/Pages/Create')->prev();
         };
 
-        $this->ui['NextBtn'] = new NextBtn($this, tr('Create'));
+        $this->ui['NextBtn'] = new NextBtn($this, tr('Next'));
         $this->ui['NextBtn']->onClicked = function($sender) {
-            $this->core->widgets->get('Components/Pages/Create')->next();
-            $this->core->widgets->get('Components/Widgets/Welcome')->Back();
+            $index = $this->ui['listTemplate']->currentRow();
+            if($index > -1) {
+                $this->core->storage->createProjectData['templateIndex'] = $index;
+                $this->core->widgets->get('Components/Pages/Create')->next();
+            }
         };
 
         $this->setLayout(new \QGridLayout());
@@ -73,10 +74,4 @@ class Template extends \QFrame implements WidgetsInterface {
         $this->layout()->addWidget($this->ui['NextBtn'], $row, 3);
         $this->layout()->setAlignment($this->ui['NextBtn'], \Qt::AlignRight | \Qt::AlignBottom);
     }
-
-//    public function __destruct() {
-//        qDebug(__METHOD__);
-//        $this->ui['listTemplate']->free();
-//        $this->ui['description']->free();
-//    }
 }

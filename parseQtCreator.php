@@ -70,7 +70,7 @@ class QtCreator {
             file_put_contents($tmpPath.'wizard.json', $json);
             if($data['icon'] !== '') copy($sourcePath.$data['icon'], $tmpPath.$data['icon']);
             foreach($data['files'] as $file) {
-                copy($sourcePath.$file, $tmpPath.$file);
+                copy($sourcePath.$file['source'], $tmpPath.$file['source']);
             }
         }
     }
@@ -81,7 +81,7 @@ class QtCreator {
             $wizard = $this->extractWizard($file);
             if($this->isProjectCategory($wizard)) {
                 $this->objects[preg_replace('/^[a-zA-Z]\./', '', $wizard['id'])] = [
-                    'id' => $wizard['id'],
+                    'id' => str_replace('Z.', '', $wizard['id']),
                     'name' => $wizard['trDisplayName'],
                     'description' => $wizard['trDescription'],
                     'icon' => $wizard['icon'],
@@ -112,7 +112,10 @@ class QtCreator {
             if(isset($row['typeId']) && $row['typeId'] === 'File') {
                 if(isset($row['data'])) {
                     foreach($row['data'] as $file) {
-                        $result[] = $file['source'];
+                        $result[] = [
+                            'source' => $file['source'],
+                            'target' => preg_replace(['/\%\{.*?\}/', '/\',\s\'.*\'\)\}/'], '', $file['target'])
+                        ];
                     }
                 }
             }

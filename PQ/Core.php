@@ -30,6 +30,7 @@ use PQ\Component\Widgets;
  * @property        string          $QT_PATH
  * @property        string          $APP_PATH
  * @property        string          $APP_DATA
+ * @property        string          $HOME_PATH
  *
  * @property        Log             $log
  * @property        Variant         $variant
@@ -72,6 +73,10 @@ class Core {
      * The path to the application in the user's AppData directory
      */
     public $APP_DATA;
+    /**
+     * Путь к домашней директории пользователя
+     */
+    public $HOME_PATH;
     /**
      * Путь к каталогу в котором расположенно ядро
      * The path to the directory in which the location of the Core
@@ -162,6 +167,8 @@ class Core {
                 }
                 /** Получаем путь к AppData приложения в директории пользователя */
                 self::$APP->APP_DATA = \QStandardPaths::writableLocation(\QStandardPaths::AppLocalDataLocation).'/';
+
+                self::$APP->HOME_PATH = \QStandardPaths::writableLocation(\QStandardPaths::HomeLocation).'/';
 
             }
             require_once self::$APP->PATH.'Component.php';
@@ -295,6 +302,9 @@ class Core {
         foreach(array_reverse($this->components[$this->initType], true) as $key => $component) {
             unset($this->{$key});
         }
-//        die();
     }
 }
+
+register_shutdown_function(function() {
+    Core::getInstance()->quit(true);
+});

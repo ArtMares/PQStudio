@@ -21,7 +21,6 @@ class Create extends \QFrame implements WidgetsInterface {
     private $currentSlide = 0;
 
     public function initComponents() {
-
         /** Задаем имя объекту */
         $this->objectName = 'CreatePage';
 
@@ -31,12 +30,13 @@ class Create extends \QFrame implements WidgetsInterface {
         $this->slider->setDuration(350);
         $this->slider->setLoop(true);
         
-        $this->core->widgets->set('Components/Pages/Create/Basic', new Basic());
-        $this->core->widgets->set('Components/Pages/Create/Template', new Template());
+//        $this->core->widgets->set('Components/Pages/Create/Basic', new Basic());
+//        $this->core->widgets->set('Components/Pages/Create/Template', new Template());
         
         $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Basic'));
         $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Template'));
-        
+        $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Settings'));
+
         $this->setLayout(new \QHBoxLayout());
         $this->layout()->setContentsMargins(0, 0, 0, 0);
         $this->layout()->setSpacing(0);

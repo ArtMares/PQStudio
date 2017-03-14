@@ -19,8 +19,6 @@ class Main extends \QFrame implements WidgetsInterface {
 
     public $general;
 
-    private $Animation;
-
     /** Инициализирует основные компоненты */
     public function initComponents() {
         /** Создаем слой */
@@ -42,12 +40,6 @@ class Main extends \QFrame implements WidgetsInterface {
         
         /** Инициализируем создание основной области */
         $this->initGeneralArea();
-
-//        $this->Animation = new \QPropertyAnimation($this, 'x');
-//        $this->Animation->duration = 100;
-//        $this->Animation->setEndValue($this->parentWidget()->width());
-
-//        $this->parentWidget()->connect(SIGNAL('currentChanged(int)'), $this->Animation, SLOT('start()'));
     }
 
     public function initProjectsListArea() {

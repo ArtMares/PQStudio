@@ -37,3 +37,16 @@ QFrame#CreatePage QListWidget::item:focus {
     border: none;
     outline: none;
 }
+QFrame#CreatePage QTextEdit {
+    background: transparent;
+    border: none;
+    color: #c4c4c4;
+}
+
+QFrame#CreatePage QScrollArea {
+    background: #393939;
+    border: none;
+}
+QFrame#CreatePage QScrollArea QFrame {
+    background: transparent;
+}

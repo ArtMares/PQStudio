@@ -14,6 +14,12 @@ class CheckBox extends IconBtn {
 
     protected $iconSize = 18;
 
+    /**
+     * CheckBox constructor.
+     * @param $parent
+     * @param string $text
+     * @param bool $check
+     */
     public function __construct($parent, $text, $check = false) {
         /** Конвертируем аргумент в булев тип */
         $check = (bool)$check;
@@ -23,6 +29,8 @@ class CheckBox extends IconBtn {
 
         /** Вызываем конструктор родителя и передаем необходимые аргументы */
         parent::__construct($parent, $this->icon, $text);
+
+        $this->textLabel->setWordWrap(true);
 
         $this->eventFilter = new \PQEventFilter($this);
         $this->eventFilter->addEventType(\QEvent::EnabledChange);

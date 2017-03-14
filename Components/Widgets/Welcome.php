@@ -73,9 +73,10 @@ class Welcome extends \QWidget implements WidgetsInterface {
         /** Инициализируем основные страницы виджета */
         $this->core->widgets->set('Components/Pages/Main', new Main($this));
         $this->core->widgets->set('Components/Pages/Create', new Create($this));
-        $this->core->widgets->set('Components/Pages/Import', new Import());
+        $this->core->widgets->set('Components/Pages/Import', new Import($this));
         
         $this->MainPage = $this->core->widgets->get('Components/Pages/Main');
+//        $this->MainPage->setParent($this);
         $this->pages[] = $this->core->widgets->get('Components/Pages/Create');
 
         /** Добавляем страницы в стаковый виджет */
@@ -131,5 +132,6 @@ class Welcome extends \QWidget implements WidgetsInterface {
             $page->resize($this->size());
             $page->move(new \QPoint($this->width(), 0));
         }
+//        qDebug($this->children());
     }
 }

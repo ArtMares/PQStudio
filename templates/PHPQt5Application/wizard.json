@@ -1,10 +1,16 @@
 {
-    "id": "Z.PHPQt5Application",
+    "id": "PHPQt5Application",
     "name": "PHPQt5 Application",
     "description": "Creates a simple PHPQt5 application.",
     "icon": "icon.png",
     "files": [
-        "file.phpqt5",
-        "main.php"
+        {
+            "source": "file.phpqt5",
+            "target": ""
+        },
+        {
+            "source": "main.php",
+            "target": "\/scripts\/"
+        }
     ]
 }

@@ -31,7 +31,9 @@ class Basic extends \QFrame implements WidgetsInterface {
         /** Задаем функция для проверки валидности поля */
         $this->ui['name']->onValidate(function($sender, $text) {
             if(preg_match('/[0-9a-zA-Z\-\.\_ ]+/', $text)) {
-                return $this->checkProject($text);
+                $result = $this->checkProject($text);
+                if($result === true) $this->core->storage->createProjectData['name'] = $text;
+                return $result;
             }
             return false;
         });
@@ -95,7 +97,14 @@ class Basic extends \QFrame implements WidgetsInterface {
     
         $this->ui['NextBtn'] = new NextBtn($this, tr('Next'));
         $this->ui['NextBtn']->onClicked = function($sender) {
-            $this->core->widgets->get('Components/Pages/Create')->next();
+            if($this->core->variant->get($this->ui['name']->property('invalid')) === false && $this->ui['name']->text() !== '') {
+                $this->core->storage->createProjectData['path'] = $this->ui['path']->text();
+                $this->core->storage->createProjectData['app']['name'] = $this->ui['appName']->text();
+                $this->core->storage->createProjectData['app']['version'] = $this->ui['appVersion']->text();
+                $this->core->storage->createProjectData['app']['orgName'] = $this->ui['orgName']->text();
+                $this->core->storage->createProjectData['app']['orgDomain'] = $this->ui['orgDomain']->text();
+                $this->core->widgets->get('Components/Pages/Create')->next();
+            }
         };
     
         /** Создаем слой */

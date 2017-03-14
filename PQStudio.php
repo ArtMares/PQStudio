@@ -19,6 +19,7 @@ $title = sprintf('%1$s %2$s [build: %3$s]',
     BUILD_VERSION);
 
 var_dump(QSysInfo::productType());
+//var_dump(aboutPQ(true));
 
 $core->widgets->setDefaultTitle($title);
 
@@ -109,17 +110,22 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Building windows',
-            'class' => 'Components\\Pages\\Create',
-            'init'  => false
-        ],
-        [
-            'title' => 'Building windows',
             'class' => 'Components\\Pages\\Create\\Basic',
-            'init'  => false
+            'init'  => true
         ],
         [
             'title' => 'Building windows',
             'class' => 'Components\\Pages\\Create\\Template',
+            'init'  => true
+        ],
+        [
+            'title' => 'Building windows',
+            'class' => 'Components\\Pages\\Create\\Settings',
+            'init'  => true
+        ],
+        [
+            'title' => 'Building windows',
+            'class' => 'Components\\Pages\\Create',
             'init'  => false
         ],
         [
@@ -148,7 +154,7 @@ class PQStudio extends QFrame {
         /** Задаем язык приложения */
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
         /** Получаем директорию для размещения проектов */
-        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('defaultProjectsPath', $this->core->APP_PATH.'Projects'), $this->core->WIN);
+        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('defaultProjectsPath', $this->core->HOME_PATH.'PQStudioProjects'), $this->core->WIN);
         /** Задаем тему оформления */
         $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
     }
