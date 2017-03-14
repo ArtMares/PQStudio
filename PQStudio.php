@@ -65,17 +65,12 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\Events\\CheckBox',
-            'init'  => false
-        ],
-        [
-            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\CheckBox',
             'init'  => false
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\Events\\Input',
+            'class' => 'Components\\Custom\\CheckBoxHover',
             'init'  => false
         ],
         [

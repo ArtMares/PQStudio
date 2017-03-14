@@ -7,6 +7,8 @@
 namespace Components\Pages\Create;
 use Components\Custom\BackBtn;
 use Components\Custom\CheckBox;
+use Components\Custom\CheckBoxHover;
+use Components\Custom\Input;
 use Components\Custom\NextBtn;
 use PQ\QtObject;
 use PQ\WidgetsInterface;
@@ -21,21 +23,47 @@ class Settings extends \QFrame implements WidgetsInterface {
         $labelIncludes = new \QLabel($this);
         $labelIncludes->text = tr('PlastiQ Meta Objects') . ':';
 
-        $this->ui['scroll'] = new \QScrollArea($this);
+//        $this->ui['scroll'] = new \QScrollArea($this);
 
-        $this->ui['includesList'] = new \QFrame($this->ui['scroll']);
-        $this->ui['includesList']->setLayout(new \QVBoxLayout());
+//        $this->ui['includesList'] = new \QFrame($this->ui['scroll']);
+        $this->ui['includesList'] = new \QListWidget($this);
+//        $this->ui['includesList']->setLayout(new \QVBoxLayout());
+//        $this->ui['includesList']->layout()->setContentsMargins(0, 0, 0, 0);
+//        $this->ui['includesList']->layout()->setSpacing(0);
         $this->ui['includesList']->objectName = 'includesList';
 
         $include = $this->loadPHPQt5File();
 
         foreach($this->core->storage->plastiq as $include => $data) {
-            qDebug($include);
-            $item = new CheckBox($this->ui['includesList'], $include);
-            $this->ui['includesList']->layout()->addWidget($item);
+//            qDebug($include);
+            $this->ui['items'][$include] = new \QListWidgetItem();
+            $this->ui['includes'][$include] = new CheckBoxHover($this->ui['includesList'], $include);
+            $this->ui['items'][$include]->setSizeHint($this->ui['includes'][$include]->size());
+            $this->ui['includesList']->addItem($this->ui['items'][$include]);
+            $this->ui['includesList']->setItemWidget($this->ui['items'][$include], $this->ui['includes'][$include]);
+//            $this->ui['includesList']->layout()->addWidget($this->ui['includes'][$include]);
         }
+        
+        $this->ui['search'] = new Input($this);
+        $this->ui['search']->setPlaceholderText(tr('Search', '1') . '...');
+        $this->ui['search']->onTextChanged = function($sender, $value) {
+            foreach($this->ui['includes'] as $name => $include) {
+                if($value !== '') {
+                    if(stristr($name, $value) !== false) {
+                        qDebug($name);
+//                        $include->hide();
+//                        $this->ui['includesList']->layout()->removeWidget($include);
+                    } else {
+                        $this->ui['includesList']->removeItemWidget($this->ui['items'][$name]);
+                    }
+                } else {
+//                    $include->show();
+                }
+            }
+//            $this->ui['includesList']->layout()->update();
+        };
 
-        $this->ui['scroll']->setWidget($this->ui['includesList']);
+//        $this->ui['scroll']->setWidget($this->ui['includesList']);
 
         $labelAdditionally = new \QLabel($this);
         $labelAdditionally->text = tr('Additionally') . ':';
@@ -60,15 +88,19 @@ class Settings extends \QFrame implements WidgetsInterface {
 
         $this->layout()->addWidget($labelIncludes, $row, 0, 1, 2);
         $this->layout()->addWidget($labelAdditionally, $row, 2, 1, 2);
-
+        
         $row++;
-        $this->layout()->addWidget($this->ui['scroll'], $row, 0, 2, 2);
+        $this->layout()->addWidget($this->ui['search'], $row, 0, 1, 2);
         $this->layout()->addWidget($this->ui['usePQCore'], $row, 2, 1, 2);
+    
+        $row++;
+//        $this->layout()->addWidget($this->ui['scroll'], $row, 0, 2, 2);
+        $this->layout()->addWidget($this->ui['includesList'], $row, 0, 1, 2);
 
         $row++;
         $spacer = new \QFrame($this);
         $spacer->setSizePolicy(\QSizePolicy::Expanding, \QSizePolicy::Expanding);
-        $this->layout()->addWidget($spacer, $row, 2, 1, 2);
+        $this->layout()->addWidget($spacer, $row, 2, 2, 2);
 
         /** Добавляем основные кнопки */
         $row++;
@@ -80,9 +112,9 @@ class Settings extends \QFrame implements WidgetsInterface {
 
     public function resize($size) {
         parent::resize($size);
-        $w = $this->ui['scroll']->width();
-        qDebug($w);
-        $this->ui['includesList']->setMinimumWidth($w - 12);
+//        $w = $this->ui['scroll']->width();
+//        qDebug($w);
+//        $this->ui['includesList']->setMinimumWidth($w - 12);
     }
 
     private function loadPHPQt5File() {

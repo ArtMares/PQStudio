@@ -12,5 +12,5 @@ QLabel#Icon {
     qproperty-alignment: AlignCenter;
 }
 QPushButton:hover {
-    background: qlineargradient(x1 : 1, y1 : 0, x2 : 0, y2 : 0, stop : 0.0 #8a3b16,  stop : 1.0 #46474b);
+    background: qlineargradient(x1 : 1, y1 : 0, x2 : 0, y2 : 0, stop : 0.0 #8a3b16,  stop : 1.0 transparent);
 }

@@ -112,4 +112,12 @@
         <source>Description</source>
         <tr>Описание</tr>
     </unit>
+    <unit>
+        <source>Search</source>
+        <tr>Поиск</tr>
+    </unit>
+    <unit id="1">
+        <source>Search</source>
+        <tr>Найти</tr>
+    </unit>
 </pqenginetr>

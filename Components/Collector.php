@@ -26,7 +26,7 @@ class Collector extends \QObject implements WidgetsInterface {
         $this->core->storage->createProjectData = [
             'name' => '',
             'path' => '',
-            "build" => [
+            'build' => [
                 'template' => 'app',
                 'icon' =>  '',
                 'save_php7ts_md5' =>  true,
@@ -68,6 +68,7 @@ class Collector extends \QObject implements WidgetsInterface {
         if($this->core->dir->exists($path)) {
             if($this->core->file->exists($path.'PlastiQ_includes.php')) {
                 $this->core->storage->plastiq = require_once($path.'PlastiQ_includes.php');
+                ksort($this->core->storage->plastiq);
             }
         }
     }
