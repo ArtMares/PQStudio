@@ -30,7 +30,7 @@ class Main extends \QFrame implements WidgetsInterface {
         /** Устанавливаем отступы между элементами на слое в 0 */
         $this->layout()->setSpacing(0);
         
-        /** Задаем имя для класса PQView_welcome_main_page */
+        /** Задаем имя для страницы */
         $this->objectName = 'MainPage';
         
         $this->core->style->set($this, 'MainPage');

@@ -143,9 +143,25 @@ class Slider extends \QWidget {
             }
         }
     }
+
+    public function showSlideToIndex($index) {
+        $index = (int)$index;
+        if($this->state === self::Stopped && $this->count > 1 && $index > -1 && $index < $this->count) {
+            $this->hideDirectionPrev($this->widgets[$this->currentIndex]);
+            $i = $this->currentIndex;
+            $this->currentIndex = $index;
+            if($this->issetWidget()) {
+                $this->showDirectionPrev($this->widgets[$this->currentIndex]);
+                $this->startAnimators();
+            } else {
+                $this->currentIndex = $i;
+            }
+        }
+    }
     
     public function isStopped() {
         if($this->hideAnimator->state() === $this->showAnimator->state()) {
+            $this->signal_currentChanged();
             return true;
         }
         return false;
@@ -156,7 +172,6 @@ class Slider extends \QWidget {
         if($this->loop === true && $this->currentIndex >= $this->count) {
             $this->currentIndex = 0;
         }
-        $this->signal_currentChanged();
     }
     
     protected function currentDown() {
@@ -164,7 +179,6 @@ class Slider extends \QWidget {
         if($this->loop === true && $this->currentIndex < 0) {
             $this->currentIndex = $this->count - 1;
         }
-        $this->signal_currentChanged();
     }
     
     protected function stateChange($state) {

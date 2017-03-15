@@ -16,6 +16,7 @@ class Collector extends \QObject implements WidgetsInterface {
         $this->prepareCreateProjectData();
         $this->loadAppTemplates();
         $this->loadPlastiQ();
+        $this->loadPQCore();
     }
 
     public function resetProjectData() {
@@ -69,6 +70,16 @@ class Collector extends \QObject implements WidgetsInterface {
             if($this->core->file->exists($path.'PlastiQ_includes.php')) {
                 $this->core->storage->plastiq = require_once($path.'PlastiQ_includes.php');
                 ksort($this->core->storage->plastiq);
+            }
+        }
+    }
+
+    private function loadPQCore() {
+        $this->core->storage->pqcore = [];
+        $path = $this->core->APP_PATH.'Builder/';
+        if($this->core->dir->exists($path)) {
+            if($this->core->file->exists($path.'PQCore_includes.php')) {
+                $this->core->storage->pqcore = require_once($path.'PQCore_includes.php');
             }
         }
     }

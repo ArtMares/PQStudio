@@ -14,19 +14,19 @@ class CheckBoxHover extends CheckBox {
         parent::__construct($parent, $text, $check);
         
         $this->styleSheet = $this->styleSheet() . Core::getInstance()->style->CheckBoxHover;
-        
-        $this->eventFilter->addEventType(\QEvent::Enter);
-        $this->eventFilter->addEventType(\QEvent::Leave);
-        
-        $this->eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::Enter:
-                    qDebug('Enter');
-                    break;
-                case \QEvent::Leave:
-                    qDebug('Leave');
-                    break;
-            }
-        };
+
+//        $this->eventFilter->addEventType(\QEvent::Enter);
+//        $this->eventFilter->addEventType(\QEvent::Leave);
+//
+//        $this->eventFilter->onEvent = function($sender, $event) {
+//            switch($event->type()) {
+//                case \QEvent::Enter:
+//                    qDebug('Enter');
+//                    break;
+//                case \QEvent::Leave:
+//                    qDebug('Leave');
+//                    break;
+//            }
+//        };
     }
 }

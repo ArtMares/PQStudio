@@ -15,6 +15,8 @@ class Template extends \QFrame implements WidgetsInterface {
     use QtObject;
     
     public $ui = [];
+
+    private $items = [];
     
     public function initComponents() {
         
@@ -25,15 +27,20 @@ class Template extends \QFrame implements WidgetsInterface {
         $this->ui['listTemplate']->setIconSize(new \QSize(32, 32));
         foreach($this->core->storage->appTemplates as $t) {
             $iconPath = $this->core->APP_PATH . $t['icon'] == '' ? 'img/icons/unknown.png' : 'templates/'.$t['path'].'/'.$t['icon'];
-            $item = new \QListWidgetItem($this->ui['listTemplate']);
-            $item->setIcon(new \QIcon($iconPath));
-            $item->setText(tr($t['name']));
+            $this->items[] = new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
         }
         $this->ui['listTemplate']->onCurrentRowChanged = function($sender, $index) {
             if(isset($this->core->storage->appTemplates[$index])) {
                 $this->ui['description']->plainText = tr($this->core->storage->appTemplates[$index]['description']);
             } else {
                 $this->ui['description']->plainText = '';
+            }
+        };
+        $this->ui['listTemplate']->onDestroyed = function($sender) {
+            qDebug('QListWidget Destroyed');
+            foreach($this->items as $i => $item) {
+                $item->free();
+                unset($this->items[$i]);
             }
         };
 

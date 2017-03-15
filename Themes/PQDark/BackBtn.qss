@@ -4,13 +4,10 @@ QPushButton {
     border-bottom-left-radius: 3px;
     background: transparent;
 }
-QPushButton QLabel:hover {
-    color: #ff0000;
-}
 QPushButton QLabel {
     color: #c4c4c4;
     font-size: 16px;
 }
 QPushButton:hover {
-    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop : 0.0 transparent,  stop : 1.0 #46474b);
+    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop : 0.0 #8a3b16,  stop : 1.0 transparent);
 }
