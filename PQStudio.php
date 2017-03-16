@@ -11,7 +11,7 @@ require_once 'PQ/Core.php';
 $core = \PQ\Core::getInstance();
 
 define('RELEASE_VERSION', 'testing');
-define('BUILD_VERSION', (string)111);
+define('BUILD_VERSION', (string)112);
 
 $title = sprintf('%1$s %2$s [build: %3$s]',
     $core->applicationName(),
@@ -41,7 +41,8 @@ class PQStudio extends QFrame {
         [
             'title' => 'Wake up',
             'class' => 'Components\\Collector',
-            'init'  => true
+//            'init'  => true
+            'init'  => false
         ],
         [
             'title' => 'Collecting stones',
@@ -116,17 +117,20 @@ class PQStudio extends QFrame {
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Basic',
-            'init'  => true
+//            'init'  => true
+            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Template',
-            'init'  => true
+//            'init'  => true
+            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Settings',
-            'init'  => true
+//            'init'  => true
+            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
@@ -141,6 +145,17 @@ class PQStudio extends QFrame {
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Widgets\\Welcome',
+//            'init'  => true
+            'init'  => false
+        ],
+        [
+            'title' => 'Pour coffee',
+            'class' => 'Components\\Widgets\\Notification',
+            'init'  => false
+        ],
+        [
+            'title' => 'Pour coffee',
+            'class' => 'Components\\Widgets\\NotificationCenter',
             'init'  => true
         ],
     ];
@@ -301,7 +316,14 @@ class PQStudio extends QFrame {
 
     public function completed() {
         sleep(2);
-        $this->core->widgets->get('Components/Widgets/Welcome')->show();
+//        $window = $this->core->widgets->get('Components/Widgets/Welcome');
+        $window = $this->core->widgets->get('Components/Widgets/NotificationCenter');
+        $window->show();
+//        $this->core->widgets->set(
+//            'Components/Widgets/Notification',
+//            new \Components\Widgets\Notification($window)
+//        );
+//        $this->core->widgets->get('Components/Widgets/Notification')->showMessage(\Components\Widgets\Notification::INFO, 'PQStudio', 'Is run', 10000);
 //        $this->core->widgets->get('Components/Widgets/Pages')->show();
         $this->close();
     }

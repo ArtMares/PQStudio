@@ -5,24 +5,26 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Widgets;
-class Notification {
-    const SUCCESS = 'success';
-    const INFO = 'info';
-    const WARNING = 'warning';
-    const ERROR = 'error';
-    const NONE = 'default';
+use PQ\WidgetsInterface;
 
-    const sideTop = 'top';
-    const sideBottom = 'bottom';
-    const sideLeft = 'left';
-    const sideRight = 'right';
+class Notification extends \QWidget implements WidgetsInterface {
+    const SUCCESS   = 0x00;
+    const INFO      = 0x01;
+    const WARNING   = 0x02;
+    const ERROR     = 0x03;
+    const NONE      = 0x04;
+
+    const sideTop       = 0x05;
+    const sideBottom    = 0x06;
+    const sideLeft      = 0x07;
+    const sideRight     = 0x08;
     /**
      * Ссылка на родительский объект
      * Если не является null то Notification будет отображатся на том же экране где находится основное окно
      */
     private $parentWindow;
 
-    /** QTimer - пердназначен для анимации появления Notification */
+    /** QPropertyAnimation - пердназначены для анимации появления Notification */
     private $slideIn;
     private $slideOut;
     /** QTimer - задержа перед slideOut при собитии QEvent::Leave */
@@ -67,6 +69,8 @@ class Notification {
     private $maxX;
     /** Стили для окна Notification */
     private $theme;
+    
+    private $eventFilter;
 
     /**
      * Notification constructor.
@@ -142,22 +146,33 @@ class Notification {
                 color: #fff;
             }';
 
-        $this->initComponent();
-
-        $this->setEventListener(array($this, 'eventListener'));
-        $this->addEventListenerType(QEvent::Leave);
+        $this->initComponents();
+        
+        $this->eventFilter = new \PQEventFilter($this);
+        $this->eventFilter->addEventType(\QEvent::Leave);
+        $this->installEventFilter($this->eventFilter);
+        
+        $this->eventFilter->onEvent = function($sender, $event) {
+            switch($event->type) {
+                case \QEvent::Leave:
+                    $this->time = microtime(true);
+                    $this->delayLeave->start();
+                    break;
+            }
+            return false;
+        };
     }
 
     /**
-     * Метод initComponent()
+     * Метод initComponents()
      * Создает все необходимые элменеты в окне Notification
      */
-    private function initComponent() {
+    public function initComponents() {
         /** Задаем флаг для типа окна */
-        $this->setWindowFlags(Qt::ToolTip);
+        $this->setWindowFlags(\Qt::ToolTip);
 
         /** Создается QTimer анимации появления окна */
-        $this->slideIn = new QTimer;
+        $this->slideIn = new \QTimer();
         $this->slideIn->interval = $this->interval;
         $this->slideIn->onTimeout = function() {
             switch($this->side) {
@@ -196,7 +211,7 @@ class Notification {
             }
         };
         /** Создается QTimer анимации скрытия окна */
-        $this->slideOut = new QTimer;
+        $this->slideOut = new \QTimer();
         $this->slideOut->interval = $this->interval;
         $this->slideOut->onTimeout = function() {
             switch($this->side) {
@@ -234,7 +249,7 @@ class Notification {
                     break;
             }
         };
-        $this->delayLeave = new QTimer;
+        $this->delayLeave = new \QTimer();
         $this->delayLeave->intevral = $this->interval;
         $this->delayLeave->onTimeout = function() {
             $time = microtime(true) - $this->timeLeave;
@@ -243,7 +258,7 @@ class Notification {
                 $this->slideOut();
             }
         };
-        $this->delayShow = new QTimer;
+        $this->delayShow = new \QTimer();
         $this->delayShow->interval = $this->interval;
         $this->delayShow->onTimeout = function() {
             $time = microtime(true) - $this->timeShow;
@@ -253,22 +268,22 @@ class Notification {
             }
         };
         /** Созется слой-сетка для позизионирования элементов */
-        $this->layout = new QGridLayout;
+        $this->layout = new \QGridLayout();
         /** Создается QLabel для заголовка окна */
-        $this->labelTitle = new QLabel($this);
+        $this->labelTitle = new \QLabel($this);
         $this->labelTitle->objectName = 'Title';
         $this->labelTitle->text = '';
-        $this->labelTitle->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        $this->labelTitle->setSizePolicy(\QSizePolicy::Expanding, \QSizePolicy::Fixed);
         /** Создается QLabel для текста сообщения */
-        $this->labelMessage = new QLabel($this);
+        $this->labelMessage = new \QLabel($this);
         $this->labelMessage->objectName = 'Message';
         $this->labelMessage->text = '';
         $this->labelMessage->setWordWrap(true);
         /** Создается кнопка для скрытия окна */
-        $this->closeBtn = new QPushButton($this);
+        $this->closeBtn = new \QPushButton($this);
         $this->closeBtn->objectName = 'Close';
         $this->closeBtn->text = "\u{00d7}";
-        $this->closeBtn->setCursor(Qt::PointingHandCursor);
+        $this->closeBtn->setCursor(new \QCursor(\Qt::PointingHandCursor));
         $this->closeBtn->onClicked = function($sender) {
             $this->slideOut();
         };
@@ -289,8 +304,8 @@ class Notification {
      */
     private function moveTo() {
         if(is_null($this->parentWindow)) {
-            $area = QDesktopWidget::availableGeometry(0);
-            $screen = QDesktopWidget::screenGeometry(0);
+            $area = \QDesktopWidget::availableGeometry(0);
+            $screen = \QDesktopWidget::screenGeometry(0);
             if($area['x'] > 0 or $area['y'] > 0) {
                 if($area['x'] > 0) $this->side = 'left';
                 if($area['y'] > 0) $this->side = 'top';
@@ -299,9 +314,9 @@ class Notification {
                 if($screen['height'] > $area['height']) $this->side = 'bottom';
             }
         } else {
-            $screenNumber = QDesktopWidget::screenNumber($this->parentWindow);
-            $area = QDesktopWidget::availableGeometry($this->parentWindow);
-            $screen = QDesktopWidget::screenGeometry($this->parentWindow);
+            $screenNumber = \QDesktopWidget::screenNumber($this->parentWindow);
+            $area = \QDesktopWidget::availableGeometry($this->parentWindow);
+            $screen = \QDesktopWidget::screenGeometry($this->parentWindow);
             if($screenNumber > 0) {
                 $this->side = 'bottom';
             } else {
@@ -401,22 +416,5 @@ class Notification {
             $this->timeShow = microtime(true);
             $this->delayShow->start();
         }
-    }
-
-    /**
-     * Метод eventListener
-     * Обработчик собитый
-     * @param $sender - Объект, который отправил собитые
-     * @param $event - Собитыие
-     * @return bool
-     */
-    public function eventListener($sender, $event) {
-        switch($event->type) {
-            case QEvent::Leave:
-                $this->time = microtime(true);
-                $this->delayLeave->start();
-                break;
-        }
-        return false;
     }
 }

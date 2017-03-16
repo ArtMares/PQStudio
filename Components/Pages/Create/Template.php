@@ -16,8 +16,6 @@ class Template extends \QFrame implements WidgetsInterface {
     
     public $ui = [];
 
-    private $items = [];
-    
     public function initComponents() {
         
         $labelTemplate = new \QLabel($this);
@@ -27,7 +25,7 @@ class Template extends \QFrame implements WidgetsInterface {
         $this->ui['listTemplate']->setIconSize(new \QSize(32, 32));
         foreach($this->core->storage->appTemplates as $t) {
             $iconPath = $this->core->APP_PATH . $t['icon'] == '' ? 'img/icons/unknown.png' : 'templates/'.$t['path'].'/'.$t['icon'];
-            $this->items[] = new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
+            new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
         }
         $this->ui['listTemplate']->onCurrentRowChanged = function($sender, $index) {
             if(isset($this->core->storage->appTemplates[$index])) {
