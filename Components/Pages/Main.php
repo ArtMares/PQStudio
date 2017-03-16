@@ -23,14 +23,21 @@ class Main extends \QFrame implements WidgetsInterface {
     public function initComponents() {
         /** Создаем слой */
         $this->setLayout(new \QHBoxLayout());
+        
         /** Устанавливаем отступы от края в 0 */
         $this->layout()->setContentsMargins(0, 0, 0, 0);
+        
         /** Устанавливаем отступы между элементами на слое в 0 */
         $this->layout()->setSpacing(0);
-        /** Задаем имя для класса PQView_welcome_main_page */
+        
+        /** Задаем имя для страницы */
         $this->objectName = 'MainPage';
+        
+        $this->core->style->set($this, 'MainPage');
+        
         /** Инициализируем создание области для списка проектов которые были созданы с IDE */
         $this->initProjectsListArea();
+        
         /** Инициализируем создание основной области */
         $this->initGeneralArea();
     }
@@ -38,22 +45,30 @@ class Main extends \QFrame implements WidgetsInterface {
     public function initProjectsListArea() {
         /** Создаем QScrollArea для области проектов */
         $this->scrollArea = new \QScrollArea($this);
+        
         /** Задаем имя для QScrollArea */
         $this->scrollArea->objectName = 'ScrollProjects';
+        
         /** Запрещаем горизонтальное отображение скролла */
         $this->scrollArea->setHorizontalScrollBarPolicy(\Qt::ScrollBarAlwaysOff);
+        
         /** Создаем область для списка проектов */
         $this->projectsList = new \QFrame($this);
+        
         /** Задаем имя для QFrame */
         $this->projectsList->objectName = 'Projects';
+        
         /** Задаем минимальную и максимальную ширину области */
         $this->projectsList->setMinimumWidth(288);
         $this->projectsList->setMaximumWidth(300);
+        
         /** Создаем слой для области проектов */
         $this->projectsList->setLayout(new \QVBoxLayout());
+        
         /** Передаем область проектов в QScrollArea */
         $this->scrollArea->setWidget($this->projectsList);
-        /** Добавляем QScrollArea на основнйо слой */
+        
+        /** Добавляем QScrollArea на основной слой */
         $this->layout()->addWidget($this->scrollArea);
     }
 
@@ -72,7 +87,7 @@ class Main extends \QFrame implements WidgetsInterface {
         /** Создаем QLabel для логотипа */
         $labelLogo = new \QLabel($this->general);
         $labelLogo->setFixedSize(96, 100);
-        $pixmap = new \QIcon(':/img/logo_96x96.png');
+        $pixmap = new \QIcon($this->core->APP_PATH.'img/logo.svg');
         $labelLogo->setPixmap($pixmap->pixmap(96, 96));
         $labelLogo->objectName = 'AppLogo';
 
@@ -93,43 +108,28 @@ class Main extends \QFrame implements WidgetsInterface {
         $menu->setMaximumWidth(200);
         $menu->setLayout(new \QVBoxLayout());
         $menu->layout()->setSpacing(0);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::MouseButtonRelease);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::MouseButtonPress);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::Enter);
-//        $this->pqcore->mvc->controller->welcome_main->addEventType(QEvent::Leave);
 
         /** Создаем кнопку основного меню для создания проекта */
-        $createBtn = new MenuBtn($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), 'Create Project', 'CreateProjectBtn');
+        $createBtn = new MenuBtn($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), tr('Create Project'), 'CreateProjectBtn');
         $createBtn->onClicked = function($sender) {
-            $this->core->widgets->get('Components/Widgets/Welcome')->setPage('Components/Pages/Create');
+            $this->core->widgets->get('Components/Widgets/Welcome')->showPage('Components/Pages/Create');
         };
-//        $createBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
-//        $createBtn = new QToolButton($this);
-//        $createBtn->text = $this->pqcore->icon->font('fa-asterisk').' '.tr('Create Project');
-//        $createBtn->toolButtonStyle = Qt::ToolButtonTextOnly;
-//        $createBtn->setCursor(new QCursor(Qt::PointingHandCursor));
 
         /** Создаем кнопку основного меню для открытия проекта */
-        $openBtn = new MenuBtn($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), 'Open Project File', 'welcome_main-open_project');
+        $openBtn = new MenuBtn($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), tr('Open Project File'), 'welcome_main-open_project');
         $openBtn->onClicked = function($sender) {
-            $this->core->mvc->controller->welcome_main->open_project_directory();
         };
-//        $openBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
 
 //        $importBtn = new MainMenuBtn($this->Menu, Icon::get('fa-sign-in', '#c28a46', 16), tr('Import PQBuilder Project'));
-        $importBtn = new MenuBtn($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), 'Import PQBuilder Project', 'welcome_main-import_page_show');
+        $importBtn = new MenuBtn($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), tr('Import Project'), 'welcome_main-import_page_show');
         $importBtn->onClicked = function($sender) {
-            $this->core->mvc->controller->welcome_main->import_project_show();
         };
-//        $importBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
         /** Создаем кнопку основного меню для открытия окна настроек приложения */
-        $settingBtn = new MenuBtn($menu, $this->core->icon->font('fa-gears', '#999999', 16), 'Settings', 'settings_main-show');
+        $settingBtn = new MenuBtn($menu, $this->core->icon->font('fa-gears', '#999999', 16), tr('Settings'), 'settings_main-show');
         $settingBtn->onClicked = function($sender) {
-            $this->core->mvc->controller->settings_main->show();
         };
-//        $settingBtn->installEventFilter($this->pqcore->mvc->controller->welcome_main);
 
         /** Добавляем кнопки меню в слой QFrame основного меню */
         $menu->layout()->addWidget($createBtn);

@@ -13,9 +13,9 @@ class Config extends Component {
     /**
      * @var Component\Config\Manager[]
      */
-    private $_loaded = array();
+    private $_loaded = [];
 
-    private $_config = array();
+    private $_config = [];
 
     public function __construct(Core &$core) {
         parent::__construct($core);
@@ -37,7 +37,7 @@ class Config extends Component {
     }
 
     public function __destruct(){
-        $this->_loaded = array();
+        $this->_loaded = [];
         parent::__destruct();
     }
 

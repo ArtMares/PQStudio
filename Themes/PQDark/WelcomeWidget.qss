@@ -3,42 +3,6 @@ QWidget {
     font-size: 16px;
 }
 
-QFrame#MainPage QLabel#AppName {
-    color: #c4c4c4;
-    font-size: 26px;
-}
-QFrame#MainPage QLabel#AppVersion {
-    color: #6e6e6e;
-    font-size: 20px;
-}
-QFrame#MainPage QFrame#Projects {
-    background: #393939;
-}
-QFrame#MainPage QFrame#General {
-    background: #46474b;
-}
-
-QFrame#CreatePage {
-    background: #46474b;
-}
-QFrame#CreatePage QLabel {
-    color: #c4c4c4;
-}
-QFrame#CreatePage QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5c5c5c, stop: 1 #515151);
-    color: #c4c4c4;
-    border: 1px solid #393939;
-    border-radius: 3px;
-    height: 26px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-QFrame#CreatePage QPushButton:hover {
-    background: #8a3b16;
-}
-QFrame#CreatePage QPushButton:focus {
-    outline: none;
-}
 QFrame#ImportPage {
     background: #46474b;
 }
@@ -76,9 +40,6 @@ QFrame#ImportPage QPushButton {
     height: 20px;
     padding-left: 10px;
     padding-right: 10px;
-}
-QFrame#ImportPage QPushButton:focus {
-    outline: none;
 }
 QFrame QPushButton {
     outline: none;

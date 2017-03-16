@@ -1,0 +1,24 @@
+{
+    "id": "PHPQt5MainWindowUiApplication",
+    "name": "PHPQt5 MainWindow Application (Ui)",
+    "description": "Creates a PHPQt5 application for the desktop. Includes a Qt Designer-based main window (QMainWindow).",
+    "icon": "icon.png",
+    "files": [
+        {
+            "source": "file.phpqt5",
+            "target": ""
+        },
+        {
+            "source": "main.php",
+            "target": "\/scripts\/"
+        },
+        {
+            "source": "widget.php",
+            "target": "\/scripts\/"
+        },
+        {
+            "source": "widget.ui",
+            "target": "\/forms\/"
+        }
+    ]
+}

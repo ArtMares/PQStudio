@@ -30,6 +30,7 @@ use PQ\Component\Widgets;
  * @property        string          $QT_PATH
  * @property        string          $APP_PATH
  * @property        string          $APP_DATA
+ * @property        string          $HOME_PATH
  *
  * @property        Log             $log
  * @property        Variant         $variant
@@ -73,6 +74,10 @@ class Core {
      */
     public $APP_DATA;
     /**
+     * Путь к домашней директории пользователя
+     */
+    public $HOME_PATH;
+    /**
      * Путь к каталогу в котором расположенно ядро
      * The path to the directory in which the location of the Core
      */
@@ -91,7 +96,7 @@ class Core {
      * Список компонентов ядра
      * The list of Core components
      */
-    private $components = [
+    public $components = [
         'app' => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
             'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
@@ -114,7 +119,10 @@ class Core {
 
     private $object;
 
-    private $descructor;
+    /** @var Destructor */
+    private $destructor;
+    
+    private $initType = 'app';
     /**
      * Класс может быть инициализирован только самим классом
      * A class can only be initialized by the class
@@ -132,10 +140,10 @@ class Core {
             die('Error! Core not run!'.PHP_EOL.'Please assemble the project using QCoreApplication and QStandardPaths of Core library');
         }
         if(self::$APP === false) {
-            $type = strtolower($type);
             self::$APP = new self();
             self::$APP->WIN = stripos(PHP_OS, 'win') === false ? false : true;
-            switch($type) {
+            self::$APP->initType = strtolower($type);
+            switch(self::$APP->initType) {
                 case 'gui':
                     self::$APP->QApp = new \QGuiApplication($argc, $argv);
                     break;
@@ -160,16 +168,19 @@ class Core {
                 /** Получаем путь к AppData приложения в директории пользователя */
                 self::$APP->APP_DATA = \QStandardPaths::writableLocation(\QStandardPaths::AppLocalDataLocation).'/';
 
+                self::$APP->HOME_PATH = \QStandardPaths::writableLocation(\QStandardPaths::HomeLocation).'/';
+
             }
             require_once self::$APP->PATH.'Component.php';
-            foreach(self::$APP->components[$type] as $alias => $component) {
+            foreach(self::$APP->components[self::$APP->initType] as $alias => $component) {
                 self::$APP->load_component($component, $alias);
             }
+            
             require_once self::$APP->PATH.'WidgetsInterface.php';
             require_once self::$APP->PATH.'QtObject.php';
             require_once self::$APP->PATH.'Destructor.php';
-            self::$APP->descructor = new Destructor(self::$APP);
-            connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->descructor, 'onDestruct()');
+            self::$APP->destructor = new Destructor(self::$APP);
+            connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->destructor, 'onDestruct()');
         }
         return self::$APP;
     }
@@ -286,7 +297,14 @@ class Core {
         return $this->QApp->exec();
     }
 
-    public function quit() {
-        $this->descructor->onDestruct();
+    public function quit($die = false) {
+        if((bool)$die === true) $this->log->info('Forced Core shutdown', 'Core');
+        foreach(array_reverse($this->components[$this->initType], true) as $key => $component) {
+            unset($this->{$key});
+        }
     }
 }
+
+register_shutdown_function(function() {
+    Core::getInstance()->quit(true);
+});

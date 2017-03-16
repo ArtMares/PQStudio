@@ -12,6 +12,6 @@ class Variant extends Component {
     public function get(\QVariant $variant) {
         if($variant->isNull()) return null;
         $type = \QVariant::typeToName($variant->userType());
-        return $variant->{'to'.str_replace('Q', '', $type)}();
+        return $variant->{'to'.str_replace('Q', '', ucfirst($type))}();
     }
 }

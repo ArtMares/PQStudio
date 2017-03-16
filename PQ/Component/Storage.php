@@ -15,7 +15,7 @@ class Storage extends Component {
         $this->data[$name] = $value;
     }
 
-    public function __get($name) {
+    public function &__get($name) {
         if($this->__isset($name)) {
             return $this->data[$name];
         }
@@ -34,7 +34,7 @@ class Storage extends Component {
         $this->__set($name, $value);
     }
     
-    public function get($name) {
+    public function &get($name) {
         $result = $this->__get($name);
         return $result;
     }

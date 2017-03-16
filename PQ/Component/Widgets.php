@@ -15,8 +15,17 @@ class Widgets extends Component {
 
     private $title;
 
+    public function __destruct() {
+        foreach($this->widgets as $name => $widget) {
+            $this->_info('Destruct widget "'.$name.'"');
+            unset($this->widgets[$name]);
+        }
+        parent::__destruct();
+    }
+
     public function set($name, WidgetsInterface $widget) {
         $this->widgets[$name] = $widget;
+        $this->_info('Set widget "'.$name.'"');
     }
 
     /**
@@ -28,6 +37,15 @@ class Widgets extends Component {
             return $this->widgets[$name];
         }
         return null;
+    }
+
+    public function remove($name) {
+        if(isset($this->widgets[$name])) {
+            $this->widgets[$name]->free();
+            unset($this->widgets[$name]);
+            return true;
+        }
+        return false;
     }
 
     public function setDefaultTitle($title) {
