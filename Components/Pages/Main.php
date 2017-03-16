@@ -6,6 +6,7 @@
  */
 namespace Components\Pages;
 use Components\Custom\MenuBtn;
+use Components\Custom\Widget\ListView;
 use PQ\QtObject;
 use PQ\WidgetsInterface;
 
@@ -43,33 +44,37 @@ class Main extends \QFrame implements WidgetsInterface {
     }
 
     public function initProjectsListArea() {
-        /** Создаем QScrollArea для области проектов */
-        $this->scrollArea = new \QScrollArea($this);
-        
-        /** Задаем имя для QScrollArea */
-        $this->scrollArea->objectName = 'ScrollProjects';
-        
-        /** Запрещаем горизонтальное отображение скролла */
-        $this->scrollArea->setHorizontalScrollBarPolicy(\Qt::ScrollBarAlwaysOff);
-        
-        /** Создаем область для списка проектов */
-        $this->projectsList = new \QFrame($this);
-        
-        /** Задаем имя для QFrame */
-        $this->projectsList->objectName = 'Projects';
-        
+
+        $this->projectsList = new ListView($this);
+        $this->projectsList->disableScroll(ListView::Horizontal);
+//        /** Создаем QScrollArea для области проектов */
+//        $this->scrollArea = new \QScrollArea($this);
+//
+//        /** Задаем имя для QScrollArea */
+//        $this->scrollArea->objectName = 'ScrollProjects';
+//
+//        /** Запрещаем горизонтальное отображение скролла */
+//        $this->scrollArea->setHorizontalScrollBarPolicy(\Qt::ScrollBarAlwaysOff);
+//
+//        /** Создаем область для списка проектов */
+//        $this->projectsList = new \QFrame($this);
+//
+//        /** Задаем имя для QFrame */
+//        $this->projectsList->objectName = 'Projects';
+//
         /** Задаем минимальную и максимальную ширину области */
-        $this->projectsList->setMinimumWidth(288);
+        $this->projectsList->setMinimumWidth(300);
         $this->projectsList->setMaximumWidth(300);
-        
-        /** Создаем слой для области проектов */
-        $this->projectsList->setLayout(new \QVBoxLayout());
-        
-        /** Передаем область проектов в QScrollArea */
-        $this->scrollArea->setWidget($this->projectsList);
-        
-        /** Добавляем QScrollArea на основной слой */
-        $this->layout()->addWidget($this->scrollArea);
+//
+//        /** Создаем слой для области проектов */
+//        $this->projectsList->setLayout(new \QVBoxLayout());
+//
+//        /** Передаем область проектов в QScrollArea */
+//        $this->scrollArea->setWidget($this->projectsList);
+//
+//        /** Добавляем QScrollArea на основной слой */
+//        $this->layout()->addWidget($this->scrollArea);
+        $this->layout()->addWidget($this->projectsList);
     }
 
     public function initGeneralArea() {

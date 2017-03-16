@@ -21,6 +21,8 @@ class ListView extends \QScrollArea {
 
     protected $eventFilter;
 
+    protected $firstShow = true;
+
     public function __construct($parent = null) {
         parent::__construct($parent);
         $this->area = new \QFrame($this);
@@ -38,8 +40,11 @@ class ListView extends \QScrollArea {
         $this->eventFilter->onEvent = function($sender, $event) {
             switch($event->type()) {
                 case \QEvent::Show:
-                    $this->updateList();
-                    $this->resizeWidgets();
+                    if($this->firstShow) {
+                        $this->firstShow = false;
+                        $this->updateList();
+                        $this->resizeWidgets();
+                    }
                     break;
                 case \QEvent::Resize:
                     $this->resizeWidgets();
@@ -118,7 +123,7 @@ class ListView extends \QScrollArea {
         if($n > 0) {
             $this->area->resize(new \QSize($this->width() - 12, $n * $this->list[0]->height()));
         } else {
-            $this->area->resize(new \QSize($this->width() - 12, $this->height()));
+            $this->area->resize(new \QSize($this->width() - 12, $this->height() - 10));
         }
     }
 }

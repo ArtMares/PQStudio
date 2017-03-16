@@ -30,13 +30,18 @@ class PQStudio extends QFrame {
     private $components = [
         [
             'title' => 'Wake up',
-            'class' => 'Components\\Collector',
-            'init'  => true
+            'class' => 'Components\\BaseModel',
+            'init'  => false
         ],
         [
-            'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\EventCtrl',
+            'title' => 'Wake up',
+            'class' => 'Components\\Model\\CreateProject',
             'init'  => false
+        ],
+        [
+            'title' => 'Wake up',
+            'class' => 'Components\\Collector',
+            'init'  => true
         ],
         [
             'title' => 'Collecting stones',
@@ -104,37 +109,37 @@ class PQStudio extends QFrame {
             'init'  => false
         ],
         [
-            'title' => 'Building windows',
+            'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Main',
             'init'  => false
         ],
         [
-            'title' => 'Building windows',
+            'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Basic',
             'init'  => true
         ],
         [
-            'title' => 'Building windows',
+            'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Template',
             'init'  => true
         ],
         [
-            'title' => 'Building windows',
+            'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Settings',
             'init'  => true
         ],
         [
-            'title' => 'Building windows',
+            'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create',
             'init'  => false
         ],
         [
-            'title' => 'Building windows',
+            'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Import',
             'init'  => false
         ],
         [
-            'title' => 'Building windows',
+            'title' => 'Pour coffee',
             'class' => 'Components\\Widgets\\Welcome',
             'init'  => true
         ],
@@ -153,8 +158,6 @@ class PQStudio extends QFrame {
     private function initConfiguration() {
         /** Задаем язык приложения */
         $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
-        /** Получаем директорию для размещения проектов */
-        $this->core->storage->defaultProjectsPath = $this->core->preparePath($this->core->config->ini()->get('defaultProjectsPath', $this->core->HOME_PATH.'PQStudioProjects'), $this->core->WIN);
         /** Задаем тему оформления */
         $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
     }

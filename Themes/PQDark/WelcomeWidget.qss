@@ -44,11 +44,6 @@ QFrame#ImportPage QPushButton {
 QFrame QPushButton {
     outline: none;
 }
-
-QScrollArea#ScrollProjects {
-    background: #393939;
-    border: none;
-}
 QScrollBar:vertical {
     border: none;
     background: rgba(0, 0, 0, 0);

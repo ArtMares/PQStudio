@@ -7,7 +7,7 @@
 namespace Components\Model;
 use Components\BaseModel;
 
-class CreateProjects extends BaseModel {
+class CreateProject extends BaseModel {
 
     public $name;
 
@@ -21,6 +21,14 @@ class CreateProjects extends BaseModel {
 
     public $orgDomain;
 
+    public $templateIndex;
+
+    public $usePQCore = false;
+
+    public $includes = [];
+
+    public $icon;
+
     public function __construct() {
         $this->reset();
     }
@@ -32,5 +40,11 @@ class CreateProjects extends BaseModel {
         $this->appVersion = '0.1';
         $this->orgName = '';
         $this->orgDomain = '';
+        $this->templateIndex = -1;
+        $this->usePQCore = false;
+        $this->includes = [
+            'core:Qt'
+        ];
+        $this->icon = '';
     }
 }

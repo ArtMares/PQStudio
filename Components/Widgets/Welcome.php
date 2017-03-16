@@ -29,6 +29,8 @@ class Welcome extends \QWidget implements WidgetsInterface {
     private $duration = 350;
     
     private $eventFilter;
+
+    private $firstShow = true;
     
     public function initComponents() {
         
@@ -44,12 +46,17 @@ class Welcome extends \QWidget implements WidgetsInterface {
     
         $this->eventFilter = new \PQEventFilter($this);
         $this->eventFilter->addEventType(\QEvent::Show);
+//        $this->eventFilter->addEventType(\QEvent::WindowStateChange);
         $this->installEventFilter($this->eventFilter);
     
         $this->eventFilter->onEvent = function($sender, $event) {
             switch($event->type()) {
                 case \QEvent::Show:
                     $this->resizePages();
+                    break;
+                case \QEvent::WindowStateChange:
+                    if($sender->isMinimized())
+                        qDebug('Minimized');
                     break;
             }
         };
@@ -127,11 +134,18 @@ class Welcome extends \QWidget implements WidgetsInterface {
     }
     
     private function resizePages() {
-        $this->MainPage->resize($this->size());
-        foreach($this->pages as $index => $page) {
-            $page->resize($this->size());
-            $page->move(new \QPoint($this->width(), 0));
+        if($this->firstShow) {
+            $this->MainPage->resize($this->size());
+            foreach ($this->pages as $index => $page) {
+                $page->resize($this->size());
+                $page->move(new \QPoint($this->width(), 0));
+            }
+            $this->firstShow = false;
         }
-//        qDebug($this->children());
+    }
+
+    public function show() {
+        parent::show();
+        $this->core->QApp->alert($this, 10000);
     }
 }

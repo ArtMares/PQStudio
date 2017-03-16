@@ -12,3 +12,10 @@ QFrame#MainPage QFrame#Projects {
 QFrame#MainPage QFrame#General {
     background: #46474b;
 }
+QFrame#MainPage QScrollArea {
+    background: #393939;
+    border: none;
+}
+QFrame#MainPage QScrollArea QFrame {
+    background: transparent;
+}

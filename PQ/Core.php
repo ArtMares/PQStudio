@@ -13,6 +13,7 @@ use PQ\Component\Font;
 use PQ\Component\Icon;
 use PQ\Component\Lib;
 use PQ\Component\Log;
+use PQ\Component\Model;
 use PQ\Component\Process;
 use PQ\Component\Single;
 use PQ\Component\Storage;
@@ -43,16 +44,25 @@ use PQ\Component\Widgets;
  * @property        Style           $style
  * @property        Icon            $icon
  * @property        Storage         $storage
+ * @property        Model           $model
  * @property        Widgets         $widgets
  * @property        Single          $single
  * @property        Process         $process
  */
 class Core {
+
+    const QtCore = 0x00;
+    const QtGui  = 0x01;
+    const QtApp  = 0X02;
+
+    const MAJOR_VERSION     = 0;
+    const MINOR_VERSION     = 1;
+    const RELEASE_VERSION   = 1;
     /**
      * Версия ядра
      * Core Version
      */
-    const VERSION = '0.1';
+    const VERSION = self::MAJOR_VERSION.'.'.self::MINOR_VERSION.'.'.self::RELEASE_VERSION;
     /**
      * Экземпляр ядра
      * Instance Core
@@ -96,25 +106,18 @@ class Core {
      * Список компонентов ядра
      * The list of Core components
      */
-    public $components = [
-        'app' => [
+    private $components = [
+        self::QtCore => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
-            'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
-            'style' => 'Style', 'icon' => 'Icon',
-            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network',
-            'single' => 'Single', 'process' => 'Process'
+            'dir' => 'Dir', 'file' => 'File', 'lib' => 'Lib', 'storage' => 'Storage',
+            'model' => 'Model', 'network' => 'Network', 'single' => 'Single', 'process' => 'Process'
         ],
-        'gui' => [
-            'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
-            'dir' => 'Dir', 'file' => 'File', 'font' => 'Font', 'lib' => 'Lib',
-            'storage' => 'Storage', 'widgets' => 'Widgets', 'bootstrap' => 'Bootstrap', 'network' => 'Network',
-            'single' => 'Single', 'process' => 'Process'
+        self::QtGui => [
+            'font' => 'Font'
         ],
-        'core' => [
-            'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
-            'dir' => 'Dir', 'file' => 'File', 'lib' => 'Lib',
-            'storage' => 'Storage', 'network' => 'Network', 'single' => 'Single', 'process' => 'Process'
-        ]
+        self::QtApp => [
+            'style' => 'Style', 'icon' => 'Icon', 'widgets' => 'Widgets',
+        ],
     ];
 
     private $object;
@@ -122,7 +125,7 @@ class Core {
     /** @var Destructor */
     private $destructor;
     
-    private $initType = 'app';
+    private $initType = self::QtApp;
     /**
      * Класс может быть инициализирован только самим классом
      * A class can only be initialized by the class
@@ -134,7 +137,7 @@ class Core {
      */
     protected function __clone() {}
 
-    static public function &getInstance($type = 'app') {
+    static public function &getInstance($type = self::QtApp) {
         global $argc, $argv;
         if((!class_exists('QApplication') || !class_exists('QCuiApplication') || !class_exists('QCoreApplication')) && !class_exists('QStandardPaths')) {
             die('Error! Core not run!'.PHP_EOL.'Please assemble the project using QCoreApplication and QStandardPaths of Core library');
@@ -142,16 +145,19 @@ class Core {
         if(self::$APP === false) {
             self::$APP = new self();
             self::$APP->WIN = stripos(PHP_OS, 'win') === false ? false : true;
-            self::$APP->initType = strtolower($type);
+            self::$APP->initType = (int)$type;
             switch(self::$APP->initType) {
-                case 'gui':
-                    self::$APP->QApp = new \QGuiApplication($argc, $argv);
-                    break;
-                case 'core':
+                case self::QtCore:
                     self::$APP->QApp = new \QCoreApplication($argc, $argv);
                     break;
-                default:
+                case self::QtGui:
+                    self::$APP->QApp = new \QGuiApplication($argc, $argv);
+                    break;
+                case self::QtApp:
                     self::$APP->QApp = new \QApplication($argc, $argv);
+                    break;
+                default:
+                    die('Error! Core not run!'.PHP_EOL.'Please Please specify the type of application!'.PHP_EOL.'Use constants: PQ\\Core::QtApp or PQ\\Core::QtGui or PQ\\Core::QtCore');
             }
             self::$APP->PATH = __DIR__.'/';
             self::$APP->QT_PATH = stripos(self::$APP->PATH, 'qrc://') === false ? self::$APP->PATH : str_replace('qrc://', ':/', self::$APP->PATH);
@@ -172,9 +178,14 @@ class Core {
 
             }
             require_once self::$APP->PATH.'Component.php';
-            foreach(self::$APP->components[self::$APP->initType] as $alias => $component) {
+            $components = [];
+            for($i = 0; $i <= self::$APP->initType; $i++) {
+                $components = array_merge($components, self::$APP->components[$i]);
+            }
+            foreach($components as $alias => $component) {
                 self::$APP->load_component($component, $alias);
             }
+            self::$APP->components = $components;
             
             require_once self::$APP->PATH.'WidgetsInterface.php';
             require_once self::$APP->PATH.'QtObject.php';
@@ -299,7 +310,7 @@ class Core {
 
     public function quit($die = false) {
         if((bool)$die === true) $this->log->info('Forced Core shutdown', 'Core');
-        foreach(array_reverse($this->components[$this->initType], true) as $key => $component) {
+        foreach(array_reverse($this->components, true) as $key => $component) {
             unset($this->{$key});
         }
     }

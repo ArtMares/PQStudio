@@ -11,10 +11,10 @@ class Slider extends \QWidget {
     const Stopped       = 0x00;
     const Running       = 0x01;
     
-    const RightToLeft   = 0x00;
-    const LeftToRight   = 0x01;
-    const UpToDown      = 0x02;
-    const DownToUp      = 0x03;
+    const RightToLeft   = 0x02;
+    const LeftToRight   = 0x03;
+    const UpToDown      = 0x04;
+    const DownToUp      = 0x05;
     
     public $signals = [
         'currentChanged(int)',
@@ -40,6 +40,8 @@ class Slider extends \QWidget {
     protected $loop = false;
     
     protected $eventFilter;
+
+    protected $firstShow = true;
     
     public function __construct($parent = null) {
         parent::__construct($parent);
@@ -52,6 +54,10 @@ class Slider extends \QWidget {
         $this->eventFilter->onEvent = function($sender, $event) {
             switch($event->type()) {
                 case \QEvent::Show:
+                    if($this->firstShow) {
+                        $this->firstShow = false;
+                        $this->resizeWidgets();
+                    }
                 case \QEvent::Resize:
                     $this->resizeWidgets();
                     break;

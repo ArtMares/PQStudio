@@ -36,13 +36,6 @@ class Template extends \QFrame implements WidgetsInterface {
                 $this->ui['description']->plainText = '';
             }
         };
-//        $this->ui['listTemplate']->onDestroyed = function($sender) {
-//            qDebug('QListWidget Destroyed');
-//            foreach($this->items as $i => $item) {
-//                $item->free();
-//                unset($this->items[$i]);
-//            }
-//        };
 
         $labelDescription = new \QLabel($this);
         $labelDescription->text = tr('Description') . ':';
@@ -58,7 +51,10 @@ class Template extends \QFrame implements WidgetsInterface {
         $this->ui['NextBtn']->onClicked = function($sender) {
             $index = $this->ui['listTemplate']->currentRow();
             if($index > -1) {
-                $this->core->storage->createProjectData['templateIndex'] = $index;
+                $this->core->model->get('CreateProject')->templateIndex = $index;
+                $this->core->widgets->get('Components/Pages/Create/Settings')->prepareIncludes(
+                    $this->core->model->get('CreateProject')->includes
+                );
                 $this->core->widgets->get('Components/Pages/Create')->next();
             }
         };

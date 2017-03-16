@@ -30,9 +30,9 @@ class Basic extends \QFrame implements WidgetsInterface {
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
         /** Задаем функция для проверки валидности поля */
         $this->ui['name']->onValidate(function($sender, $text) {
-            if(preg_match('/[0-9a-zA-Z\-\.\_ ]+/', $text)) {
+            if(preg_match('/^[0-9a-zA-Z\-\.\_ ]+/', $text)) {
                 $result = $this->checkProject($text);
-                if($result === true) $this->core->storage->createProjectData['name'] = $text;
+                if($result === true) $this->core->model->get('CreateProject')->name = $text;
                 return $result;
             }
             return false;
@@ -48,7 +48,7 @@ class Basic extends \QFrame implements WidgetsInterface {
     
         /** Создаем поле ввода для директории проекта */
         $this->ui['path'] = new Input($this);
-        $this->ui['path']->text = $this->core->storage->defaultProjectsPath;
+        $this->ui['path']->text = $this->core->model->get('CreateProject')->path_to;
         $this->ui['path']->setPlaceholderText(tr('Select directory for Project') . '...');
         $this->ui['path']->readOnly = true;
     
@@ -98,11 +98,11 @@ class Basic extends \QFrame implements WidgetsInterface {
         $this->ui['NextBtn'] = new NextBtn($this, tr('Next'));
         $this->ui['NextBtn']->onClicked = function($sender) {
             if($this->core->variant->get($this->ui['name']->property('invalid')) === false && $this->ui['name']->text() !== '') {
-                $this->core->storage->createProjectData['path'] = $this->ui['path']->text();
-                $this->core->storage->createProjectData['app']['name'] = $this->ui['appName']->text();
-                $this->core->storage->createProjectData['app']['version'] = $this->ui['appVersion']->text();
-                $this->core->storage->createProjectData['app']['orgName'] = $this->ui['orgName']->text();
-                $this->core->storage->createProjectData['app']['orgDomain'] = $this->ui['orgDomain']->text();
+                $this->core->model->get('CreateProject')->path_to = $this->ui['path']->text();
+                $this->core->model->get('CreateProject')->appName = $this->ui['appName']->text();
+                $this->core->model->get('CreateProject')->appVersion = $this->ui['appVersion']->text();
+                $this->core->model->get('CreateProject')->orgName = $this->ui['orgName']->text();
+                $this->core->model->get('CreateProject')->orgDomain = $this->ui['orgDomain']->text();
                 $this->core->widgets->get('Components/Pages/Create')->next();
             }
         };
@@ -188,11 +188,11 @@ class Basic extends \QFrame implements WidgetsInterface {
     private function setDefaultProjectsPath($sender, $path) {
         if($sender->checked) {
             $path = $path->text;
-            if($this->core->storage->defaultProjectsPath !== $path) {
-                $this->core->storage->defaultProjectsPath = $path;
+            if($this->core->model->get('CreateProject')->path_to !== $path) {
+                $this->core->model->get('CreateProject')->path_to = $path;
             }
         }
-        $this->core->config->ini()->set('defaultProjectsPath', $this->core->storage->defaultProjectsPath);
+        $this->core->config->ini()->set('defaultProjectsPath', $this->core->model->get('CreateProject')->path_to);
     }
 
     private function checkProject($name) {

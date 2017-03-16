@@ -5,6 +5,7 @@
  * @copyright           artmares@influ.su
  */
 namespace Components;
+use Components\Model\CreateProject;
 use PQ\Component\Dir;
 use PQ\QtObject;
 use PQ\WidgetsInterface;
@@ -13,38 +14,20 @@ class Collector extends \QObject implements WidgetsInterface {
     use QtObject;
 
     public function initComponents() {
-        $this->prepareCreateProjectData();
+        $this->loadModelCreateProject();
         $this->loadAppTemplates();
         $this->loadPlastiQ();
         $this->loadPQCore();
     }
 
-    public function resetProjectData() {
-        $this->prepareCreateProjectData();
-    }
-
-    private function prepareCreateProjectData() {
-        $this->core->storage->createProjectData = [
-            'name' => '',
-            'path' => '',
-            'build' => [
-                'template' => 'app',
-                'icon' =>  '',
-                'save_php7ts_md5' =>  true,
-                'save_ini_md5' => false,
-            ],
-            'app' => [
-                'name' => '',
-                'version' => '',
-                'orgName' => '',
-                'orgDomain' => '',
-            ],
-            'templateIndex' => 0,
-            'usePQCore' => false,
-            'includes' => [
-                'core:Qt'
-            ]
-        ];
+    private function loadModelCreateProject() {
+        $model = new CreateProject();
+        $model->reset();
+        $model->path_to = $this->core->preparePath(
+            $this->core->config->ini()->get('defaultProjectsPath', $this->core->HOME_PATH.'PQStudioProjects'),
+            $this->core->WIN
+        );
+        $this->core->model->set('CreateProject', $model);
     }
 
     private function loadAppTemplates() {
@@ -57,6 +40,7 @@ class Collector extends \QObject implements WidgetsInterface {
                 if($this->core->file->exists($file)) {
                     $data = json_decode($this->core->file->read($file), true);
                     $data['path'] = $dir.'/';
+                    $data['phpqt5'] = json_decode($this->core->file->read($path.$dir.'/file.phpqt5'), true);
                     $this->core->storage->appTemplates[] = $data;
                 }
             }
