@@ -11,7 +11,7 @@ require_once 'PQ/Core.php';
 $core = \PQ\Core::getInstance();
 
 define('RELEASE_VERSION', 'testing');
-define('BUILD_VERSION', (string)110);
+define('BUILD_VERSION', (string)111);
 
 $title = sprintf('%1$s %2$s [build: %3$s]',
     $core->applicationName(),
@@ -100,7 +100,7 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\Widget\\Roll',
+            'class' => 'Components\\Custom\\Widget\\ListView',
             'init'  => false
         ],
         [

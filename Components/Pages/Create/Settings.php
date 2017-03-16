@@ -32,25 +32,29 @@ class Settings extends \QFrame implements WidgetsInterface {
         $this->ui['scroll'] = new ListView($this);
         $this->ui['scroll']->disableScroll(ListView::Horizontal);
 
-        $this->ui['includesList'] = new \QFrame($this->ui['scroll']);
+//        $this->ui['includesList'] = new \QFrame($this->ui['scroll']);
 //        $this->ui['includesList'] = new \QListWidget($this);
-        $this->ui['includesList']->setLayout(new \QVBoxLayout());
-        $this->ui['includesList']->layout()->setContentsMargins(0, 0, 0, 0);
-        $this->ui['includesList']->layout()->setSpacing(0);
-        $this->ui['includesList']->objectName = 'includesList';
+//        $this->ui['includesList']->setLayout(new \QVBoxLayout());
+//        $this->ui['includesList']->layout()->setContentsMargins(0, 0, 0, 0);
+//        $this->ui['includesList']->layout()->setSpacing(0);
+//        $this->ui['includesList']->objectName = 'includesList';
 
         $include = $this->loadPHPQt5File();
 
+//        $i = 0;
         foreach($this->core->storage->plastiq as $include => $data) {
-//            $this->items[$include] = new \QListWidgetItem();
-            $this->ui['includes'][$include] = new CheckBoxHover($this->ui['includesList'], $include);
-//            $this->items[$include]->setSizeHint($this->ui['includes'][$include]->size());
-//            $this->ui['includesList']->addItem($this->items[$include]);
-//            $this->ui['includesList']->setItemWidget($this->items[$include], $this->ui['includes'][$include]);
+//            $item = new \QListWidgetItem();
+//            $this->ui['includes'][$include] = new CheckBoxHover($this->ui['includesList'], $include);
+            $this->ui['includes'][$include] = new CheckBoxHover($this->ui['scroll'], $include);
+//            $item->setSizeHint($this->ui['includes'][$include]->size());
+//            $this->ui['includesList']->addItem($item);
+//            $this->ui['includesList']->setItemWidget($item, $this->ui['includes'][$include]);
             $this->ui['scroll']->addItem($this->ui['includes'][$include], $include);
             $this->ui['includes'][$include]->onToggled = function($sender, $check) use($include) {
                 $this->checkInclude($include, $check);
             };
+//            $i++;
+//            if($i > 10) break;
         }
         
         $this->ui['search'] = new Input($this);
@@ -61,11 +65,10 @@ class Settings extends \QFrame implements WidgetsInterface {
             if($text !== $this->searchText) {
                 $this->searchText = $text;
                 $this->ui['scroll']->update($text);
-            }
 //            $rows = [];
 //            foreach($this->ui['includes'] as $name => $include) {
-//                if($value !== '') {
-//                    if(stristr($name, $value) !== false) {
+//                if($text !== '') {
+//                    if(stristr($name, $text) !== false) {
 //                        $rows[] = $name;
 //                    }
 //                } else {
@@ -73,6 +76,7 @@ class Settings extends \QFrame implements WidgetsInterface {
 //                }
 //            }
 //            $this->updateList($rows);
+            }
         };
 
 //        $this->ui['scroll']->setWidget($this->ui['includesList']);
@@ -137,13 +141,14 @@ class Settings extends \QFrame implements WidgetsInterface {
 
     private function updateList($data) {
         $this->ui['includesList']->clear();
-        foreach($this->items as $item) unset($item);
-        $this->items = [];
+//        foreach($this->items as $item) unset($item);
+//        $this->items = [];
         foreach($data as $name) {
-            $this->items[$name] = new \QListWidgetItem();
-            $this->items[$name]->setSizeHint($this->ui['includes'][$name]->size());
-            $this->ui['includesList']->addItem($this->items[$name]);
-            $this->ui['includesList']->setItemWidget($this->items[$name], $this->ui['includes'][$name]);
+            qDebug($this->ui['includes'][$name]);
+            $item = new \QListWidgetItem();
+            $item->setSizeHint($this->ui['includes'][$name]->size());
+            $this->ui['includesList']->addItem($item);
+//            $this->ui['includesList']->setItemWidget($item, $this->ui['includes'][$name]);
         }
     }
 

@@ -36,13 +36,13 @@ class Template extends \QFrame implements WidgetsInterface {
                 $this->ui['description']->plainText = '';
             }
         };
-        $this->ui['listTemplate']->onDestroyed = function($sender) {
-            qDebug('QListWidget Destroyed');
-            foreach($this->items as $i => $item) {
-                $item->free();
-                unset($this->items[$i]);
-            }
-        };
+//        $this->ui['listTemplate']->onDestroyed = function($sender) {
+//            qDebug('QListWidget Destroyed');
+//            foreach($this->items as $i => $item) {
+//                $item->free();
+//                unset($this->items[$i]);
+//            }
+//        };
 
         $labelDescription = new \QLabel($this);
         $labelDescription->text = tr('Description') . ':';
