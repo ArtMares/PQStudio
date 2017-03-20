@@ -41,8 +41,8 @@ class PQStudio extends QFrame {
         [
             'title' => 'Wake up',
             'class' => 'Components\\Collector',
-//            'init'  => true
-            'init'  => false
+            'init'  => true
+//            'init'  => false
         ],
         [
             'title' => 'Collecting stones',
@@ -117,20 +117,20 @@ class PQStudio extends QFrame {
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Basic',
-//            'init'  => true
-            'init'  => false
+            'init'  => true
+//            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Template',
-//            'init'  => true
-            'init'  => false
+            'init'  => true
+//            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Settings',
-//            'init'  => true
-            'init'  => false
+            'init'  => true
+//            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
@@ -145,8 +145,8 @@ class PQStudio extends QFrame {
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Widgets\\Welcome',
-//            'init'  => true
-            'init'  => false
+            'init'  => true
+//            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
@@ -156,7 +156,7 @@ class PQStudio extends QFrame {
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Widgets\\NotificationCenter',
-            'init'  => true
+//            'init'  => true
         ],
     ];
     
@@ -316,8 +316,8 @@ class PQStudio extends QFrame {
 
     public function completed() {
         sleep(2);
-//        $window = $this->core->widgets->get('Components/Widgets/Welcome');
-        $window = $this->core->widgets->get('Components/Widgets/NotificationCenter');
+        $window = $this->core->widgets->get('Components/Widgets/Welcome');
+//        $window = $this->core->widgets->get('Components/Widgets/NotificationCenter');
         $window->show();
 //        $this->core->widgets->set(
 //            'Components/Widgets/Notification',
