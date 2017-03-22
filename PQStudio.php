@@ -153,11 +153,6 @@ class PQStudio extends QFrame {
             'class' => 'Components\\Widgets\\Notification',
             'init'  => false
         ],
-        [
-            'title' => 'Pour coffee',
-            'class' => 'Components\\Widgets\\NotificationCenter',
-//            'init'  => true
-        ],
     ];
     
     private $progress;
@@ -319,6 +314,23 @@ class PQStudio extends QFrame {
         $window = $this->core->widgets->get('Components/Widgets/Welcome');
 //        $window = $this->core->widgets->get('Components/Widgets/NotificationCenter');
         $window->show();
+        
+        $socket = new QLocalSocket();
+        $socket->abort();
+        $socket->connectToServer('PQCenter');
+        
+        if($socket->waitForConnected(1000)) {
+            echo 'connect';
+            $socket->write(json_encode([
+                'title' => 'PQStudio',
+                'message' => 'Reply running application',
+                'level' => 4
+            ]));
+        } else {
+            echo 'not connect';
+        }
+        $this->core->QApp->processEvents();
+        
 //        $this->core->widgets->set(
 //            'Components/Widgets/Notification',
 //            new \Components\Widgets\Notification($window)
