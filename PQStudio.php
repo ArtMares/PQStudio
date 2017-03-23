@@ -167,32 +167,56 @@ class PQStudio extends QFrame {
 
     private function initConfiguration() {
         /** Задаем язык приложения */
-        $this->changeLang($this->core->config->ini()->get('language', 'en'), true);
+        $this->changeLang($this->core->config->ini()->get('language', QLocale::system()->name()), true);
         /** Задаем тему оформления */
         $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
     }
 
     private function changeLang($lang, $accept = false) {
-        if($lang !== 'en') {
+        if($lang !== 'en_US') {
             if($accept === true) set_tr_lang($lang, 'languages');
         }
         $this->core->config->ini()->set('language', $lang);
+    }
+    
+    private function initLocalSocket() {
+        $socket = new QLocalSocket();
+        $socket->abort();
+        $socket->connectToServer('PQCenter');
+    
+        if($socket->waitForConnected(1000)) {
+            $this->core->storage->socket = $socket;
+        }
+        $this->core->QApp->processEvents();
     }
 
     public function initComponents() {
         /** Инициализируем загрузку всех основных конфигураций приложени */
         $this->initConfiguration();
+        
+        $this->core->process->detached('PQStudioCenter-src.exe');
+        
+        $this->initLocalSocket();
 
         /** Проверяем запущен ли уже экземпляр приложения */
         $single = $this->core->single->check($this->core->applicationName());
 
         /** Если запущен то закрываем текущее приложение */
         if($single) {
-            $msgBox = new QMessageBox();
-            $this->core->style->set($msgBox, 'MessageBox');
-            $msgBox->setText(tr('The application is already running'));
-            $ret = $msgBox->exec();
-            if($ret === QMessageBox::Ok) $this->core->quit();
+            $this->core->storage->socket->write(
+                json_encode([
+                    'type' => 'notice',
+                    'title' => $this->core->widgets->getDefaultTitle(),
+                    'message' => tr('The application is already running'),
+                    'level' => 6
+                ])
+            );
+            die();
+//            $msgBox = new QMessageBox();
+//            $this->core->style->set($msgBox, 'MessageBox');
+//            $msgBox->setText(tr('The application is already running'));
+//            $ret = $msgBox->exec();
+//            if($ret === QMessageBox::Ok) $this->core->quit();
         }
 
         /** Получаем колличество компонетов приложения которые необходимо подключить */
@@ -314,22 +338,6 @@ class PQStudio extends QFrame {
         $window = $this->core->widgets->get('Components/Widgets/Welcome');
 //        $window = $this->core->widgets->get('Components/Widgets/NotificationCenter');
         $window->show();
-        
-        $socket = new QLocalSocket();
-        $socket->abort();
-        $socket->connectToServer('PQCenter');
-        
-        if($socket->waitForConnected(1000)) {
-            echo 'connect';
-            $socket->write(json_encode([
-                'title' => 'PQStudio',
-                'message' => 'Reply running application',
-                'level' => 4
-            ]));
-        } else {
-            echo 'not connect';
-        }
-        $this->core->QApp->processEvents();
         
 //        $this->core->widgets->set(
 //            'Components/Widgets/Notification',

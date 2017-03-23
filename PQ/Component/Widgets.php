@@ -51,6 +51,10 @@ class Widgets extends Component {
     public function setDefaultTitle($title) {
         $this->title = $this->core->var->convert('str', $title);
     }
+    
+    public function getDefaultTitle() {
+        return $this->title;
+    }
 
     public function setTitle(&$object, $title = '') {
         $title = $this->core->var->convert('str', $title);

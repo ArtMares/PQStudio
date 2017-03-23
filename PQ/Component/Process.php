@@ -21,6 +21,10 @@ class Process extends Component {
         $this->list[$pid] = $process;
         return $pid;
     }
+    
+    public function detached($command) {
+        \QProcess::startDetached($command);
+    }
 
     public function connect($pid, $signal, &$object, $slot) {
         if(isset($this->list[$pid])) {

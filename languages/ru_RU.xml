@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<pqenginetr lang="ru">
+<pqenginetr lang="ru_RU">
     <unit>
         <source>The application is already running</source>
         <tr>Приложение уже запущено</tr>
