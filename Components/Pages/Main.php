@@ -6,19 +6,18 @@
  */
 namespace Components\Pages;
 use Components\Custom\MenuBtn;
-use Components\Custom\Widget\ListView;
+use Components\Custom\ProjectBtn;
+use Components\Custom\Widget\ListWidget;
 use PQ\QtObject;
 use PQ\WidgetsInterface;
 
-class Main extends \QFrame implements WidgetsInterface {
+class Main extends \QWidget implements WidgetsInterface {
 
     use QtObject;
-
-    public $scrollArea;
+    
+    private $general;
 
     public $projectsList;
-
-    public $general;
 
     /** Инициализирует основные компоненты */
     public function initComponents() {
@@ -36,7 +35,7 @@ class Main extends \QFrame implements WidgetsInterface {
         
         $this->core->style->set($this, 'MainPage');
         
-        /** Инициализируем создание области для списка проектов которые были созданы с IDE */
+        /** Инициализируем создание области для списка проектов которые были созданы в IDE */
         $this->initProjectsListArea();
         
         /** Инициализируем создание основной области */
@@ -45,36 +44,18 @@ class Main extends \QFrame implements WidgetsInterface {
 
     public function initProjectsListArea() {
 
-        $this->projectsList = new ListView($this);
-        $this->projectsList->disableScroll(ListView::Horizontal);
-//        /** Создаем QScrollArea для области проектов */
-//        $this->scrollArea = new \QScrollArea($this);
-//
-//        /** Задаем имя для QScrollArea */
-//        $this->scrollArea->objectName = 'ScrollProjects';
-//
-//        /** Запрещаем горизонтальное отображение скролла */
-//        $this->scrollArea->setHorizontalScrollBarPolicy(\Qt::ScrollBarAlwaysOff);
-//
-//        /** Создаем область для списка проектов */
-//        $this->projectsList = new \QFrame($this);
-//
-//        /** Задаем имя для QFrame */
-//        $this->projectsList->objectName = 'Projects';
-//
+        $this->projectsList = new ListWidget($this);
         /** Задаем минимальную и максимальную ширину области */
         $this->projectsList->setMinimumWidth(300);
         $this->projectsList->setMaximumWidth(300);
-//
-//        /** Создаем слой для области проектов */
-//        $this->projectsList->setLayout(new \QVBoxLayout());
-//
-//        /** Передаем область проектов в QScrollArea */
-//        $this->scrollArea->setWidget($this->projectsList);
-//
-//        /** Добавляем QScrollArea на основной слой */
-//        $this->layout()->addWidget($this->scrollArea);
+        $projectBtn = new ProjectBtn(null, 'Test', 'D:/Test', $this->core->lib->uid->generate());
+        $projectBtn->connect(SIGNAL('remove()'), $this, SLOT('removeProject()'));
+        $this->projectsList->addWidget($projectBtn);
         $this->layout()->addWidget($this->projectsList);
+    }
+    
+    public function removeProject($sender) {
+        qDebug($sender->uid);
     }
 
     public function initGeneralArea() {
@@ -124,9 +105,8 @@ class Main extends \QFrame implements WidgetsInterface {
         $openBtn = new MenuBtn($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), tr('Open Project File'), 'welcome_main-open_project');
         $openBtn->onClicked = function($sender) {
         };
-
-
-//        $importBtn = new MainMenuBtn($this->Menu, Icon::get('fa-sign-in', '#c28a46', 16), tr('Import PQBuilder Project'));
+        
+        /** Создаем кнопку основного меню для импорта проекта */
         $importBtn = new MenuBtn($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), tr('Import Project'), 'welcome_main-import_page_show');
         $importBtn->onClicked = function($sender) {
         };
@@ -161,5 +141,9 @@ class Main extends \QFrame implements WidgetsInterface {
         $this->general->layout()->addWidget($spacer);
 
         $this->layout()->addWidget($this->general);
+    }
+    
+    public function addProject($name, $path) {
+    
     }
 }

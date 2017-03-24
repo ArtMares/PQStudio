@@ -35,14 +35,13 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Wake up',
-            'class' => 'Components\\Model\\CreateProject',
+            'class' => 'Components\\Model\\Project',
             'init'  => false
         ],
         [
             'title' => 'Wake up',
             'class' => 'Components\\Collector',
             'init'  => true
-//            'init'  => false
         ],
         [
             'title' => 'Collecting stones',
@@ -67,6 +66,11 @@ class PQStudio extends QFrame {
         [
             'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\NextBtn',
+            'init'  => false
+        ],
+        [
+            'title' => 'Collecting stones',
+            'class' => 'Components\\Custom\\ProjectBtn',
             'init'  => false
         ],
         [
@@ -110,6 +114,11 @@ class PQStudio extends QFrame {
             'init'  => false
         ],
         [
+            'title' => 'Collecting stones',
+            'class' => 'Components\\Custom\\Widget\\ListWidget',
+            'init'  => false
+        ],
+        [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Main',
             'init'  => false
@@ -118,19 +127,16 @@ class PQStudio extends QFrame {
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Basic',
             'init'  => true
-//            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Template',
             'init'  => true
-//            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Settings',
             'init'  => true
-//            'init'  => false
         ],
         [
             'title' => 'Pour coffee',
@@ -146,12 +152,6 @@ class PQStudio extends QFrame {
             'title' => 'Pour coffee',
             'class' => 'Components\\Widgets\\Welcome',
             'init'  => true
-//            'init'  => false
-        ],
-        [
-            'title' => 'Pour coffee',
-            'class' => 'Components\\Widgets\\Notification',
-            'init'  => false
         ],
     ];
     
@@ -169,7 +169,7 @@ class PQStudio extends QFrame {
         /** Задаем язык приложения */
         $this->changeLang($this->core->config->ini()->get('language', QLocale::system()->name()), true);
         /** Задаем тему оформления */
-        $this->core->style->setSkin($this->core->config->ini()->get('theame', 'PQDark'));
+        $this->core->style->setSkin($this->core->config->ini()->get('theme', 'PQDark'));
     }
 
     private function changeLang($lang, $accept = false) {

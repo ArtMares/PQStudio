@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <pqenginetr lang="ru_RU">
     <unit>
+        <source>Hide</source>
+        <tr>Скрыть</tr>
+    </unit>
+    <unit>
+        <source>Show</source>
+        <tr>Показать</tr>
+    </unit>
+    <unit>
+        <source>Quit</source>
+        <tr>Выйти</tr>
+    </unit>
+    <unit>
+        <source>Remove All</source>
+        <tr>Удалить все</tr>
+    </unit>
+    <unit>
         <source>The application is already running</source>
         <tr>Приложение уже запущено</tr>
     </unit>

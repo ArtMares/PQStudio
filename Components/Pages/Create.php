@@ -30,9 +30,6 @@ class Create extends \QFrame implements WidgetsInterface {
         $this->slider->setDuration(350);
         $this->slider->setLoop(true);
         
-//        $this->core->widgets->set('Components/Pages/Create/Basic', new Basic());
-//        $this->core->widgets->set('Components/Pages/Create/Template', new Template());
-        
         $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Basic'));
         $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Template'));
         $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Settings'));

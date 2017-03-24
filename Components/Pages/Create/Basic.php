@@ -28,7 +28,7 @@ class Basic extends \QFrame implements WidgetsInterface {
         /** Создаем поле ввода для Навзвания проекта */
         $this->ui['name'] = new InputValidate($this);
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
-        /** Задаем функция для проверки валидности поля */
+        /** Задаем функцию для проверки валидности поля */
         $this->ui['name']->onValidate(function($sender, $text) {
             if(preg_match('/^[0-9a-zA-Z\-\.\_ ]+/', $text)) {
                 $result = $this->checkProject($text);

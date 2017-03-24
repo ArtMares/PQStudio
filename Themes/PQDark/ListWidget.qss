@@ -1,0 +1,42 @@
+QScrollArea {
+    background-color: #393939;
+    border: none;
+}
+QScrollArea QFrame {
+    background: transparent;
+}
+QScrollBar:vertical {
+    border: none;
+    background: rgba(0, 0, 0, 0);
+    width: 12px;
+    margin: 0px;
+}
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #5c5c5c, stop: 1 #515151);
+    min-height: 30px;
+    border: none;
+    border-radius: 2px;
+}
+QScrollBar::add-line:vertical {
+    border: 0px;
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+QScrollBar::sub-line:vertical {
+    border: 0px;
+    height: 0px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+QScrollBar::up-arrow:vertical {
+    width: 0px;
+    height: 0px;
+}
+QScrollBar::down-arrow:vertical {
+    width: 0px;
+    height: 0px;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}

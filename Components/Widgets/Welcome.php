@@ -28,11 +28,11 @@ class Welcome extends \QWidget implements WidgetsInterface {
 
     private $duration = 350;
     
-    private $eventFilter;
-
     private $firstShow = true;
     
     public function initComponents() {
+        
+        $this->objectName = 'Welcome';
         
         $this->hideAnimator = new \QPropertyAnimation($this);
         $this->hideAnimator->setDuration($this->duration);
@@ -43,23 +43,6 @@ class Welcome extends \QWidget implements WidgetsInterface {
         $this->showAnimator->setDuration($this->duration);
         $this->showAnimator->setPropertyName('pos');
         $this->showAnimator->setEasingCurve(new \QEasingCurve(\QEasingCurve::InOutQuad));
-    
-        $this->eventFilter = new \PQEventFilter($this);
-        $this->eventFilter->addEventType(\QEvent::Show);
-//        $this->eventFilter->addEventType(\QEvent::WindowStateChange);
-        $this->installEventFilter($this->eventFilter);
-    
-        $this->eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::Show:
-                    $this->resizePages();
-                    break;
-                case \QEvent::WindowStateChange:
-                    if($sender->isMinimized())
-                        qDebug('Minimized');
-                    break;
-            }
-        };
         
         /** Задаем фиксированный размер окна */
         $this->setFixedSize(770, 430);
@@ -70,67 +53,58 @@ class Welcome extends \QWidget implements WidgetsInterface {
         /** Задаем стили для окна */
         $this->core->style->set($this, 'WelcomeWidget');
 
-        /** Создаем слой */
-//        $this->setLayout(new \QHBoxLayout());
-
-        /** Убираем отступы от края у слоя */
-//        $this->layout()->setContentsMargins(0, 0, 0, 0);
-//        $this->layout()->setSpacing(0);
-
         /** Инициализируем основные страницы виджета */
         $this->core->widgets->set('Components/Pages/Main', new Main($this));
-        $this->core->widgets->set('Components/Pages/Create', new Create($this));
-        $this->core->widgets->set('Components/Pages/Import', new Import($this));
+//        $this->core->widgets->set('Components/Pages/Create', new Create($this));
+//        $this->core->widgets->set('Components/Pages/Import', new Import($this));
         
         $this->MainPage = $this->core->widgets->get('Components/Pages/Main');
-//        $this->MainPage->setParent($this);
-        $this->pages[] = $this->core->widgets->get('Components/Pages/Create');
-
-        /** Добавляем страницы в стаковый виджет */
-//        $this->stack->addWidget($this->core->widgets->get('Components/Pages/Main'));
-//        $this->stack->addWidget($this->core->widgets->get('Components/Pages/Create'));
-//        $this->stack->addWidget($this->core->widgets->get('Components/Pages/Import'));
-
-        /** Добавляем стаковый виджет в слой */
-//        $this->layout()->addWidget($this->stack);
-
-        /** Задаем страницу которая будет отображена */
-//        $this->stack->setCurrentWidget($this->core->widgets->get('Components/Pages/Main'));
-//        $this->page = 'Components/Pages/Main';
+//        $this->pages[] = $this->core->widgets->get('Components/Pages/Create');
+    }
+    
+    /** @override showEvent */
+    public function showEvent($event) {
+        $this->resizePages();
     }
     
     public function showPage($pageName) {
         $this->currentPage = false;
-        if(!$this->core->var->is_null($this->core->widgets->get($pageName))) {
+        $page = $this->core->widgets->get($pageName);
+        if(!$this->core->var->is_null($page)) {
             $this->hideAnimator->setTargetObject($this->MainPage);
             $this->hideAnimator->setStartValue(new \QPoint(0, 0));
             $this->hideAnimator->setEndValue(new \QPoint(-$this->width(), 0));
     
-            $this->showAnimator->setTargetObject($this->core->widgets->get($pageName));
+            $this->showAnimator->setTargetObject($page);
             $this->showAnimator->setStartValue(new \QPoint($this->width(), 0));
             $this->showAnimator->setEndValue(new \QPoint(0, 0));
             
-            $this->hideAnimator->start();
-            $this->showAnimator->start();
+            $this->animationStart();
             
             $this->currentPage = $pageName;
         }
     }
 
     public function Back() {
-        if(!$this->core->var->is_null($this->core->widgets->get($this->currentPage))) {
-            $this->hideAnimator->setTargetObject($this->core->widgets->get($this->currentPage));
+        $page = $this->core->widgets->get($this->currentPage);
+        if(!$this->core->var->is_null($page)) {
+            $this->hideAnimator->setTargetObject($page);
             $this->hideAnimator->setStartValue(new \QPoint(0, 0));
             $this->hideAnimator->setEndValue(new \QPoint($this->width(), 0));
     
             $this->showAnimator->setTargetObject($this->MainPage);
             $this->showAnimator->setStartValue(new \QPoint(-$this->width(), 0));
             $this->showAnimator->setEndValue(new \QPoint(0, 0));
-    
-            $this->hideAnimator->start();
-            $this->showAnimator->start();
+            
+            $this->animationStart();
+            
             $this->currentPage = false;
         }
+    }
+    
+    private function animationStart() {
+        $this->hideAnimator->start();
+        $this->showAnimator->start();
     }
     
     private function resizePages() {

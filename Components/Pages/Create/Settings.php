@@ -20,8 +20,12 @@ class Settings extends \QFrame implements WidgetsInterface {
     public $ui = [];
 
     private $searchText = '';
+    
+    private $model;
 
     public function initComponents() {
+        
+        $this->model = $this->core->model->get('CreateProject');
 
         $labelIncludes = new \QLabel($this);
         $labelIncludes->text = tr('PlastiQ Meta Objects') . ':';
@@ -107,7 +111,7 @@ class Settings extends \QFrame implements WidgetsInterface {
             $depends = isset($this->core->storage->plastiq[$name]['depends']) ? $this->core->storage->plastiq[$name]['depends'] : [];
             foreach($depends as $depend) $this->ui['includes'][$depend]->setChecked(true);
         } else {
-            unset($this->core->model->get('CrateProject')->includes[$index]);
+            unset($this->core->model->get('CreateProject')->includes[$index]);
         }
     }
 

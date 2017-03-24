@@ -1,0 +1,25 @@
+QLabel {
+    color: #c4c4c4;
+    font-size: 16px;
+}
+QLabel#Path {
+    color: #969696;
+    font-size: 14px;
+}
+QWidget#ProjectBtn {
+    background: transparent;
+}
+QWidget#ProjectBtn QPushButton > QLabel {
+    color: transparent;
+}
+QWidget#ProjectBtnHover {
+    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop : 0.0 #8a3b16,  stop : 1.0 transparent);
+}
+QWidget#ProjectBtnHover QPushButton > QLabel {
+    color: #c4c4c4;
+}
+QPushButton {
+    border: none;
+    width: 16px;
+    height: 16px;
+}

@@ -2,6 +2,9 @@ QWidget {
     font-family: "FontAwesome", "Akrobat";
     font-size: 16px;
 }
+QWidget#Welcome {
+    background: #393939;
+}
 
 QFrame#ImportPage {
     background: #46474b;

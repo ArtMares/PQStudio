@@ -6,19 +6,20 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Ctrl;
-class Welcome extends \PQEventFilter {
+use Components\BaseCtrl;
+
+class Welcome extends BaseCtrl {
+    /** @var \Components\Widgets\Welcome */
+    public $widget;
     
-    public function __construct($parent = null) {
-        parent::__constrcut($parent);
-        $this->addEventType(\QEvent::Show);
-        if(!is_null($parent) && is_object($parent)) $parent->installEventFilter($this);
-        
-        $this->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::Show:
-                    $sender->slide();
-                    break;
-            }
-        };
+    public $pages = [];
+    
+    public function __construct() {
+        parent::__construct();
+        $this->widget = $this->core->widgets->get('Components/Widgets/Welcome');
+    }
+    
+    public function showPage($pageName) {
+        $this->widget->showPage($pageName);
     }
 }

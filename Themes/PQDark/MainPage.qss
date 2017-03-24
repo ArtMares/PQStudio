@@ -1,21 +1,12 @@
-QFrame#MainPage QLabel#AppName {
+QWidget#MainPage {
+    color: #c4c4c4;
+    background: #46474b;
+}
+QWidget#MainPage QLabel#AppName {
     color: #c4c4c4;
     font-size: 26px;
 }
-QFrame#MainPage QLabel#AppVersion {
+QWidget#MainPage QLabel#AppVersion {
     color: #6e6e6e;
     font-size: 20px;
-}
-QFrame#MainPage QFrame#Projects {
-    background: #393939;
-}
-QFrame#MainPage QFrame#General {
-    background: #46474b;
-}
-QFrame#MainPage QScrollArea {
-    background: #393939;
-    border: none;
-}
-QFrame#MainPage QScrollArea QFrame {
-    background: transparent;
 }
