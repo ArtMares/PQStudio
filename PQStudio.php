@@ -35,6 +35,11 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Wake up',
+            'class' => 'Components\\Model\\Main',
+            'init'  => false
+        ],
+        [
+            'title' => 'Wake up',
             'class' => 'Components\\Model\\Project',
             'init'  => false
         ],
@@ -158,8 +163,6 @@ class PQStudio extends QFrame {
     private $progress;
     
     private $message;
-    
-    private $hidden = false;
 
     private $now = 0;
 
@@ -272,42 +275,40 @@ class PQStudio extends QFrame {
     }
 
     public function show() {
-        if(!$this->hidden) {
-            $this->message->text = tr('Wake up').'...';
+        $this->message->text = tr('Wake up').'...';
 
-            /** В противном случае задаем стиль по умолчанию */
-            $this->styleSheet = '
-                QFrame {
-                    font-family: "Akrobat";
-                    font-size: 16px;
-                }
-                QLabel#Message {
-                    color: #c4c4c4;
-                    padding-left: 5px;
-                    background: #46474b;
-                    border-top-left-radius: 6px;
-                    border-top-right-radius: 6px;
-                }
-                QProgressBar {
-                    background: #46474b;
-                    height: 10px;
-                    border-bottom-left-radius: 6px;
-                    border-bottom-right-radius: 6px;
-                }
-                QProgressBar::chunk {
-                    background-color: #f16327;
-                    border-bottom-left-radius: 6px;
-                    border-bottom-right-radius: 6px;
-                }
-            ';
-            parent::show();
-            $this->core->QApp->processEvents();
-            sleep(1);
-            while(isset($this->components[$this->now]) && $this->now <= $this->count) {
-                $this->load();
+        /** В противном случае задаем стиль по умолчанию */
+        $this->styleSheet = '
+            QFrame {
+                font-family: "Akrobat";
+                font-size: 16px;
             }
-            $this->completed();
+            QLabel#Message {
+                color: #c4c4c4;
+                padding-left: 5px;
+                background: #46474b;
+                border-top-left-radius: 6px;
+                border-top-right-radius: 6px;
+            }
+            QProgressBar {
+                background: #46474b;
+                height: 10px;
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+            QProgressBar::chunk {
+                background-color: #f16327;
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        ';
+        parent::show();
+        $this->core->QApp->processEvents();
+        sleep(1);
+        while(isset($this->components[$this->now]) && $this->now <= $this->count) {
+            $this->load();
         }
+        $this->completed();
     }
 
     public function load() {
@@ -338,6 +339,7 @@ class PQStudio extends QFrame {
         $window = $this->core->widgets->get('Components/Widgets/Welcome');
 //        $window = $this->core->widgets->get('Components/Widgets/NotificationCenter');
         $window->show();
+        print_r($this->core->args());
         
 //        $this->core->widgets->set(
 //            'Components/Widgets/Notification',

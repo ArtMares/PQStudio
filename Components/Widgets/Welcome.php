@@ -30,7 +30,11 @@ class Welcome extends \QWidget implements WidgetsInterface {
     
     private $firstShow = true;
     
+    private $controller;
+    
     public function initComponents() {
+        
+        $this->controller =
         
         $this->objectName = 'Welcome';
         

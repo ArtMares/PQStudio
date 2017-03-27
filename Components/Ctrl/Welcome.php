@@ -16,6 +16,10 @@ class Welcome extends BaseCtrl {
     
     public function __construct() {
         parent::__construct();
+        
+    }
+    
+    public function getWidget() {
         $this->widget = $this->core->widgets->get('Components/Widgets/Welcome');
     }
     
