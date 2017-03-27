@@ -6,9 +6,10 @@
  */
 
 namespace Components\Model;
-use Components\BaseModel;
 
-class Project extends BaseModel {
+use PQ\MVC\Model;
+
+class Project extends Model {
     
     public $name;
     
@@ -29,10 +30,6 @@ class Project extends BaseModel {
     public $includes = [];
     
     public $icon;
-    
-    public function __construct() {
-        $this->reset();
-    }
     
     public function reset() {
         $this->name = '';

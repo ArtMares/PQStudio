@@ -44,8 +44,6 @@ use PQ\Component\Widgets;
  * @property        Style           $style
  * @property        Icon            $icon
  * @property        Storage         $storage
- * @property        Model           $model
- * @property        Widgets         $widgets
  * @property        Single          $single
  * @property        Process         $process
  */
@@ -110,13 +108,13 @@ class Core {
         self::QtCore => [
             'log' => 'Log', 'variant' => 'Variant', 'var' => 'Variable', 'config' => 'Config',
             'dir' => 'Dir', 'file' => 'File', 'lib' => 'Lib', 'storage' => 'Storage',
-            'model' => 'Model', 'network' => 'Network', 'single' => 'Single', 'process' => 'Process'
+            'single' => 'Single', 'process' => 'Process'
         ],
         self::QtGui => [
             'font' => 'Font'
         ],
         self::QtApp => [
-            'style' => 'Style', 'icon' => 'Icon', 'widgets' => 'Widgets',
+            'style' => 'Style', 'icon' => 'Icon'
         ],
     ];
 
@@ -157,7 +155,7 @@ class Core {
                     self::$APP->QApp = new \QApplication($argc, $argv);
                     break;
                 default:
-                    die('Error! Core not run!'.PHP_EOL.'Please Please specify the type of application!'.PHP_EOL.'Use constants: PQ\\Core::QtApp or PQ\\Core::QtGui or PQ\\Core::QtCore');
+                    die('Error! Core not run!'.PHP_EOL.'Please specify the type of application!'.PHP_EOL.'Use constants: PQ\\Core::QtApp or PQ\\Core::QtGui or PQ\\Core::QtCore');
             }
             self::$APP->PATH = __DIR__.'/';
             self::$APP->QT_PATH = stripos(self::$APP->PATH, 'qrc://') === false ? self::$APP->PATH : str_replace('qrc://', ':/', self::$APP->PATH);
@@ -187,33 +185,12 @@ class Core {
             }
             self::$APP->components = $components;
             
-            require_once self::$APP->PATH.'WidgetsInterface.php';
-            require_once self::$APP->PATH.'QtObject.php';
+            require_once self::$APP->PATH.'MVC.php';
             require_once self::$APP->PATH.'Destructor.php';
             self::$APP->destructor = new Destructor(self::$APP);
-            connect(self::$APP->QApp, 'aboutToQuit()', self::$APP->destructor, 'onDestruct()');
+            self::$APP->QApp->connect(SIGNAL('aboutToQuit()'), self::$APP->destructor, SLOT('onDestruct()'));
         }
         return self::$APP;
-    }
-
-    static public function preparePath($path, $toWin = false) {
-        if(self::$APP !== false) {
-            if ($toWin && self::$APP->WIN) {
-                $search = '/';
-                $needle = '\\\\';
-                $replace = '\\';
-            } else {
-                $search = '\\';
-                $needle = '//';
-                $replace = '/';
-            }
-            $path = str_replace($search, $replace, $path);
-            // remove double slashes
-            while (strpos($path, $needle) !== false) {
-                $path = str_replace($needle, $replace, $path);
-            }
-        }
-        return $path;
     }
 
     private function load_component($name = false, $alias = '') {
@@ -313,6 +290,26 @@ class Core {
         foreach(array_reverse($this->components, true) as $key => $component) {
             unset($this->{$key});
         }
+    }
+}
+
+if(!function_exists('preparePath')) {
+    function preparePath($path, $toWin = false) {
+        if ($toWin && Core::getInstance()->WIN) {
+            $search = '/';
+            $needle = '\\\\';
+            $replace = '\\';
+        } else {
+            $search = '\\';
+            $needle = '//';
+            $replace = '/';
+        }
+        $path = str_replace($search, $replace, $path);
+        // remove double slashes
+        while (strpos($path, $needle) !== false) {
+            $path = str_replace($needle, $replace, $path);
+        }
+        return $path;
     }
 }
 

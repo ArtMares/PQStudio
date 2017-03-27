@@ -6,19 +6,16 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Model;
-use Components\BaseModel;
 
-class Main extends BaseModel {
+use PQ\MVC\Model;
+
+class Main extends Model {
     
     public $plastiq = [];
     
     public $templates = [];
     
     public $pqcore = [];
-    
-    public function __construct() {
-        $this->reset();
-    }
     
     public function reset() {
         $this->plastiq = [];

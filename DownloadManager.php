@@ -1,16 +1,18 @@
 <?php
+
 /**
  * @author              Dmitriy Dergachev (ArtMares)
  * @date                27.03.2017
  * @copyright           artmares@influ.su
  */
+class DownloadManager extends QObject {
+    
+    private $manager;
+    
+    private $list = [];
 
-namespace PQ\MVC;
-class Model {
-    
     public function __construct() {
-        $this->reset();
+        parent::__construct();
+        $this->manager = new QNetworkAccessManager();
     }
-    
-    public function reset() {}
 }

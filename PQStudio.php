@@ -21,31 +21,29 @@ $title = sprintf('%1$s %2$s [build: %3$s]',
 var_dump(QSysInfo::productType());
 //var_dump(aboutPQ(true));
 
-$core->widgets->setDefaultTitle($title);
+\PQ\MVC::setDefaultTitle($title);
 
 class PQStudio extends QFrame {
 
-    use \PQ\QtObject;
+    use \PQ\MVC\View;
     
     private $components = [
         [
             'title' => 'Wake up',
-            'class' => 'Components\\BaseModel',
-            'init'  => false
-        ],
-        [
-            'title' => 'Wake up',
             'class' => 'Components\\Model\\Main',
-            'init'  => false
+            'type'  => 'model',
+            'init'  => true
         ],
         [
             'title' => 'Wake up',
             'class' => 'Components\\Model\\Project',
+            'type'  => 'model',
             'init'  => false
         ],
         [
             'title' => 'Wake up',
-            'class' => 'Components\\Collector',
+            'class' => 'Components\\Ctrl\\Welcome',
+            'type'  => 'controller',
             'init'  => true
         ],
         [
@@ -209,7 +207,7 @@ class PQStudio extends QFrame {
             $this->core->storage->socket->write(
                 json_encode([
                     'type' => 'notice',
-                    'title' => $this->core->widgets->getDefaultTitle(),
+                    'title' => \PQ\MVC::getDefaultTitle(),
                     'message' => tr('The application is already running'),
                     'level' => 6
                 ])
@@ -277,7 +275,7 @@ class PQStudio extends QFrame {
     public function show() {
         $this->message->text = tr('Wake up').'...';
 
-        /** В противном случае задаем стиль по умолчанию */
+        /** Задаем стиль */
         $this->styleSheet = '
             QFrame {
                 font-family: "Akrobat";
@@ -305,15 +303,14 @@ class PQStudio extends QFrame {
         parent::show();
         $this->core->QApp->processEvents();
         sleep(1);
-        while(isset($this->components[$this->now]) && $this->now <= $this->count) {
-            $this->load();
+        foreach($this->components as $index => $component) {
+            $this->load($index);
         }
-        $this->completed();
+        if($this->now > 0 && $this->count === $this->now) $this->completed();
     }
 
-    public function load() {
-        $data = $this->components[$this->now];
-        $this->now++;
+    public function load($i) {
+        $data = $this->components[$i];
         $this->message->text = tr($data['title']) . '...';
         $file = ':/' . $data['class'] . '.php';
         $this->core->log->info('Loading component "' . $data['class'] . '"', 'App');
@@ -330,14 +327,16 @@ class PQStudio extends QFrame {
         if(isset($data['path'])) {
             $data['path'] = preg_replace('/^:\//', 'qrc://', $data['path']);
             $data['path'] = str_replace('\\', '/', $data['path']);
-            if($this->_load($data)) $this->progress->setValue($this->now);
+            if($this->_load($data)) {
+                $this->progress->setValue($i);
+                $this->now++;
+            }
         }
     }
 
     public function completed() {
         sleep(2);
-        $window = $this->core->widgets->get('Components/Widgets/Welcome');
-//        $window = $this->core->widgets->get('Components/Widgets/NotificationCenter');
+        $window = \PQ\MVC::v('Components/Widgets/Welcome');
         $window->show();
         print_r($this->core->args());
         
@@ -347,7 +346,12 @@ class PQStudio extends QFrame {
 //        );
 //        $this->core->widgets->get('Components/Widgets/Notification')->showMessage(\Components\Widgets\Notification::INFO, 'PQStudio', 'Is run', 10000);
 //        $this->core->widgets->get('Components/Widgets/Pages')->show();
-        $this->close();
+        $this->hide();
+//        $this->close();
+    }
+    
+    public function checkBuilder() {
+        $http = new QNetwork
     }
 
     private function _load($data) {
@@ -355,9 +359,21 @@ class PQStudio extends QFrame {
         $class = $data['class'];
         if(!class_exists($class)) return false;
         if($data['init'] === true) {
-            $this->core->widgets->set(str_replace('\\', '/', $data['class']), new $class());
+            $name = str_replace('\\', '/', $data['class']);
+            switch(strtolower($data['type'])) {
+                case 'controller':
+                    \PQ\MVC::setController($name, new $class());
+                    break;
+                case 'model':
+                    \PQ\MVC::setModel($name, new $class());
+                    break;
+                case 'view':
+                    \PQ\MVC::setView($name, new $class());
+                    break;
+            }
         }
         return true;
+        
     }
 
 //    public function SocketConnect($sender) {
