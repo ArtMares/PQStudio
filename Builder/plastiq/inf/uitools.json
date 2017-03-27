@@ -1,0 +1,17 @@
+{
+    "fullname": "Qt UI Tools Classes",
+    "description": "Provides classes to handle forms created with Qt Designer.",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll",
+        "Qt5Gui.dll",
+        "Qt5Widgets.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core",
+        "gui",
+        "widgets"
+    ]
+}

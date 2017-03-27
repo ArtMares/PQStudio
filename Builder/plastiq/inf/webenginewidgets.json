@@ -1,0 +1,37 @@
+{
+    "fullname": "QtWebEngineWidgets Module",
+    "description": "Provides a web browser engine as well as C++ classes to render and interact with web content.",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll",
+        "Qt5Gui.dll",
+        "Qt5Widgets.dll",
+        "Qt5WebEngineWidgets.dll",
+        "Qt5WebEngineCore.dll",
+        "Qt5Qml.dll",
+        "Qt5Quick.dll",
+        "Qt5Network.dll",
+        "Qt5WebChannel.dll",
+        "libEGL.dll",
+        "libGLESv2.dll",
+        "opengl32sw.dll",
+        "QtWebEngineProcess.exe"
+    ],
+    "dependsQtFiles": [
+        "resources"
+    ],
+    "dependsExtFiles": [
+        "qt.conf"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core",
+        "gui",
+        "widgets",
+        "webenginewidgets",
+        "network",
+        "quick",
+        "qml"
+    ]
+}

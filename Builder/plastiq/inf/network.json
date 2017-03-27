@@ -1,0 +1,15 @@
+{
+    "fullname": "Qt Network Classes",
+    "description": "Provides classes to make network programming easier and portable.",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll",
+        "Qt5Network.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core",
+        "network"
+    ]
+}

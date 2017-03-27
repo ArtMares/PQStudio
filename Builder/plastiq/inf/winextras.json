@@ -1,0 +1,17 @@
+{
+    "fullname": "Qt Windows Extras Classes",
+    "description": "Provides classes and functions for using some Windows APIs in a Qt way",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll",
+        "Qt5Gui.dll",
+        "Qt5WinExtras.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core",
+        "gui",
+        "winextras"
+    ]
+}

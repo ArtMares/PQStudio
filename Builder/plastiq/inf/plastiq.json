@@ -1,0 +1,13 @@
+{
+    "fullname": "Extra Module",
+    "description": "",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core"
+    ]
+}

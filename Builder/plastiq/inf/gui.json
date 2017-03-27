@@ -1,0 +1,15 @@
+{
+    "fullname": "QtGui Module",
+    "description": "Qt GUI module provides the basic enablers for graphical applications written with Qt",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll",
+        "Qt5Gui.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core",
+        "gui"
+    ]
+}

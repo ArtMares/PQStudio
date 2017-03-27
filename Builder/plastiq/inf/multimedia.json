@@ -1,0 +1,16 @@
+{
+    "fullname": "QtMultimedia Module",
+    "description": "The Qt Multimedia module provides audio, video, radio and camera functionality.",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll",
+        "Qt5Multimedia.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows",
+        "audio/qtaudio_windows"
+    ],
+    "qt": [
+        "core",
+        "multimedia"
+    ]
+}

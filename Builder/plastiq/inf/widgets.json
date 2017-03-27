@@ -1,0 +1,17 @@
+{
+    "fullname": "QtWidgets Module",
+    "description": "Qt Widgets module extends Qt GUI with C++ widget functionality",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll",
+        "Qt5Gui.dll",
+        "Qt5Widgets.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core",
+        "gui",
+        "widgets"
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "fullname": "Qt Charts Module",
+    "description": "Classes for the Qt Charts API.",
+    "dependsQtBinFiles": [
+        "Qt5Charts.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core",
+        "gui",
+        "widgets",
+        "charts"
+    ]
+}

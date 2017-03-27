@@ -1,0 +1,13 @@
+{
+    "fullname": "QtCore Module",
+    "description": "Provides core non-GUI functionality",
+    "dependsQtBinFiles": [
+        "Qt5Core.dll"
+    ],
+    "plugins": [
+        "platforms/qwindows"
+    ],
+    "qt": [
+        "core"
+    ]
+}
