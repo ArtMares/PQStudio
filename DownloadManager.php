@@ -7,9 +7,15 @@
  */
 class DownloadManager extends QObject {
     
+    public $signals = [
+        'finished()'
+    ];
+    
     private $manager;
     
     private $list = [];
+    
+    private $queue = [];
 
     public function __construct() {
         parent::__construct();
