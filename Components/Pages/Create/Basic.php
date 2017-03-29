@@ -6,21 +6,25 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Pages\Create;
-use Components\Custom\BackBtn;
 use Components\Custom\Btn;
 use Components\Custom\CheckBox;
 use Components\Custom\Input;
 use Components\Custom\InputValidate;
-use Components\Custom\NextBtn;
-use PQ\QtObject;
-use PQ\WidgetsInterface;
+use PQ\MVC;
+use PQ\MVC\View;
+use function PQ\preparePath;
 
-class Basic extends \QFrame implements WidgetsInterface {
-    use QtObject;
+class Basic extends \QFrame {
+    use View;
+    
+    private $model;
     
     private $ui = [];
     
     public function initComponents() {
+        
+        $this->model = MVC::m('Components/Model/Create');
+        
         /** Создаем QLabel для названия поля ввода */
         $labelName = new \QLabel($this);
         $labelName->text = tr('Project Name') . ':';
@@ -32,7 +36,7 @@ class Basic extends \QFrame implements WidgetsInterface {
         $this->ui['name']->onValidate(function($sender, $text) {
             if(preg_match('/^[0-9a-zA-Z\-\.\_ ]+/', $text)) {
                 $result = $this->checkProject($text);
-                if($result === true) $this->core->model->get('CreateProject')->name = $text;
+                if($result === true) $this->model->name = $text;
                 return $result;
             }
             return false;
@@ -48,7 +52,7 @@ class Basic extends \QFrame implements WidgetsInterface {
     
         /** Создаем поле ввода для директории проекта */
         $this->ui['path'] = new Input($this);
-        $this->ui['path']->text = $this->core->model->get('CreateProject')->path_to;
+        $this->ui['path']->text = $this->model->path_to;
         $this->ui['path']->setPlaceholderText(tr('Select directory for Project') . '...');
         $this->ui['path']->readOnly = true;
     
@@ -90,20 +94,20 @@ class Basic extends \QFrame implements WidgetsInterface {
         $this->ui['message'] = new \QLabel($this);
         $this->ui['message']->text = '';
     
-        $this->ui['BackBtn'] = new BackBtn($this, tr('Back'));
+        $this->ui['BackBtn'] = new Btn\Back($this, tr('Back'));
         $this->ui['BackBtn']->onClicked = function() {
-            $this->core->widgets->get('Components/Widgets/Welcome')->Back();
+            MVC::v('Components/Widgets/Welcome')->Back();
         };
     
-        $this->ui['NextBtn'] = new NextBtn($this, tr('Next'));
+        $this->ui['NextBtn'] = new Btn\Next($this, tr('Next'));
         $this->ui['NextBtn']->onClicked = function($sender) {
             if($this->core->variant->get($this->ui['name']->property('invalid')) === false && $this->ui['name']->text() !== '') {
-                $this->core->model->get('CreateProject')->path_to = $this->ui['path']->text();
-                $this->core->model->get('CreateProject')->appName = $this->ui['appName']->text();
-                $this->core->model->get('CreateProject')->appVersion = $this->ui['appVersion']->text();
-                $this->core->model->get('CreateProject')->orgName = $this->ui['orgName']->text();
-                $this->core->model->get('CreateProject')->orgDomain = $this->ui['orgDomain']->text();
-                $this->core->widgets->get('Components/Pages/Create')->next();
+                $this->model->path_to = $this->ui['path']->text();
+                $this->model->appName = $this->ui['appName']->text();
+                $this->model->appVersion = $this->ui['appVersion']->text();
+                $this->model->orgName = $this->ui['orgName']->text();
+                $this->model->orgDomain = $this->ui['orgDomain']->text();
+                MVC::v('Components/Pages/Create')->next();
             }
         };
     
@@ -175,28 +179,28 @@ class Basic extends \QFrame implements WidgetsInterface {
 
     private function setProjectsPath($sender) {
         $path = $sender->text;
-        $dir = \QFileDialog::getExistingDirectory($this, tr('Select directory'), $this->core->preparePath($path));
+        $dir = \QFileDialog::getExistingDirectory($this, tr('Select directory'), preparePath($path));
         if(!empty($dir)) {
             if($this->ui['defaultPath']->checked === true) {
                 $this->ui['defaultPath']->checked = false;
                 $this->ui['defaultPath']->enabled = true;
             }
-            $this->ui['path']->text = $this->core->preparePath($dir, $this->core->WIN);
+            $this->ui['path']->text = preparePath($dir, $this->core->WIN);
         }
     }
 
     private function setDefaultProjectsPath($sender, $path) {
         if($sender->checked) {
             $path = $path->text;
-            if($this->core->model->get('CreateProject')->path_to !== $path) {
-                $this->core->model->get('CreateProject')->path_to = $path;
+            if($this->model->path_to !== $path) {
+                $this->model->path_to = $path;
             }
         }
-        $this->core->config->ini()->set('defaultProjectsPath', $this->core->model->get('CreateProject')->path_to);
+        $this->core->config->ini()->set('defaultProjectsPath', $this->model->path_to);
     }
 
     private function checkProject($name) {
-        if(!$this->core->dir->exists($this->core->preparePath($this->ui['path']->text.'/'.$name))) {
+        if(!$this->core->dir->exists(preparePath($this->ui['path']->text.'/'.$name))) {
             return true;
         }
         return false;

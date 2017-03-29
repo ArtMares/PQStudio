@@ -5,11 +5,11 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Pages;
-use PQ\QtObject;
-use PQ\WidgetsInterface;
 
-class Import extends \QFrame implements WidgetsInterface {
-    use QtObject;
+use PQ\MVC\View;
+
+class Import extends \QFrame {
+    use View;
 
     public function initComponents() {
 

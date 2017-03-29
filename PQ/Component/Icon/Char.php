@@ -12,6 +12,8 @@ class Char {
     private $color = false;
 
     private $size = false;
+    
+    private $html = false;
 
     public function __construct($char = '') {
         $this->set($char);
@@ -31,13 +33,18 @@ class Char {
         $this->size = $size;
         return $this;
     }
+    
+    public function html($res = true) {
+        $this->html = $res;
+        return $this;
+    }
 
     public function __toString(){
         $str = '';
         if($this->color) $this->color = "color: {$this->color}";
         if($this->size) $this->size = "font-size: {$this->size}px";
         if($this->char !== '') {
-            $str = "<span>".$this->char.'</span>';
+            $str = ($this->html === true ? "<span>".$this->char.'</span>' : $this->char);
             if($this->color) $str = "<span style=\"{$this->color}\">".$this->char."</span>";
             if($this->size) $str = "<span style=\"{$this->size}\">".$this->char."</span>";
             if($this->color && $this->size) $str = "<span style=\"{$this->color}; {$this->size}\">".$this->char."</span>";

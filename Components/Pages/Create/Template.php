@@ -6,54 +6,62 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Pages\Create;
-use Components\Custom\BackBtn;
-use Components\Custom\NextBtn;
-use PQ\QtObject;
-use PQ\WidgetsInterface;
+use Components\Custom\Btn;
+use Components\Custom\Widget\OneSelectList;
+use PQ\MVC;
+use PQ\MVC\View;
 
-class Template extends \QFrame implements WidgetsInterface {
-    use QtObject;
+class Template extends \QFrame {
+    use View;
+    
+    public $model;
     
     public $ui = [];
-
+    
     public function initComponents() {
+        
+        $this->model = MVC::m('Components/Model/Create');
         
         $labelTemplate = new \QLabel($this);
         $labelTemplate->text = tr('Application Template') . ':';
         
-        $this->ui['listTemplate'] = new \QListWidget($this);
-        $this->ui['listTemplate']->setIconSize(new \QSize(32, 32));
-        foreach($this->core->storage->appTemplates as $t) {
+//        $this->ui['listTemplate'] = new \QListWidget($this);
+        $this->ui['listTemplate'] = new OneSelectList($this);
+//        $this->ui['listTemplate']->setIconSize(new \QSize(32, 32));
+        foreach(MVC::m('Components/Model/Main')->templates as $index => $t) {
             $iconPath = $this->core->APP_PATH . $t['icon'] == '' ? 'img/icons/unknown.png' : 'templates/'.$t['path'].'/'.$t['icon'];
-            new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
+            $template = new Btn\Template(null, $iconPath, tr($t['name']), tr($t['description']));
+            $this->ui['listTemplate']->addWidget($template);
+//            new \QListWidgetItem(new \QIcon($iconPath), tr($t['name']), $this->ui['listTemplate']);
         }
-        $this->ui['listTemplate']->onCurrentRowChanged = function($sender, $index) {
-            if(isset($this->core->storage->appTemplates[$index])) {
-                $this->ui['description']->plainText = tr($this->core->storage->appTemplates[$index]['description']);
-            } else {
-                $this->ui['description']->plainText = '';
-            }
-        };
+        $this->ui['listTemplate']->connect(SIGNAL('currentRowChanged(int)'), $this, SLOT('updateDescription(int)'));
+//        $this->ui['listTemplate']->onCurrentRowChanged = function($sender, $index) {
+//            if(isset(MVC::m('Components/Model/Main')->templates[$index])) {
+//                $this->ui['description']->plainText = tr(MVC::m('Components/Model/Main')->templates[$index]['description']);
+//            } else {
+//                $this->ui['description']->plainText = '';
+//            }
+//        };
 
         $labelDescription = new \QLabel($this);
         $labelDescription->text = tr('Description') . ':';
 
         $this->ui['description'] = new \QTextEdit($this);
 
-        $this->ui['BackBtn'] = new BackBtn($this, tr('Back'));
+        $this->ui['BackBtn'] = new Btn\Back($this, tr('Back'));
         $this->ui['BackBtn']->onClicked = function() {
-            $this->core->widgets->get('Components/Pages/Create')->prev();
+            MVC::v('Components/Pages/Create')->prev();
         };
 
-        $this->ui['NextBtn'] = new NextBtn($this, tr('Next'));
+        $this->ui['NextBtn'] = new Btn\Next($this, tr('Next'));
         $this->ui['NextBtn']->onClicked = function($sender) {
             $index = $this->ui['listTemplate']->currentRow();
             if($index > -1) {
-                $this->core->model->get('CreateProject')->templateIndex = $index;
-                $this->core->widgets->get('Components/Pages/Create/Settings')->prepareIncludes(
-                    $this->core->model->get('CreateProject')->includes
+                $this->model->templateIndex = $index;
+                MVC::v('Components/Pages/Create/Settings')->prepareIncludes(
+                    $this->model->includes
                 );
-                $this->core->widgets->get('Components/Pages/Create')->next();
+                MVC::v('Components/Pages/Create')->next();
             }
         };
 
@@ -74,5 +82,23 @@ class Template extends \QFrame implements WidgetsInterface {
         $this->layout()->setAlignment($this->ui['BackBtn'], \Qt::AlignBottom | \Qt::AlignLeft);
         $this->layout()->addWidget($this->ui['NextBtn'], $row, 3);
         $this->layout()->setAlignment($this->ui['NextBtn'], \Qt::AlignRight | \Qt::AlignBottom);
+    }
+    
+    public function updateDescription($sender, $index) {
+        if(isset(MVC::m('Components/Model/Main')->templates[$index])) {
+            $this->ui['description']->plainText = tr(MVC::m('Components/Model/Main')->templates[$index]['description']);
+        } else {
+            $this->ui['description']->plainText = '';
+        }
+//        foreach($this->templates as $template) {
+//            if($sender !== $template) {
+//                $sender->selected(false);
+//            } else {
+//                qDebug(($checked ? 'true' : 'false'));
+//                if($checked) {
+//                    $this->ui['description']->plainText = $sender->description;
+//                }
+//            }
+//        }
     }
 }

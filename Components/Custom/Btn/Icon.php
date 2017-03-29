@@ -4,11 +4,12 @@
  * @date                03.03.2017
  * @copyright           artmares@influ.su
  */
-namespace Components\Custom;
+namespace Components\Custom\Btn;
+use Components\Custom\Btn;
 use PQ\Component\Icon\Char;
 use PQ\Core;
 
-class IconBtn extends Btn {
+class Icon extends Btn {
 
     protected $iconLabel;
 

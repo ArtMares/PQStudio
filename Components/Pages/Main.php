@@ -5,18 +5,14 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Pages;
-use Components\Custom\MenuBtn;
-use Components\Custom\ProjectBtn;
+use Components\Custom\Btn;
 use Components\Custom\Widget\ListWidget;
-use PQ\QtObject;
-use PQ\WidgetsInterface;
+use PQ\MVC;
+use PQ\MVC\View;
 
-class Main extends \QWidget implements WidgetsInterface {
-
-    use QtObject;
+class Main extends \QWidget {
+    use View;
     
-    private $general;
-
     public $projectsList;
 
     /** Инициализирует основные компоненты */
@@ -48,7 +44,7 @@ class Main extends \QWidget implements WidgetsInterface {
         /** Задаем минимальную и максимальную ширину области */
         $this->projectsList->setMinimumWidth(300);
         $this->projectsList->setMaximumWidth(300);
-        $projectBtn = new ProjectBtn(null, 'Test', 'D:/Test', $this->core->lib->uid->generate());
+        $projectBtn = new Btn\Project(null, 'Test', 'D:/Test', $this->core->lib->uid->generate());
         $projectBtn->connect(SIGNAL('remove()'), $this, SLOT('removeProject()'));
         $this->projectsList->addWidget($projectBtn);
         $this->layout()->addWidget($this->projectsList);
@@ -60,35 +56,36 @@ class Main extends \QWidget implements WidgetsInterface {
 
     public function initGeneralArea() {
 
-        $this->general = new \QFrame($this);
-
-        $this->general->objectName = 'General';
-
-        $this->general->setMinimumWidth(470);
-
-        $this->general->setLayout(new \QVBoxLayout());
-
-        $this->general->layout()->setContentsMargins(0, 0, 0, 0);
+        /** Создаем область для вывода основной информации */
+        $general = new \QFrame($this);
+        /** Задаем название для объекта */
+        $general->objectName = 'General';
+        /** Задаем минимальную ширину */
+        $general->setMinimumWidth(470);
+        /** Задаем слой для конмановки */
+        $general->setLayout(new \QVBoxLayout());
+        /** Задаем слою отступы от края равные 0 */
+        $general->layout()->setContentsMargins(0, 0, 0, 0);
 
         /** Создаем QLabel для логотипа */
-        $labelLogo = new \QLabel($this->general);
+        $labelLogo = new \QLabel($general);
         $labelLogo->setFixedSize(96, 100);
         $pixmap = new \QIcon($this->core->APP_PATH.'img/logo.svg');
         $labelLogo->setPixmap($pixmap->pixmap(96, 96));
         $labelLogo->objectName = 'AppLogo';
 
         /** Создаем QLabel для названия приложения */
-        $labelAppName = new \QLabel($this->general);
+        $labelAppName = new \QLabel($general);
         $labelAppName->text = $this->core->applicationName();
         $labelAppName->objectName = 'AppName';
 
         /** Создаем QLabel для отображения текущей версии приложения */
-        $labelAppVersion = new \QLabel($this->general);
+        $labelAppVersion = new \QLabel($general);
         $labelAppVersion->text = tr('Version').' '.$this->core->applicationVersion();
         $labelAppVersion->objectName = 'AppVersion';
 
         /** Создаем QFrame для основного меню */
-        $menu = new \QFrame($this->general);
+        $menu = new \QFrame($general);
         $menu->objectName = 'MainMenu';
         $menu->setMinimumWidth(200);
         $menu->setMaximumWidth(200);
@@ -96,23 +93,23 @@ class Main extends \QWidget implements WidgetsInterface {
         $menu->layout()->setSpacing(0);
 
         /** Создаем кнопку основного меню для создания проекта */
-        $createBtn = new MenuBtn($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), tr('Create Project'), 'CreateProjectBtn');
+        $createBtn = new Btn\Menu($menu, $this->core->icon->font('fa-asterisk', '#c43737', 16), tr('Create Project'), 'CreateProjectBtn');
         $createBtn->onClicked = function($sender) {
-            $this->core->widgets->get('Components/Widgets/Welcome')->showPage('Components/Pages/Create');
+            MVC::v('Components/Widgets/Welcome')->showPage('Components/Pages/Create');
         };
 
         /** Создаем кнопку основного меню для открытия проекта */
-        $openBtn = new MenuBtn($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), tr('Open Project File'), 'welcome_main-open_project');
+        $openBtn = new Btn\Menu($menu, $this->core->icon->font('fa-folder-open', '#bf6024', 16), tr('Open Project File'), 'welcome_main-open_project');
         $openBtn->onClicked = function($sender) {
         };
         
         /** Создаем кнопку основного меню для импорта проекта */
-        $importBtn = new MenuBtn($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), tr('Import Project'), 'welcome_main-import_page_show');
+        $importBtn = new Btn\Menu($menu, $this->core->icon->font('fa-sign-in', '#71a62b', 16), tr('Import Project'), 'welcome_main-import_page_show');
         $importBtn->onClicked = function($sender) {
         };
 
         /** Создаем кнопку основного меню для открытия окна настроек приложения */
-        $settingBtn = new MenuBtn($menu, $this->core->icon->font('fa-gears', '#999999', 16), tr('Settings'), 'settings_main-show');
+        $settingBtn = new Btn\Menu($menu, $this->core->icon->font('fa-gears', '#999999', 16), tr('Settings'), 'settings_main-show');
         $settingBtn->onClicked = function($sender) {
         };
 
@@ -125,22 +122,22 @@ class Main extends \QWidget implements WidgetsInterface {
         /** Создаем пустой QFrame для отсупа от верха окна */
         $topSpacer = new \QFrame($this);
         $topSpacer->setMinimumHeight(50);
-        $this->general->layout()->addWidget($topSpacer);
+        $general->layout()->addWidget($topSpacer);
 
-        $this->general->layout()->addWidget($labelLogo);
-        $this->general->layout()->setAlignment($labelLogo, \Qt::AlignHCenter);
-        $this->general->layout()->addWidget($labelAppName);
-        $this->general->layout()->setAlignment($labelAppName, \Qt::AlignCenter);
-        $this->general->layout()->addWidget($labelAppVersion);
-        $this->general->layout()->setAlignment($labelAppVersion, \Qt::AlignCenter);
-        $this->general->layout()->addWidget($menu);
-        $this->general->layout()->setAlignment($menu, \Qt::AlignHCenter);
+        $general->layout()->addWidget($labelLogo);
+        $general->layout()->setAlignment($labelLogo, \Qt::AlignHCenter);
+        $general->layout()->addWidget($labelAppName);
+        $general->layout()->setAlignment($labelAppName, \Qt::AlignCenter);
+        $general->layout()->addWidget($labelAppVersion);
+        $general->layout()->setAlignment($labelAppVersion, \Qt::AlignCenter);
+        $general->layout()->addWidget($menu);
+        $general->layout()->setAlignment($menu, \Qt::AlignHCenter);
 
         $spacer = new \QFrame($this);
         $spacer->setSizePolicy(\QSizePolicy::Expanding, \QSizePolicy::Expanding);
-        $this->general->layout()->addWidget($spacer);
+        $general->layout()->addWidget($spacer);
 
-        $this->layout()->addWidget($this->general);
+        $this->layout()->addWidget($general);
     }
     
     public function addProject($name, $path) {

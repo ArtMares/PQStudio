@@ -12,6 +12,7 @@ use Components\Model\Project;
 use PQ\Component\Dir;
 use PQ\MVC;
 use PQ\MVC\Controller;
+use function PQ\preparePath;
 
 class Welcome extends Controller {
     /** @var \Components\Widgets\Welcome */
@@ -31,6 +32,9 @@ class Welcome extends Controller {
         $this->loadPlastiQ();
         $this->loadPQCore();
         $this->loadAppTemplates();
+        $dir = $this->core->config->ini()->get('defaultProjectsPath', $this->core->HOME_PATH.'PQStudioProjects');
+        $this->core->dir->mkdir($dir);
+        $this->create->path_to = preparePath($dir, $this->core->WIN);
     }
     
     private function loadPlastiQ() {
@@ -62,7 +66,7 @@ class Welcome extends Controller {
                     $data = json_decode($this->core->file->read($file), true);
                     $data['path'] = $dir.'/';
                     $data['phpqt5'] = json_decode($this->core->file->read($path.$dir.'/file.phpqt5'), true);
-                    $this->model->templates = $data;
+                    $this->model->templates[] = $data;
                 }
             }
         }

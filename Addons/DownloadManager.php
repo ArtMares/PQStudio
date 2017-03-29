@@ -15,8 +15,12 @@
 # QNetworkRequest
 # QNetworkReply
 
-
 namespace Addons;
+
+use Addons\DownloadManager\Queue;
+
+require_once __DIR__.'/DownloadManager/Queue.php';
+
 class DownloadManager extends \QObject {
     
     public $signals = [
@@ -28,7 +32,7 @@ class DownloadManager extends \QObject {
     
     protected $list = [];
     
-    protected $queue = [];
+    protected $queue;
     
     protected $count = 0;
     
@@ -44,7 +48,7 @@ class DownloadManager extends \QObject {
         
         $this->time = new \QTime();
         
-        
+        $this->queue = new Queue();
     }
     
     public function append($url) {

@@ -9,17 +9,28 @@ QLabel#Path {
 QWidget#ProjectBtn {
     background: transparent;
 }
-QWidget#ProjectBtn QPushButton > QLabel {
+QWidget#ProjectBtn QPushButton {
     color: transparent;
 }
 QWidget#ProjectBtnHover {
     background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop : 0.0 #8a3b16,  stop : 1.0 transparent);
 }
-QWidget#ProjectBtnHover QPushButton > QLabel {
+QWidget#ProjectBtnHover QPushButton {
     color: #c4c4c4;
 }
 QPushButton {
     border: none;
     width: 16px;
     height: 16px;
+}
+QMenu {
+    background: #46474b;
+    border: 1px solid #393939;
+}
+QMenu::item {
+    background: transparent;
+    color: #c4c4c4;
+}
+QMenu::item:selected {
+    background: qlineargradient(x1 : 0, y1 : 0, x2 : 1, y2 : 0, stop : 0.0 #8a3b16,  stop : 1.0 transparent);
 }

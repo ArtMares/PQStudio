@@ -53,27 +53,32 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\IconBtn',
+            'class' => 'Components\\Custom\\Btn\\Icon',
             'init'  => false
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\MenuBtn',
+            'class' => 'Components\\Custom\\Btn\\Menu',
             'init'  => false
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\BackBtn',
+            'class' => 'Components\\Custom\\Btn\\Back',
             'init'  => false
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\NextBtn',
+            'class' => 'Components\\Custom\\Btn\\Next',
             'init'  => false
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\ProjectBtn',
+            'class' => 'Components\\Custom\\Btn\\Project',
+            'init'  => false
+        ],
+        [
+            'title' => 'Collecting stones',
+            'class' => 'Components\\Custom\\Btn\\Template',
             'init'  => false
         ],
         [
@@ -122,6 +127,11 @@ class PQStudio extends QFrame {
             'init'  => false
         ],
         [
+            'title' => 'Collecting stones',
+            'class' => 'Components\\Custom\\Widget\\OneSelectList',
+            'init'  => false
+        ],
+        [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Main',
             'init'  => false
@@ -129,16 +139,19 @@ class PQStudio extends QFrame {
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Basic',
+            'type'  => 'view',
             'init'  => true
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Template',
+            'type'  => 'view',
             'init'  => true
         ],
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Pages\\Create\\Settings',
+            'type'  => 'view',
             'init'  => true
         ],
         [
@@ -154,6 +167,7 @@ class PQStudio extends QFrame {
         [
             'title' => 'Pour coffee',
             'class' => 'Components\\Widgets\\Welcome',
+            'type'  => 'view',
             'init'  => true
         ],
     ];
@@ -351,7 +365,6 @@ class PQStudio extends QFrame {
     }
     
     public function checkBuilder() {
-        $http = new QNetwork
     }
 
     private function _load($data) {

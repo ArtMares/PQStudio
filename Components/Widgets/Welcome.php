@@ -5,16 +5,15 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Widgets;
-use Components\Custom\Widget\Slider;
 use Components\Pages\Create;
 use Components\Pages\Import;
 use Components\Pages\Main;
-use PQ\QtObject;
-use PQ\WidgetsInterface;
+use PQ\MVC;
+use PQ\MVC\View;
 
-class Welcome extends \QWidget implements WidgetsInterface {
+class Welcome extends \QWidget {
 
-    use QtObject;
+    use View;
     
     private $MainPage;
     
@@ -52,18 +51,18 @@ class Welcome extends \QWidget implements WidgetsInterface {
         $this->setFixedSize(770, 430);
 
         /** Задаем заголовок окна */
-        $this->core->widgets->setTitle($this);
+        MVC::setTitle($this);
 
         /** Задаем стили для окна */
         $this->core->style->set($this, 'WelcomeWidget');
 
         /** Инициализируем основные страницы виджета */
-        $this->core->widgets->set('Components/Pages/Main', new Main($this));
-//        $this->core->widgets->set('Components/Pages/Create', new Create($this));
+        MVC::setView('Components/Pages/Main', new Main($this));
+        MVC::setView('Components/Pages/Create', new Create($this));
 //        $this->core->widgets->set('Components/Pages/Import', new Import($this));
         
-        $this->MainPage = $this->core->widgets->get('Components/Pages/Main');
-//        $this->pages[] = $this->core->widgets->get('Components/Pages/Create');
+        $this->MainPage = MVC::v('Components/Pages/Main');
+        $this->pages[] = MVC::v('Components/Pages/Create');
     }
     
     /** @override showEvent */
@@ -73,7 +72,7 @@ class Welcome extends \QWidget implements WidgetsInterface {
     
     public function showPage($pageName) {
         $this->currentPage = false;
-        $page = $this->core->widgets->get($pageName);
+        $page = MVC::v($pageName);
         if(!$this->core->var->is_null($page)) {
             $this->hideAnimator->setTargetObject($this->MainPage);
             $this->hideAnimator->setStartValue(new \QPoint(0, 0));
@@ -90,7 +89,7 @@ class Welcome extends \QWidget implements WidgetsInterface {
     }
 
     public function Back() {
-        $page = $this->core->widgets->get($this->currentPage);
+        $page = MVC::v($this->currentPage);
         if(!$this->core->var->is_null($page)) {
             $this->hideAnimator->setTargetObject($page);
             $this->hideAnimator->setStartValue(new \QPoint(0, 0));
@@ -124,6 +123,7 @@ class Welcome extends \QWidget implements WidgetsInterface {
 
     public function show() {
         parent::show();
-        $this->core->QApp->alert($this, 10000);
+//        $this->core->QApp->alert($this, 10000);
+        $this->core->QApp->beep();
     }
 }

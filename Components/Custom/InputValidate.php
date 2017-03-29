@@ -23,7 +23,8 @@ class InputValidate extends Input {
         $this->setProperty('invalid', false);
         
         /** Задаем стиль */
-        $this->styleSheet = Core::getInstance()->style->Input . Core::getInstance()->style->InputValidate;
+        Core::getInstance()->style->set($this, 'Input', 'InputValidate');
+//        $this->styleSheet = Core::getInstance()->style->Input . Core::getInstance()->style->InputValidate;
         
         /** Задаем обработку по событию onTextChange */
         $this->onTextChanged = function($sender, $value) {

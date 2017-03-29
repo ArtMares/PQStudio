@@ -13,14 +13,12 @@ use PQ\Component\Font;
 use PQ\Component\Icon;
 use PQ\Component\Lib;
 use PQ\Component\Log;
-use PQ\Component\Model;
 use PQ\Component\Process;
 use PQ\Component\Single;
 use PQ\Component\Storage;
 use PQ\Component\Style;
 use PQ\Component\Variable;
 use PQ\Component\Variant;
-use PQ\Component\Widgets;
 
 /**
  * Class Core

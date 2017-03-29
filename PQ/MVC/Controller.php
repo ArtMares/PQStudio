@@ -8,11 +8,12 @@
 namespace PQ\MVC;
 use PQ\Core;
 
-class Controller {
+class Controller extends \QObject {
     
     protected $core;
     
-    public function __construct() {
+    public function __construct($parent = null) {
+        parent::__construct($parent);
         $this->core = Core::getInstance();
     }
 }

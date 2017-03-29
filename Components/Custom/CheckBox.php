@@ -6,9 +6,8 @@
  */
 namespace Components\Custom;
 use PQ\Core;
-use Components\Custom\Events;
 
-class CheckBox extends IconBtn {
+class CheckBox extends Btn\Icon {
 
     protected $eventFilter;
 

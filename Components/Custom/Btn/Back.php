@@ -4,11 +4,11 @@
  * @date                03.03.2017
  * @copyright           artmares@influ.su
  */
-namespace Components\Custom;
+namespace Components\Custom\Btn;
 
 use PQ\Core;
 
-class BackBtn extends IconBtn {
+class Back extends Icon {
 
     protected $iconSize = 16;
 

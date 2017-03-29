@@ -8,12 +8,12 @@ namespace Components\Pages;
 use Components\Custom\Widget\Slider;
 use Components\Pages\Create\Basic;
 use Components\Pages\Create\Template;
-use PQ\QtObject;
-use PQ\WidgetsInterface;
+use PQ\MVC;
+use PQ\MVC\View;
 
-class Create extends \QFrame implements WidgetsInterface {
+class Create extends \QFrame {
 
-    use QtObject;
+    use View;
 
     /** @var Slider */
     private $slider;
@@ -30,9 +30,9 @@ class Create extends \QFrame implements WidgetsInterface {
         $this->slider->setDuration(350);
         $this->slider->setLoop(true);
         
-        $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Basic'));
-        $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Template'));
-        $this->slider->addWidget($this->core->widgets->get('Components/Pages/Create/Settings'));
+        $this->slider->addWidget(MVC::v('Components/Pages/Create/Basic'));
+        $this->slider->addWidget(MVC::v('Components/Pages/Create/Template'));
+        $this->slider->addWidget(MVC::v('Components/Pages/Create/Settings'));
 
         $this->setLayout(new \QHBoxLayout());
         $this->layout()->setContentsMargins(0, 0, 0, 0);

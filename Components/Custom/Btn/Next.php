@@ -4,10 +4,10 @@
  * @date                06.03.2017
  * @copyright           artmares@influ.su
  */
-namespace Components\Custom;
+namespace Components\Custom\Btn;
 use PQ\Core;
 
-class NextBtn extends IconBtn {
+class Next extends Icon {
 
     protected $iconSize = 16;
 

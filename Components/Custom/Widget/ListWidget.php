@@ -44,11 +44,6 @@ class ListWidget extends \QScrollArea {
         $event->onEvent = function($sender, $event) {
             switch($event->type()) {
                 case \QEvent::Resize:
-                    qDebug('Resize ListWidget');
-                    qDebug([
-                        $this->width(),
-                        $this->height()
-                    ]);
                     $this->list->setMinimumWidth($this->width());
                     break;
             }

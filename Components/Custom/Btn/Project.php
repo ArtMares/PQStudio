@@ -4,12 +4,14 @@
  * @date                24.03.2017
  * @copyright           artmares@influ.su
  */
-namespace Components\Custom;
+namespace Components\Custom\Btn;
 use PQ\Core;
 
-class ProjectBtn extends \QWidget {
+class Project extends \QWidget {
     
     public $signals = [
+        'open()',
+        'openDirectory()',
         'remove()'
     ];
     
@@ -36,7 +38,7 @@ class ProjectBtn extends \QWidget {
         
         $this->closeBtn = new \QPushButton($this);
         $this->closeBtn->setCursor(new \QCursor(\Qt::PointingHandCursor));
-        $this->closeBtn->iconSize = new \QSize(12, 12);
+        $this->closeBtn->text = Core::getInstance()->icon->font('fa-times')->html(false)->__toString();
         $this->closeBtn->onClicked = function($sender) {
             $this->emit('remove()', []);
         };
@@ -63,15 +65,34 @@ class ProjectBtn extends \QWidget {
     public function enterEvent($event) {
         $this->objectName = 'ProjectBtnHover';
         $this->styleSheet = $this->styleSheet();
-        $this->closeBtn->setIcon(new \QIcon(
-            Core::getInstance()->APP_PATH.'Themes/'.Core::getInstance()->config->ini()->get('theme', 'PQDark').'/close.png'
-        ));
     }
     
     /** @override leaveEvent */
     public function leaveEvent($event) {
         $this->objectName = 'ProjectBtn';
         $this->styleSheet = $this->styleSheet();
-        $this->closeBtn->setIcon(new \QIcon(''));
+    }
+    
+    /** @override contextMenuEvent */
+    public function contextMenuEvent($event) {
+        $menu = new \QMenu($this);
+        
+        $open = new \QAction(tr('Open'), $menu);
+        $open->onTriggered = function($sender) {
+            $this->emit('open()', []);
+        };
+        $openDirectory = new \QAction(tr('Open Directory'), $menu);
+        $openDirectory->onTriggered = function($sender) {
+            $this->emit('openDirectory()', []);
+        };
+        $remove = new \QAction(tr('Delete from List'), $menu);
+        $remove->onTriggered = function($sender) {
+            $this->emit('remove()', []);
+        };
+        
+        $menu->addAction($open);
+        $menu->addAction($openDirectory);
+        $menu->addAction($remove);
+        $menu->exec($event->globalPos());
     }
 }

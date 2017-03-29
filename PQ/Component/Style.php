@@ -147,7 +147,13 @@ class Style extends Component {
      * @param $name
      */
     public function set(&$object, $name) {
-        $object->styleSheet = $this->get($name);
+        $args = func_get_args();
+        $n = count($args);
+        $style = '';
+        if($n > 2) {
+            for($i = 2; $i < $n; $i++) $style .= $this->get($args[$i]);
+        }
+        $object->styleSheet = $this->get($name) . $style;
     }
 
     /**

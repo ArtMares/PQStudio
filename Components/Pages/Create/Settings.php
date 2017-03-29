@@ -5,17 +5,16 @@
  * @copyright           artmares@influ.su
  */
 namespace Components\Pages\Create;
-use Components\Custom\BackBtn;
+use Components\Custom\Btn;
 use Components\Custom\CheckBox;
 use Components\Custom\CheckBoxHover;
 use Components\Custom\Input;
-use Components\Custom\NextBtn;
 use Components\Custom\Widget\ListView;
-use PQ\QtObject;
-use PQ\WidgetsInterface;
+use PQ\MVC;
+use PQ\MVC\View;
 
-class Settings extends \QFrame implements WidgetsInterface {
-    use QtObject;
+class Settings extends \QFrame {
+    use View;
 
     public $ui = [];
 
@@ -25,7 +24,7 @@ class Settings extends \QFrame implements WidgetsInterface {
 
     public function initComponents() {
         
-        $this->model = $this->core->model->get('CreateProject');
+        $this->model = MVC::m('Components/Model/Create');
 
         $labelIncludes = new \QLabel($this);
         $labelIncludes->text = tr('PlastiQ Meta Objects') . ':';
@@ -34,7 +33,7 @@ class Settings extends \QFrame implements WidgetsInterface {
         $this->ui['scroll']->disableScroll(ListView::Horizontal);
 
         $i = 0;
-        foreach($this->core->storage->plastiq as $include => $data) {
+        foreach(MVC::m('Components/Model/Main')->plastiq as $include => $data) {
             $this->ui['includes'][$include] = new CheckBoxHover($this->ui['scroll'], $include);
             $this->ui['scroll']->addItem($this->ui['includes'][$include], $include);
             $this->ui['includes'][$include]->onToggled = function($sender, $check) use($include) {
@@ -60,20 +59,20 @@ class Settings extends \QFrame implements WidgetsInterface {
         $this->ui['usePQCore'] = new CheckBox($this, tr('Use PQ/Core'));
         $this->ui['usePQCore']->onToggled = function($sender, $check) {
             if($check) {
-                foreach($this->core->storage->pqcore as $include) $this->ui['includes'][$include]->setChecked($check);
+                foreach(MVC::m('Components/Model/Main')->pqcore as $include) $this->ui['includes'][$include]->setChecked($check);
             }
         };
 
-        $this->ui['BackBtn'] = new BackBtn($this, tr('Back'));
+        $this->ui['BackBtn'] = new Btn\Back($this, tr('Back'));
         $this->ui['BackBtn']->onClicked = function() {
-            $this->core->widgets->get('Components/Pages/Create')->prev();
+            MVC::v('Components/Pages/Create')->prev();
         };
 
-        $this->ui['NextBtn'] = new NextBtn($this, tr('Create'));
+        $this->ui['NextBtn'] = new Btn\Next($this, tr('Create'));
         $this->ui['NextBtn']->onClicked = function($sender) {
-            qDebug($this->core->storage->createProjectData);
-            $this->core->widgets->get('Components/Pages/Create')->next();
-            $this->core->widgets->get('Components/Widgets/Welcome')->Back();
+            qDebug($this->model);
+            MVC::v('Components/Pages/Create')->next();
+            MVC::v('Components/Widgets/Welcome')->Back();
         };
 
         $this->setLayout(new \QGridLayout());
@@ -105,13 +104,13 @@ class Settings extends \QFrame implements WidgetsInterface {
 
     private function checkInclude($name, $add = false) {
         $fullName = $this->core->storage->plastiq[$name]['lib'].':'.$name;
-        $index = array_search($fullName, $this->core->model->get('CreateProject')->includes);
+        $index = array_search($fullName, $this->model->includes);
         if($index === false && $add === true) {
-            $this->core->storage->createProjectData['includes'][] = $fullName;
-            $depends = isset($this->core->storage->plastiq[$name]['depends']) ? $this->core->storage->plastiq[$name]['depends'] : [];
+            $this->model->includes[] = $fullName;
+            $depends = isset(MVC::m('Components/Model/Main')->plastiq[$name]['depends']) ? MVC::m('Components/Model/Main')->plastiq[$name]['depends'] : [];
             foreach($depends as $depend) $this->ui['includes'][$depend]->setChecked(true);
         } else {
-            unset($this->core->model->get('CreateProject')->includes[$index]);
+            unset($this->model->includes[$index]);
         }
     }
 
