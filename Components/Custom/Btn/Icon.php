@@ -16,14 +16,13 @@ class Icon extends Btn {
     protected $textLabel;
 
     protected $icon;
+    
+    protected $eventFilter;
 
     public function __construct($parent, Char $icon, $text) {
         parent::__construct($parent);
 
         $this->icon = $icon;
-
-        /** Задаем тип курсора */
-        $this->setCursor(new \QCursor(\Qt::PointingHandCursor));
 
         /** Задаем максимальную и минимальную высоту*/
         $this->setMaximumHeight(30);
@@ -48,7 +47,23 @@ class Icon extends Btn {
         $this->textLabel = new \QLabel($this);
         $this->textLabel->text = $text;
         $this->textLabel->objectName = 'Text';
-
+    
+        $this->eventFilter = new \PQEventFilter($this);
+        $this->eventFilter->addEventType(\QEvent::MouseButtonRelease);
+        $this->eventFilter->onEvent = function($sender, $event) {
+            switch($event->type()) {
+                case \QEvent::MouseButtonRelease:
+                    $this->click();
+                    break;
+            }
+        };
+        
+        $this->iconLabel->installEventFilter($this->eventFilter);
+        
+        $this->compose();
+    }
+    
+    protected function compose() {
         /** Добавляем элементы на слой */
         $this->layout()->addWidget($this->iconLabel);
         $this->layout()->addWidget($this->textLabel);

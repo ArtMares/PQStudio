@@ -16,7 +16,7 @@ class Back extends Icon {
         /** Задаем шрифтовую иконку для кнопки */
         $icon = Core::getInstance()->icon->font('fa-arrow-left', $this->iconSize);
         parent::__construct($parent, $icon, $text);
-        $this->styleSheet = Core::getInstance()->style->BackBtn;
+        Core::getInstance()->style->set($this, 'BackBtn');
         $this->setMinimumWidth(70);
     }
 }

@@ -17,21 +17,16 @@ class Next extends Icon {
         parent::__construct($parent, $icon, $text);
 
         /** Задаем стиль для кнопки */
-        $this->styleSheet = Core::getInstance()->style->NextBtn;
+        Core::getInstance()->style->set($this, 'NextBtn');
 
         /** Задаем минимальную ширину */
         $this->setMinimumWidth(70);
-
-        /** Уничтожаем ранее созданый элемент шрифтовой иконки */
-        $this->iconLabel->free();
-
-        /** Создаем новый элемент для шрифтовой иконки */
-        $this->iconLabel = new \QLabel($this);
-        $this->iconLabel->setMaximumWidth(22);
-        $this->iconLabel->text = $icon->__toString();
-        $this->iconLabel->objectName = 'Icon';
-
-        /** Добавлям элемент на слой */
+    }
+    
+    protected function compose() {
+        /** Добавляем элементы на слой */
+        $this->layout()->addWidget($this->textLabel);
+        $this->layout()->setAlignment($this->textLabel, \Qt::AlignRight);
         $this->layout()->addWidget($this->iconLabel);
     }
 }
