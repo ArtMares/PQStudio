@@ -82,7 +82,7 @@ class Welcome extends \QWidget {
             $this->showAnimator->setStartValue(new \QPoint($this->width(), 0));
             $this->showAnimator->setEndValue(new \QPoint(0, 0));
             
-            $this->animationStart();
+            $this->startAnimation();
             
             $this->currentPage = $pageName;
         }
@@ -99,13 +99,13 @@ class Welcome extends \QWidget {
             $this->showAnimator->setStartValue(new \QPoint(-$this->width(), 0));
             $this->showAnimator->setEndValue(new \QPoint(0, 0));
             
-            $this->animationStart();
+            $this->startAnimation();
             
             $this->currentPage = false;
         }
     }
     
-    private function animationStart() {
+    private function startAnimation() {
         $this->hideAnimator->start();
         $this->showAnimator->start();
     }
@@ -123,7 +123,7 @@ class Welcome extends \QWidget {
 
     public function show() {
         parent::show();
-//        $this->core->QApp->alert($this, 10000);
-        $this->core->QApp->beep();
+        $this->core->QApp->alert($this, 10000);
+//        $this->core->QApp->beep();
     }
 }

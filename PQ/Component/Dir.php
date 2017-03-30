@@ -4,6 +4,11 @@
  * @date                28.02.2017
  * @copyright           artmares@influ.su
  */
+
+# QDir
+# QFileInfo
+# QFile
+
 namespace PQ\Component;
 use PQ\Component;
 use PQ\Core;
@@ -42,12 +47,12 @@ class Dir extends Component {
         return $this->dir->rename($newName);
     }
 
-    public function ls($dirPath, $filters = false, $sort = false) {
+    public function ls($dirPath, $filters = self::All, $sort = false) {
         $this->dir->setPath($dirPath);
         return $this->_ls_filters_sort($filters, $sort);
     }
 
-    public function ls_mask($dirPath, array $mask, $filters = false, $sort = false) {
+    public function ls_mask($dirPath, array $mask, $filters = self::All, $sort = false) {
         $this->dir->setPath($dirPath);
         return $this->_ls_mask_filters_sort($mask, $filters, $sort);
     }
@@ -63,5 +68,28 @@ class Dir extends Component {
     private function _ls_filters_sort($filters, $sort = false) {
         if(!$sort) return $this->dir->entryList($filters);
         return $this->dir->entryList($filters, $sort);
+    }
+    
+    public function copy($source, $destination) {
+        $this->dir->setPath($source);
+        if(!$this->dir->isReadable()) return false;
+        $this->mkdir($destination);
+        $list = $this->ls($source);
+        foreach($list as $item) {
+            if($item !== '.' && $item !== '..') {
+                $itemPath = $source .'/'.$item;
+                $fInfo = new \QFileInfo($itemPath);
+                if($fInfo->isDir()) $this->copy($itemPath, $destination.'/'.$item);
+                if($fInfo->isSymLink()) continue;
+                if($fInfo->isFile()) {
+                    qDebug('copy ' . ($this->core->file->copy($itemPath, $destination.'/'.$item) ? 'true' : 'false'));
+                }
+                qDebug($item);
+                qDebug($itemPath);
+                qDebug($destination.'/'.$item);
+            }
+//            $fi = new \QFileInfo()
+        }
+        return true;
     }
 }

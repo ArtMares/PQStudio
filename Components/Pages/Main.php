@@ -7,6 +7,7 @@
 namespace Components\Pages;
 use Components\Custom\Btn;
 use Components\Custom\Widget\ListWidget;
+use Components\Model\Project;
 use PQ\MVC;
 use PQ\MVC\View;
 
@@ -44,7 +45,8 @@ class Main extends \QWidget {
         /** Задаем минимальную и максимальную ширину области */
         $this->projectsList->setMinimumWidth(300);
         $this->projectsList->setMaximumWidth(300);
-        $projectBtn = new Btn\Project(null, 'Test', 'D:/Test', $this->core->lib->uid->generate());
+        $projectBtn = new Btn\Project('Test', 'D:/Test');
+        $projectBtn->setUID($this->core->lib->uid->new());
         $projectBtn->connect(SIGNAL('remove()'), $this, SLOT('removeProject()'));
         $this->projectsList->addWidget($projectBtn);
         $this->layout()->addWidget($this->projectsList);
@@ -140,7 +142,20 @@ class Main extends \QWidget {
         $this->layout()->addWidget($general);
     }
     
-    public function addProject($name, $path) {
+    public function addProject($name, $path, $icon = '') {
     
+    }
+    
+    /**
+     * @param Project $data
+     * @return bool
+     */
+    public function createProject($data) {
+        $projectPath = $data->path_to.'/'.$data->name;
+        $this->core->dir->mkdir($projectPath);
+        if($data->usePQCore) {
+            $this->core->dir->copy($this->core->APP_PATH.'PQ', $projectPath.'/PQ');
+        }
+        return false;
     }
 }

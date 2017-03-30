@@ -17,14 +17,16 @@ class Project extends \QWidget {
     
     protected $closeBtn;
     
+    protected $labelIcon;
+    
     public $name;
     
     public $path;
     
     public $uid;
     
-    public function __construct($parent = null, $projectName, $projectPath, $uid) {
-        parent::__construct($parent);
+    public function __construct($projectName, $projectPath, $iconPath = '') {
+        parent::__construct(null);
     
         $this->setCursor(new \QCursor(\Qt::PointingHandCursor));
         
@@ -34,7 +36,6 @@ class Project extends \QWidget {
         
         $this->name = $projectName;
         $this->path = $projectPath;
-        $this->uid = $uid;
         
         $this->closeBtn = new \QPushButton($this);
         $this->closeBtn->setCursor(new \QCursor(\Qt::PointingHandCursor));
@@ -51,14 +52,30 @@ class Project extends \QWidget {
         $labelPath->text = $projectPath;
         $labelPath->objectName = 'Path';
         
+        $this->labelIcon = new \QLabel($this);
+        $this->labelIcon->setMaximumWidth(34);
+        $this->setIcon($iconPath);
+        
         $this->setLayout(new \QGridLayout());
         
         $row = 0;
-        $this->layout()->addWidget($labelName, $row, 0);
-        $this->layout()->addWidget($this->closeBtn, $row, 1);
+        $this->layout()->addWidget($this->labelIcon, $row, 0, 2, 1);
+        $this->layout()->addWidget($labelName, $row, 1);
+        $this->layout()->addWidget($this->closeBtn, $row, 2);
         
         $row++;
-        $this->layout()->addWidget($labelPath, $row, 0, 1, 2);
+        $this->layout()->addWidget($labelPath, $row, 1, 1, 2);
+    }
+    
+    public function setIcon($iconPath) {
+        if($iconPath !== '') {
+            $icon = new \QIcon($iconPath);
+            $this->labelIcon->pixmap($icon->pixmap(32, 32));
+        }
+    }
+    
+    public function setUID($uid) {
+        $this->uid = $uid;
     }
     
     /** @override enterEvent */

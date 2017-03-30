@@ -40,7 +40,7 @@ class Settings extends \QFrame {
                 $this->checkInclude($include, $check);
             };
             $i++;
-            if($i > 10) break;
+            if($this->core->var->av(0, $this->core->args()) === 'PQStudio-debug.exe') if($i > 10) break;
         }
         
         $this->ui['search'] = new Input($this);
@@ -58,8 +58,9 @@ class Settings extends \QFrame {
 
         $this->ui['usePQCore'] = new CheckBox($this, tr('Use PQ/Core'));
         $this->ui['usePQCore']->onToggled = function($sender, $check) {
+            $this->model->usePQCore = $check;
             if($check) {
-                foreach(MVC::m('Components/Model/Main')->pqcore as $include) $this->ui['includes'][$include]->setChecked($check);
+                foreach(MVC::m('Components/Model/Main')->pqcore as $include) if(isset($this->ui['includes'][$include])) $this->ui['includes'][$include]->setChecked($check);
             }
         };
 
@@ -70,9 +71,13 @@ class Settings extends \QFrame {
 
         $this->ui['NextBtn'] = new Btn\Next($this, tr('Create'));
         $this->ui['NextBtn']->onClicked = function($sender) {
+//            qDebug('Model');
             qDebug($this->model);
-            MVC::v('Components/Pages/Create')->next();
-            MVC::v('Components/Widgets/Welcome')->Back();
+//            var_dump($this->model);
+            if(MVC::v('Components/Pages/Main')->createProject($this->model)) {
+                MVC::v('Components/Pages/Create')->next();
+                MVC::v('Components/Widgets/Welcome')->Back();
+            }
         };
 
         $this->setLayout(new \QGridLayout());
@@ -103,12 +108,13 @@ class Settings extends \QFrame {
     }
 
     private function checkInclude($name, $add = false) {
-        $fullName = $this->core->storage->plastiq[$name]['lib'].':'.$name;
+        $fullName = MVC::m('Components/Model/Main')->plastiq[$name]['lib'].':'.$name;
         $index = array_search($fullName, $this->model->includes);
         if($index === false && $add === true) {
             $this->model->includes[] = $fullName;
-            $depends = isset(MVC::m('Components/Model/Main')->plastiq[$name]['depends']) ? MVC::m('Components/Model/Main')->plastiq[$name]['depends'] : [];
-            foreach($depends as $depend) $this->ui['includes'][$depend]->setChecked(true);
+            $depends = $this->core->var->av('depends', MVC::m('Components/Model/Main')->plastiq[$name], []);
+            foreach($depends as $depend)
+                if(isset($this->ui['includes'][$depend])) $this->ui['includes'][$depend]->setChecked(true);
         } else {
             unset($this->model->includes[$index]);
         }

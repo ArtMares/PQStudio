@@ -14,6 +14,8 @@ class OneSelectList extends ListWidget {
     
     protected $items = [];
     
+    protected $currentRow = -1;
+    
     public function addWidget($widget) {
         parent::addWidget($widget);
         $this->items[] = $widget;
@@ -28,6 +30,11 @@ class OneSelectList extends ListWidget {
                 $item->styleSheet = $item->styleSheet();
             }
         }
+        $this->currentRow = $index;
         $this->emit('currentRowChanged(int)', [$index]);
+    }
+    
+    public function currentRow() {
+        return $this->currentRow;
     }
 }

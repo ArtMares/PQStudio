@@ -123,4 +123,10 @@ class Variable extends Component {
     public function is_callable($data) {
         return is_callable($data);
     }
+    
+    public function av($needle, $array, $default = '') {
+        $result = $default;
+        if(isset($array[$needle])) $result = $array[$needle];
+        return $result;
+    }
 }
