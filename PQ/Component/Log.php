@@ -4,6 +4,13 @@
  * @date                28.02.2017
  * @copyright           artmares@influ.su
  */
+
+# QDir
+# QFile
+# QFileDevice
+# QIODevice
+# QObject
+
 namespace PQ\Component;
 use PQ\Component;
 use PQ\Core;

@@ -4,6 +4,9 @@
  * @date                02.03.2017
  * @copyright           artmares@influ.su
  */
+
+# QProcess
+
 namespace PQ\Component;
 use PQ\Component;
 

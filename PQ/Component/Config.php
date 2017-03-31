@@ -4,6 +4,10 @@
  * @date                28.02.2017
  * @copyright           artmares@influ.su
  */
+
+# QFile
+# QSettings
+
 namespace PQ\Component;
 use PQ\Component;
 use PQ\Core;

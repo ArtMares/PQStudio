@@ -4,6 +4,9 @@
  * @date                06.03.2017
  * @copyright           artmares@influ.su
  */
+
+# QIcon
+
 namespace PQ\Component\Icon;
 class Svg {
 

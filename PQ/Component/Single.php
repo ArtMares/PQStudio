@@ -4,6 +4,10 @@
  * @date                02.03.2017
  * @copyright           artmares@influ.su
  */
+
+# QSystemSemaphore
+# QSharedMemory
+
 namespace PQ\Component;
 use PQ\Component;
 
