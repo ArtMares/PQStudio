@@ -9,7 +9,6 @@ namespace Components\Pages\Create;
 use Components\Custom\Btn;
 use Components\Custom\CheckBox;
 use Components\Custom\Input;
-use Components\Custom\InputValidate;
 use PQ\MVC;
 use PQ\MVC\View;
 use function PQ\preparePath;
@@ -30,17 +29,18 @@ class Basic extends \QFrame {
         $labelName->text = tr('Project Name') . ':';
     
         /** Создаем поле ввода для Навзвания проекта */
-        $this->ui['name'] = new InputValidate($this);
+        $this->ui['name'] = new Input($this);
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
-        /** Задаем функцию для проверки валидности поля */
-        $this->ui['name']->onValidate(function($sender, $text) {
-            if(preg_match('/^[0-9a-zA-Z\-\.\_ ]+/', $text)) {
-                $result = $this->checkProject($text);
-                if($result === true) $this->model->name = $text;
-                return $result;
-            }
-            return false;
-        });
+        $this->ui['name']->setValidator(new \QRegExpValidator(new \QRegExp('^[0-9a-zA-Z\-\.\_ ]+')));
+//        /** Задаем функцию для проверки валидности поля */
+//        $this->ui['name']->onValidate(function($sender, $text) {
+//            if(preg_match('/^[0-9a-zA-Z\-\.\_ ]+/', $text)) {
+//                $result = $this->checkProject($text);
+//                if($result === true) $this->model->name = $text;
+//                return $result;
+//            }
+//            return false;
+//        });
         /** Задаем функцию для кастомного события onBlur */
         $this->ui['name']->onBlurred(function($sender) {
             if($this->core->variant->get($this->ui['name']->property('invalid')) === false) $this->ui['appName']->text = $sender->text;

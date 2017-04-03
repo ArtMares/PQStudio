@@ -18,22 +18,20 @@ class InputValidate extends Input {
         /** Инициализируем создание объекта */
         parent::__construct($parent);
         
-//        $this->tooltip = new ErrorToolTip($this);
         /** Задаем свойсво которое указывает валидно поле или нет */
         $this->setProperty('invalid', false);
         
         /** Задаем стиль */
         Core::getInstance()->style->set($this, 'Input', 'InputValidate');
-//        $this->styleSheet = Core::getInstance()->style->Input . Core::getInstance()->style->InputValidate;
         
         /** Задаем обработку по событию onTextChange */
         $this->onTextChanged = function($sender, $value) {
             $this->validate($value);
         };
         
-        $this->onBlur[] = function($sender) {
-            $this->validate($this->text);
-        };
+        $this->onBlurred(function($sender) {
+            $this->validate($sender->text);
+        });
     }
 
     /**

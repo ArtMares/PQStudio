@@ -12,7 +12,9 @@ class Input extends \QLineEdit {
 
     public $signals = [
         'focused()',
-        'blured()'
+        'blurred()',
+        'invalidly()',
+        'validly()'
     ];
 
     protected $eventFilter;
@@ -20,6 +22,8 @@ class Input extends \QLineEdit {
     protected $onBlur = [];
 
     protected $onFocus = [];
+    
+    protected $onValidate;
 
     public function __construct($parent) {
         parent::__construct($parent);
@@ -37,6 +41,10 @@ class Input extends \QLineEdit {
                 case \QEvent::FocusOut: $sender->blur();
                     break;
             }
+        };
+        
+        $this->onTextChanged = function($sender, $value) {
+            $this->setProperty('invalid', !$this->hasAcceptableInput());
         };
     }
 
@@ -67,6 +75,6 @@ class Input extends \QLineEdit {
         foreach($this->onFocus as $focus) {
             if(is_callable($focus)) call_user_func_array($focus, [$this]);
         }
-        $this->emit('blured()', []);
+        $this->emit('blurred()', []);
     }
 }

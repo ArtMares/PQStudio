@@ -12,6 +12,6 @@ class CheckBoxHover extends CheckBox {
     
     public function __construct($parent, $text, $check = false) {
         parent::__construct($parent, $text, $check);
-        $this->styleSheet = $this->styleSheet() . Core::getInstance()->style->CheckBoxHover;
+        Core::getInstance()->style->set($this, 'CheckBox', 'CheckBoxHover');
     }
 }

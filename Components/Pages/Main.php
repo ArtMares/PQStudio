@@ -45,6 +45,11 @@ class Main extends \QWidget {
         /** Задаем минимальную и максимальную ширину области */
         $this->projectsList->setMinimumWidth(300);
         $this->projectsList->setMaximumWidth(300);
+//        $projectBtn = new Btn\Project('Test', 'D:/Test', $this->core->APP_PATH.'img/icons/unknown.png');
+        $projectBtn = new Btn\Project('Test', 'D:/Test', $this->core->APP_PATH.'img/default.ico');
+        $projectBtn->setUID($this->core->lib->uid->new());
+        $projectBtn->connect(SIGNAL('remove()'), $this, SLOT('removeProject()'));
+        $this->projectsList->addWidget($projectBtn);
         $projectBtn = new Btn\Project('Test', 'D:/Test');
         $projectBtn->setUID($this->core->lib->uid->new());
         $projectBtn->connect(SIGNAL('remove()'), $this, SLOT('removeProject()'));

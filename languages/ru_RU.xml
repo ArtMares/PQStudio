@@ -136,4 +136,12 @@
         <source>Search</source>
         <tr>Найти</tr>
     </unit>
+    <unit>
+        <source>PlastiQ Meta Objects</source>
+        <tr>Объекты меты системы PlastiQ</tr>
+    </unit>
+    <unit>
+        <source>Additionally</source>
+        <tr>Дополнительно</tr>
+    </unit>
 </pqenginetr>
