@@ -19,6 +19,7 @@ class Basic extends \QFrame {
     private $model;
     
     private $ui = [];
+    private $validator;
     
     public function initComponents() {
         
@@ -31,20 +32,23 @@ class Basic extends \QFrame {
         /** Создаем поле ввода для Навзвания проекта */
         $this->ui['name'] = new Input($this);
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
-        $this->ui['name']->setValidator(new \QRegExpValidator(new \QRegExp('^[0-9a-zA-Z\-\.\_ ]+')));
-//        /** Задаем функцию для проверки валидности поля */
-//        $this->ui['name']->onValidate(function($sender, $text) {
-//            if(preg_match('/^[0-9a-zA-Z\-\.\_ ]+/', $text)) {
-//                $result = $this->checkProject($text);
-//                if($result === true) $this->model->name = $text;
-//                return $result;
-//            }
-//            return false;
-//        });
+        $this->validator = new \QRegExpValidator(new \QRegExp('[0-9a-zA-Z\-\.\_]+'));
+        $this->ui['name']->setValidator($this->validator);
+        $this->ui['name']->onTextChanged = function($sender, $value) {
+            $result = $this->checkProject($value);
+            if($result === true) {
+                $this->ui['NextBtn']->enabled = true;
+                $this->model->name = $value;
+                $sender->valid();
+            } else {
+                $sender->invalid();
+            }
+        };
         /** Задаем функцию для кастомного события onBlur */
-        $this->ui['name']->onBlurred(function($sender) {
-            if($this->core->variant->get($this->ui['name']->property('invalid')) === false) $this->ui['appName']->text = $sender->text;
-        });
+        $this->ui['name']->connect(SIGNAL('blurred()'), $this, SLOT('isValidPath()'));
+//        $this->ui['name']->onBlurred(function($sender) {
+//            if($this->core->variant->get($this->ui['name']->property('invalid')) === false) $this->ui['appName']->text = $sender->text;
+//        });
     
         /** Создаем QLabel для названия поля ввода */
         $labelPath = new \QLabel($this);
@@ -77,6 +81,7 @@ class Basic extends \QFrame {
         $labelAppVersion = new \QLabel($this);
         $labelAppVersion->text = tr('Application Version') . ':';
         $this->ui['appVersion'] = new Input($this);
+        $this->ui['appVersion']->setInputMask('9.9');
         $this->ui['appVersion']->text = '0.1';
         $this->ui['appVersion']->setPlaceholderText(tr('Enter Version') . '...');
     
@@ -100,6 +105,7 @@ class Basic extends \QFrame {
         };
     
         $this->ui['NextBtn'] = new Btn\Next($this, tr('Next'));
+        $this->ui['NextBtn']->enabled = false;
         $this->ui['NextBtn']->onClicked = function($sender) {
             if($this->core->variant->get($this->ui['name']->property('invalid')) === false && $this->ui['name']->text() !== '') {
                 $this->model->path_to = $this->ui['path']->text();
@@ -198,11 +204,21 @@ class Basic extends \QFrame {
         }
         $this->core->config->ini()->set('defaultProjectsPath', $this->model->path_to);
     }
+    
+    public function isValidPath($sender) {
+        if($this->checkProject($sender->text)) {
+        
+        }
+    }
 
     private function checkProject($name) {
         if(!$this->core->dir->exists(preparePath($this->ui['path']->text.'/'.$name))) {
             return true;
         }
         return false;
+    }
+    
+    public function reset() {
+        $this->ui['NextBtn']->enabled = false;
     }
 }

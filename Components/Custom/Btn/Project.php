@@ -53,7 +53,8 @@ class Project extends \QWidget {
         $labelPath->objectName = 'Path';
         
         $this->labelIcon = new \QLabel($this);
-//        $this->labelIcon->setMaximumWidth(18);
+        $this->labelIcon->setMinimumWidth(24);
+        $this->labelIcon->setMaximumWidth(24);
         $this->setIcon($iconPath);
         
         $this->setLayout(new \QGridLayout());

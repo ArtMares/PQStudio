@@ -50,10 +50,15 @@ class Icon extends Btn {
     
         $this->eventFilter = new \PQEventFilter($this);
         $this->eventFilter->addEventType(\QEvent::MouseButtonRelease);
+        $this->eventFilter->addEventType(\QEvent::MouseButtonRelease);
         $this->eventFilter->onEvent = function($sender, $event) {
             switch($event->type()) {
                 case \QEvent::MouseButtonRelease:
                     $this->click();
+                    break;
+                case \QEvent::EnabledChange:
+                    qDebug('EnabledChange');
+                    $this->updateStyle();
                     break;
             }
         };
@@ -67,5 +72,9 @@ class Icon extends Btn {
         /** Добавляем элементы на слой */
         $this->layout()->addWidget($this->iconLabel);
         $this->layout()->addWidget($this->textLabel);
+    }
+    
+    protected function updateStyle() {
+        $this->styleSheet = $this->styleSheet();
     }
 }

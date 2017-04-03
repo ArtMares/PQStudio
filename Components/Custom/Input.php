@@ -13,17 +13,10 @@ class Input extends \QLineEdit {
     public $signals = [
         'focused()',
         'blurred()',
-        'invalidly()',
-        'validly()'
+        'validate(bool)'
     ];
 
     protected $eventFilter;
-    
-    protected $onBlur = [];
-
-    protected $onFocus = [];
-    
-    protected $onValidate;
 
     public function __construct($parent) {
         parent::__construct($parent);
@@ -33,6 +26,7 @@ class Input extends \QLineEdit {
         $this->eventFilter = new \PQEventFilter($this);
         $this->eventFilter->addEventType(\QEvent::FocusIn);
         $this->eventFilter->addEventType(\QEvent::FocusOut);
+        $this->eventFilter->addEventType(\QEvent::EnabledChange);
         $this->installEventFilter($this->eventFilter);
         $this->eventFilter->onEvent = function($sender, $event) {
             switch($event->type()) {
@@ -44,16 +38,12 @@ class Input extends \QLineEdit {
         };
         
         $this->onTextChanged = function($sender, $value) {
-            $this->setProperty('invalid', !$this->hasAcceptableInput());
+            if($this->hasAcceptableInput()) {
+                $this->valid();
+            } else {
+                $this->invalid();
+            }
         };
-    }
-
-    public function onBlurred(callable $callback) {
-        $this->onBlur[] = $callback;
-    }
-
-    public function onFocused(callable $callback) {
-        $this->onFocus[] = $callback;
     }
     
     public function blur() {
@@ -63,18 +53,28 @@ class Input extends \QLineEdit {
     public function focus() {
         $this->slot_focus();
     }
+    
+    public function invalid() {
+        $this->setProperty('invalid', true);
+        $this->emit('validate(bool)', [false]);
+        $this->updateStyle();
+    }
+    
+    public function valid() {
+        $this->setProperty('invalid', false);
+        $this->emit('validate(bool)', [true]);
+        $this->updateStyle();
+    }
 
     protected function slot_blur() {
-        foreach($this->onBlur as $blur) {
-            if(is_callable($blur)) call_user_func_array($blur, [$this]);
-        }
         $this->emit('focused()', []);
     }
 
     protected function slot_focus() {
-        foreach($this->onFocus as $focus) {
-            if(is_callable($focus)) call_user_func_array($focus, [$this]);
-        }
         $this->emit('blurred()', []);
+    }
+    
+    protected function updateStyle() {
+        $this->styleSheet = $this->styleSheet();
     }
 }
