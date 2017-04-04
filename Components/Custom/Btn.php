@@ -7,7 +7,7 @@
 namespace Components\Custom;
 class Btn extends \QPushButton {
 
-    public function __construct($parent) {
+    public function __construct($parent = null) {
         parent::__construct($parent);
         $this->setCursor(new \QCursor(\Qt::PointingHandCursor));
     }

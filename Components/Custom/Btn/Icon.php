@@ -50,7 +50,7 @@ class Icon extends Btn {
     
         $this->eventFilter = new \PQEventFilter($this);
         $this->eventFilter->addEventType(\QEvent::MouseButtonRelease);
-        $this->eventFilter->addEventType(\QEvent::MouseButtonRelease);
+        $this->eventFilter->addEventType(\QEvent::EnabledChange);
         $this->eventFilter->onEvent = function($sender, $event) {
             switch($event->type()) {
                 case \QEvent::MouseButtonRelease:

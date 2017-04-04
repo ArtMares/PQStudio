@@ -24,10 +24,10 @@ class CheckBox extends Btn\Icon {
         $check = (bool)$check;
 
         /** Задаем иконку в зависимости от аргумента $check */
-        $this->icon = Core::getInstance()->icon->font(($check ? 'fa-check-square-o' : 'fa-square-o'), $this->iconSize);
+        $icon = Core::getInstance()->icon->font(($check ? 'fa-check-square-o' : 'fa-square-o'), $this->iconSize);
 
         /** Вызываем конструктор родителя и передаем необходимые аргументы */
-        parent::__construct($parent, $this->icon, $text);
+        parent::__construct($parent, $icon, $text);
 
         $this->textLabel->setWordWrap(true);
 
@@ -50,14 +50,16 @@ class CheckBox extends Btn\Icon {
 
         /** Залаем стиль оформления */
         Core::getInstance()->style->set($this, 'CheckBox');
-        $this->onToggled = function($sender, $check) {
-            $this->update($check);
-        };
+        $this->connect(SIGNAL('toggled(bool)'), $this, SLOT('slot_toggled(bool)'));
     }
 
-    private function update($check) {
+    private function updateState($check) {
         $this->icon = Core::getInstance()->icon->font(($check ? 'fa-check-square-o' : 'fa-square-o'), $this->iconSize);
         /** Изменяем иконку в зависимости от аргумента $check */
         $this->iconLabel->setText($this->icon->__toString());
+    }
+    
+    public function slot_toggled($sender, $check) {
+        $this->updateState($check);
     }
 }

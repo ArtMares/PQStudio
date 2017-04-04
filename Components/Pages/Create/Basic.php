@@ -29,7 +29,7 @@ class Basic extends \QFrame {
         $labelName = new \QLabel($this);
         $labelName->text = tr('Project Name') . ':';
     
-        /** Создаем поле ввода для Навзвания проекта */
+        /** Создаем поле ввода для Названия проекта */
         $this->ui['name'] = new Input($this);
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
         $this->validator = new \QRegExpValidator(new \QRegExp('[0-9a-zA-Z\-\.\_]+'));
@@ -38,10 +38,10 @@ class Basic extends \QFrame {
             $result = $this->checkProject($value);
             if($result === true) {
                 $this->ui['NextBtn']->enabled = true;
-                $this->model->name = $value;
                 $sender->valid();
             } else {
                 $sender->invalid();
+                $this->ui['NextBtn']->enabled = false;
             }
         };
         /** Задаем функцию для кастомного события onBlur */
@@ -108,6 +108,7 @@ class Basic extends \QFrame {
         $this->ui['NextBtn']->enabled = false;
         $this->ui['NextBtn']->onClicked = function($sender) {
             if($this->core->variant->get($this->ui['name']->property('invalid')) === false && $this->ui['name']->text() !== '') {
+                $this->model->name = $this->ui['name']->text();
                 $this->model->path_to = $this->ui['path']->text();
                 $this->model->appName = $this->ui['appName']->text();
                 $this->model->appVersion = $this->ui['appVersion']->text();

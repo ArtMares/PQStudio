@@ -6,63 +6,37 @@
  */
 namespace Components\Custom;
 use PQ\Core;
-use Components\Custom\Events;
 
 class Input extends \QLineEdit {
 
     public $signals = [
         'focused()',
         'blurred()',
-        'validate(bool)'
+        'textValidated(bool)'
     ];
 
-    protected $eventFilter;
-
-    public function __construct($parent) {
+    public function __construct($parent = null) {
         parent::__construct($parent);
 
         Core::getInstance()->style->set($this, 'Input');
 
-        $this->eventFilter = new \PQEventFilter($this);
-        $this->eventFilter->addEventType(\QEvent::FocusIn);
-        $this->eventFilter->addEventType(\QEvent::FocusOut);
-        $this->eventFilter->addEventType(\QEvent::EnabledChange);
-        $this->installEventFilter($this->eventFilter);
-        $this->eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::FocusIn: $sender->focus();
-                    break;
-                case \QEvent::FocusOut: $sender->blur();
-                    break;
-            }
-        };
+        $eventFilter = new \PQEventFilter($this);
+        $eventFilter->addEventType(\QEvent::FocusIn);
+        $eventFilter->addEventType(\QEvent::FocusOut);
+        $this->installEventFilter($eventFilter);
         
-        $this->onTextChanged = function($sender, $value) {
-            if($this->hasAcceptableInput()) {
-                $this->valid();
-            } else {
-                $this->invalid();
-            }
-        };
-    }
-    
-    public function blur() {
-        $this->slot_blur();
-    }
-
-    public function focus() {
-        $this->slot_focus();
+        $this->connect(SIGNAL('textChanged(string)'), $this, SLOT('slot_acceptInput(string)'));
     }
     
     public function invalid() {
         $this->setProperty('invalid', true);
-        $this->emit('validate(bool)', [false]);
+        $this->emit('textValidated(bool)', [false]);
         $this->updateStyle();
     }
     
     public function valid() {
         $this->setProperty('invalid', false);
-        $this->emit('validate(bool)', [true]);
+        $this->emit('textValidated(bool)', [true]);
         $this->updateStyle();
     }
 
@@ -76,5 +50,22 @@ class Input extends \QLineEdit {
     
     protected function updateStyle() {
         $this->styleSheet = $this->styleSheet();
+    }
+    
+    public function eventFilter($sender, $event) {
+        switch($event->type()) {
+            case \QEvent::FocusIn: $sender->slot_focus();
+                break;
+            case \QEvent::FocusOut: $sender->slot_blur();
+                break;
+        }
+    }
+    
+    public function slot_acceptInput($sender, $value) {
+        if($this->hasAcceptableInput()) {
+            $this->valid();
+        } else {
+            $this->invalid();
+        }
     }
 }

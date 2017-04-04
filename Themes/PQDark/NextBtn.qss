@@ -14,6 +14,6 @@ QLabel#Icon {
 QPushButton:hover {
     background: qlineargradient(x1 : 1, y1 : 0, x2 : 0, y2 : 0, stop : 0.0 #8a3b16,  stop : 1.0 transparent);
 }
-QPushButton[enabled="false"] {
-    background: qlineargradient(x1 : 1, y1 : 0, x2 : 0, y2 : 0, stop : 0.0 #6b6a6a,  stop : 1.0 transparent);
+QPushButton[enabled="false"] QLabel {
+    color: #6e6e6e;
 }
