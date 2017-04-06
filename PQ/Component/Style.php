@@ -127,7 +127,10 @@ class Style extends Component {
      * @return string
      */
     public function __get($name) {
-        $result = isset($this->styles[$this->theme][$name]) ? $this->styles[$this->theme][$name] : '';
+        $result = '';
+        if(isset($this->styles[$this->theme][$name])) {
+            $result = $this->styles[$this->theme][$name];
+        }
         return $result;
     }
 

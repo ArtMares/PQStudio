@@ -20,6 +20,7 @@ class Ini extends Manager {
         if(!$this->settings) {
             return false;
         } else {
+            $this->settings->sync();
             $this->settings->setIniCodec("UTF-8");
             return $this;
         }

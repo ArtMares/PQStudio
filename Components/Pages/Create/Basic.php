@@ -28,11 +28,13 @@ class Basic extends \QFrame {
         /** Создаем QLabel для названия поля ввода */
         $labelName = new \QLabel($this);
         $labelName->text = tr('Project Name') . ':';
+        
+        
+        $this->validator = new \QRegExpValidator(new \QRegExp('[0-9a-zA-Z\-\.\_]+'));
     
         /** Создаем поле ввода для Названия проекта */
         $this->ui['name'] = new Input($this);
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
-        $this->validator = new \QRegExpValidator(new \QRegExp('[0-9a-zA-Z\-\.\_]+'));
         $this->ui['name']->setValidator($this->validator);
         $this->ui['name']->connect(SIGNAL('textChanged(string)'), $this, SLOT('isValidProjectPath(string)'));
         /** Задаем функцию для кастомного сигнала blurred() */

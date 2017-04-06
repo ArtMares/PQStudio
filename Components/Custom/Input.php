@@ -49,11 +49,11 @@ class Input extends \QLineEdit {
     }
 
     protected function slot_blur() {
-        $this->emit('focused()', []);
+        $this->emit('blurred()', []);
     }
 
     protected function slot_focus() {
-        $this->emit('blurred()', []);
+        $this->emit('focused()', []);
     }
     
     protected function updateStyle() {
