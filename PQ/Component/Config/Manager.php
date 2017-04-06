@@ -62,7 +62,7 @@ class Manager {
         /** Если было передано больше одного аргумента то второй записываем как дефолтовое значение */
         $default = (count($args) > 1 ? $args[1] : null);
         if(!is_null($default)) {
-            $variant = $this->settings->value($name, $default);
+            $variant = $this->settings->value($name, new \QVariant($default));
         } else {
             $variant = $this->settings->value($name);
         }
@@ -94,7 +94,7 @@ class Manager {
      * @param $value
      */
     public function set($name, $value) {
-        $this->__set($name, $value);
+        $this->__set($name, new \QVariant($value));
     }
 
     /**

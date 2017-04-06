@@ -18,7 +18,7 @@ $title = sprintf('%1$s %2$s [build: %3$s]',
     $core->applicationVersion(),
     BUILD_VERSION);
 
-var_dump(QSysInfo::productType());
+//var_dump(QSysInfo::productType());
 //var_dump(aboutPQ(true));
 
 \PQ\MVC::setDefaultTitle($title);
@@ -167,12 +167,15 @@ class PQStudio extends QFrame {
 
     private function initConfiguration() {
         /** Задаем язык приложения */
+//        qDebug($this->core->config->ini()->get('language', QLocale::system()->name()));
         $this->changeLang($this->core->config->ini()->get('language', QLocale::system()->name()), true);
+//        $this->changeLang($this->core->config->ini()->get('language', 1), true);
         /** Задаем тему оформления */
         $this->core->style->setSkin($this->core->config->ini()->get('theme', 'PQDark'));
     }
 
     private function changeLang($lang, $accept = false) {
+        print_r($lang);
         if($lang !== 'en_US') {
             if($accept === true) set_tr_lang($lang, 'languages');
         }
