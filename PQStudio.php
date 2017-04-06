@@ -11,9 +11,9 @@ require_once 'PQ/Core.php';
 $core = \PQ\Core::getInstance();
 
 define('RELEASE_VERSION', 'testing');
-define('BUILD_VERSION', (string)112);
+define('BUILD_VERSION', (string)113);
 
-$title = sprintf('%1$s %2$s [build: %3$s]',
+$title = (new QString('%1 %2 [build: %3]'))->args(
     $core->applicationName(),
     $core->applicationVersion(),
     BUILD_VERSION);
@@ -169,8 +169,8 @@ class PQStudio extends QFrame {
         /** Задаем язык приложения */
         $this->changeLang($this->core->config->ini()->get('language', QLocale::system()->name()), true);
         /** Задаем тему оформления */
-        $this->core->style->setSkin((string)$this->core->config->ini()->get('theme', 'PQDark'));
-    
+        $this->core->style->setSkin($this->core->config->ini()->get('theme', 'PQDark'));
+        
         $this->core->storage->debug = (substr_count($this->core->var->av(0, $this->core->args()),'PQStudio-debug.exe') > 0 ? true : false);
     }
 

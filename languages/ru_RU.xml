@@ -29,8 +29,8 @@
         <tr>Собираем камни</tr>
     </unit>
     <unit>
-        <source>Building windows</source>
-        <tr>Строим окошки</tr>
+        <source>Pour coffee</source>
+        <tr>Наливаем кофе</tr>
     </unit>
     <unit>
         <source>Version</source>
@@ -91,6 +91,10 @@
     <unit>
         <source>Domain</source>
         <tr>Домен</tr>
+    </unit>
+    <unit>
+        <source>Icon</source>
+        <tr>Иконка</tr>
     </unit>
     <unit>
         <source>Directory for all projects by default</source>

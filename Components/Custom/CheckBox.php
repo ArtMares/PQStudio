@@ -40,13 +40,14 @@ class CheckBox extends Btn\Icon {
         $this->connect(SIGNAL('toggled(bool)'), $this, SLOT('slot_toggled(bool)'));
     }
     
+    /** @override event */
     public function event($event) {
         switch($event->type()) {
             case \QEvent::EnabledChange:
                 $this->updateStyle();
                 break;
         }
-        return parent::event($event);
+        parent::event($event);
     }
 
     private function updateState($check) {

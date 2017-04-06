@@ -25,18 +25,15 @@ class Input extends \QLineEdit {
     
     /** @override focusInEvent */
     public function focusInEvent($event) {
-        echo __METHOD__.PHP_EOL;
-        print_r($event);
-        \QLineEdit::focusInEvent($event);
+        parent::focusInEvent($event);
         $this->slot_focus();
     }
     
     /** @override focusOutEvent */
     public function focusOutEvent($event) {
-        echo __METHOD__.PHP_EOL;
-        print_r($event);
-        \QLineEdit::focusOutEvent($event);
+        parent::focusOutEvent($event);
         $this->slot_blur();
+        $this->validateValue();
     }
     
     public function invalid() {
@@ -64,10 +61,18 @@ class Input extends \QLineEdit {
     }
     
     public function slot_acceptInput($sender, $value) {
+        $this->validateValue();
+    }
+    
+    protected function validateValue() {
         if($this->hasAcceptableInput()) {
             $this->valid();
         } else {
             $this->invalid();
         }
+    }
+    
+    public function resetCursor() {
+        $this->setCursorPosition(0);
     }
 }

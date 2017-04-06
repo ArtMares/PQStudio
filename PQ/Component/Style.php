@@ -108,6 +108,7 @@ class Style extends Component {
      * @param $name
      */
     public function setTheme($name) {
+        if($this->core->var->is_object($name)) $name = $name->__toString();
         $this->theme = $name;
     }
 
@@ -128,8 +129,8 @@ class Style extends Component {
      */
     public function __get($name) {
         $result = '';
-        if(isset($this->styles[$this->theme][$name])) {
-            $result = $this->styles[$this->theme][$name];
+        if(isset($this->styles[$this->theme])) {
+            $result = (isset($this->styles[$this->theme][$name]) ? $result = $this->styles[$this->theme][$name] : '');
         }
         return $result;
     }

@@ -93,6 +93,12 @@ class MVC {
             $object->windowTitle = (self::$title !== '' ? self::$title : Core::getInstance()->applicationName());
         }
     }
+    
+    static public function destruct() {
+        self::$controllers = null;
+        self::$models = null;
+        self::$views = null;
+    }
 }
 
 require_once __DIR__.'/MVC/Controller.php';

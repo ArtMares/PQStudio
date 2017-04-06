@@ -35,6 +35,7 @@ class Welcome extends Controller {
         $dir = $this->core->config->ini()->get('defaultProjectsPath', $this->core->HOME_PATH.'PQStudioProjects');
         $this->core->dir->mkdir($dir);
         $this->create->path_to = preparePath($dir, $this->core->WIN);
+        $this->create->icon = preparePath($this->core->APP_PATH.'/img/default.ico', $this->core->WIN);
     }
     
     private function loadPlastiQ() {

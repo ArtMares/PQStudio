@@ -284,6 +284,7 @@ class Core {
     }
 
     public function quit($die = false) {
+        MVC::destruct();
         if((bool)$die === true) $this->log->info('Forced Core shutdown', 'Core');
         foreach(array_reverse($this->components, true) as $key => $component) {
             unset($this->{$key});

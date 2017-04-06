@@ -50,11 +50,12 @@ class Basic extends \QFrame {
         $this->ui['path']->setPlaceholderText(tr('Select directory for Project') . '...');
         $this->ui['path']->readOnly = true;
     
-        $this->ui['ViewBtn'] = new Btn($this);
-        $this->ui['ViewBtn']->text = tr('View') . '...';
-        $this->ui['ViewBtn']->onClicked = function($sender) {
+        $this->ui['PathViewBtn'] = new Btn($this);
+        $this->ui['PathViewBtn']->text = tr('View') . '...';
+        $this->ui['PathViewBtn']->onClicked = function($sender) {
             $this->setProjectsPath($this->ui['path']);
         };
+        $this->ui['path']->connect(SIGNAL('focused()'), $this, SLOT('clickPathViewBtn()'));
     
         $this->ui['defaultPath'] = new CheckBox($this, tr('Directory for all projects by default'), true);
         $this->ui['defaultPath']->enabled = false;
@@ -71,9 +72,13 @@ class Basic extends \QFrame {
         $labelAppVersion = new \QLabel($this);
         $labelAppVersion->text = tr('Application Version') . ':';
         $this->ui['appVersion'] = new Input($this);
-        $this->ui['appVersion']->setInputMask('9.9');
-        $this->ui['appVersion']->text = '0.1';
+        $this->ui['appVersion']->setInputMask('9.9.90000');
+        $this->ui['appVersion']->text = $this->model->appVersion;
         $this->ui['appVersion']->setPlaceholderText(tr('Enter Version') . '...');
+        $this->ui['appVersion']->onTextChanged = function($sender, $value) {
+            $this->NextBtnCheck();
+        };
+        $this->ui['appVersion']->connect(SIGNAL('focused()'), $this->ui['appVersion'], SLOT('resetCursor()'));
     
         $labelOrgName = new \QLabel($this);
         $labelOrgName->text = tr('Organization Name') . ':';
@@ -84,10 +89,28 @@ class Basic extends \QFrame {
         $labelOrgDomain->text = tr('Domain') . ':';
         $this->ui['orgDomain'] = new Input($this);
         $this->ui['orgDomain']->setPlaceholderText(tr('Enter Domain') . '...');
+        
+        /** Создаем QLabel для названия поля ввода */
+        $labelIcon = new \QLabel($this);
+        $labelIcon->text = tr('Icon') . ':';
+    
+        /** Создаем поле ввода для икноки приложения */
+        $this->ui['icon'] = new Input($this);
+        $this->ui['icon']->text = $this->model->icon;
+        $this->ui['icon']->setPlaceholderText(tr('Select icon from application') . '...');
+        $this->ui['icon']->readOnly = true;
+    
+        $this->ui['IconViewBtn'] = new Btn($this);
+        $this->ui['IconViewBtn']->text = tr('View') . '...';
+        $this->ui['IconViewBtn']->onClicked = function($sender) {
+            $this->setIconPath($this->ui['icon']);
+        };
+        
+        $this->ui['icon']->connect(SIGNAL('focused()'), $this, SLOT('clickIconViewBtn()'));
     
     
-        $this->ui['message'] = new \QLabel($this);
-        $this->ui['message']->text = '';
+//        $this->ui['message'] = new \QLabel($this);
+//        $this->ui['message']->text = '';
     
         $this->ui['BackBtn'] = new Btn\Back($this, tr('Back'));
 //        $this->ui['BackBtn']->connect(SIGNAL('clicked()'), MVC::v('Components/Widgets/Welcome'), SLOT('Back()'));
@@ -105,6 +128,7 @@ class Basic extends \QFrame {
                 $this->model->appVersion = $this->ui['appVersion']->text();
                 $this->model->orgName = $this->ui['orgName']->text();
                 $this->model->orgDomain = $this->ui['orgDomain']->text();
+                $this->model->icon = $this->ui['icon']->text();
                 MVC::v('Components/Pages/Create')->next();
             }
         };
@@ -128,7 +152,7 @@ class Basic extends \QFrame {
         $row++;
         $this->layout()->addWidget($labelPath, $row, 1);
         $this->layout()->addWidget($this->ui['path'], $row, 2);
-        $this->layout()->addWidget($this->ui['ViewBtn'], $row, 3);
+        $this->layout()->addWidget($this->ui['PathViewBtn'], $row, 3);
     
         /** Добавляем чекбокс для задания пути как пути по умолчанию для всех проектов */
         $row++;
@@ -137,7 +161,7 @@ class Basic extends \QFrame {
         $row++;
         /** Создаем пустой QFrame для отступа и добавляем на слой */
         $spacer = new \QFrame($this);
-        $spacer->setMinimumHeight(30);
+        $spacer->setMinimumHeight(20);
         $this->layout()->addWidget($spacer, $row, 0, 1, 4);
     
         $row++;
@@ -156,10 +180,15 @@ class Basic extends \QFrame {
         $this->layout()->addWidget($labelOrgDomain, $row, 1);
         $this->layout()->addWidget($this->ui['orgDomain'], $row, 2, 1, 2);
     
-        /** Добавляем элемент для вывода сообщений */
-        // TODO В дальшейнем заменить на Notification
         $row++;
-        $this->layout()->addWidget($this->ui['message'], $row, 2, 1, 2);
+        $this->layout()->addWidget($labelIcon, $row, 1);
+        $this->layout()->addWidget($this->ui['icon'], $row, 2);
+        $this->layout()->addWidget($this->ui['IconViewBtn'], $row, 3);
+    
+//        /** Добавляем элемент для вывода сообщений */
+//        // TODO В дальшейнем заменить на Notification
+//        $row++;
+//        $this->layout()->addWidget($this->ui['message'], $row, 2, 1, 2);
     
         /** Добавялем пустой QFrame для того чтобы прижать элемнеты к низу */
         $row++;
@@ -178,12 +207,12 @@ class Basic extends \QFrame {
     private function setProjectsPath($sender) {
         $path = $sender->text;
         $dir = \QFileDialog::getExistingDirectory($this, tr('Select directory'), preparePath($path));
-        if(!empty($dir)) {
+        if(!$dir->isEmpty()) {
             if($this->ui['defaultPath']->checked === true) {
                 $this->ui['defaultPath']->checked = false;
                 $this->ui['defaultPath']->enabled = true;
             }
-            $this->ui['path']->text = preparePath($dir, $this->core->WIN);
+            $sender->text = preparePath($dir, $this->core->WIN);
         }
     }
 
@@ -197,14 +226,25 @@ class Basic extends \QFrame {
         $this->core->config->ini()->set('defaultProjectsPath', $this->model->path_to);
     }
     
+    private function setIconPath($sender) {
+        $path = $sender->text;
+        $dir = \QFileDialog::getOpenFileName($this, tr('Select icon from application'), preparePath($path), tr('Icon Images (*.ico)'));
+        if(!$dir->isEmpty()) {
+            $sender->text = preparePath($dir, $this->core->WIN);
+        }
+    }
+    
     public function isValidProjectPath($sender, $value) {
         if($this->checkProject($value)) {
-            $this->ui['NextBtn']->enabled = true;
             $sender->valid();
         } else {
-            $this->ui['NextBtn']->enabled = false;
             $sender->invalid();
         }
+        $this->NextBtnCheck();
+    }
+    
+    public function slot_validVersion($sender, $valid) {
+        $this->NextBtnCheck();
     }
 
     private function checkProject($name) {
@@ -214,13 +254,32 @@ class Basic extends \QFrame {
         return false;
     }
     
+    private function NextBtnCheck() {
+        if($this->core->variant->get($this->ui['name']->property('invalid')) === false
+            && $this->core->variant->get($this->ui['appVersion']->property('invalid')) === false
+        ) {
+            $this->ui['NextBtn']->enabled = true;
+            return;
+        }
+        if($this->ui['NextBtn']->enabled === true) $this->ui['NextBtn']->enabled = false;
+    }
+    
     public function slot_setAppName($sender) {
-        qDebug(__METHOD__);
         $text = (string)$sender->text();
-        if($text === '') $this->ui['appName']->text = $text;
+        if($text !== '') $this->ui['appName']->text = $text;
     }
     
     public function reset() {
         $this->ui['NextBtn']->enabled = false;
+    }
+    
+    public function clickPathViewBtn($sender) {
+        $this->ui['PathViewBtn']->setFocus();
+        $this->ui['PathViewBtn']->click();
+    }
+    
+    public function clickIconViewBtn($sender) {
+        $this->ui['IconViewBtn']->setFocus();
+        $this->ui['IconViewBtn']->click();
     }
 }

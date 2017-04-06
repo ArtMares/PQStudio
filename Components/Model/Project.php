@@ -35,7 +35,7 @@ class Project extends Model {
         $this->name = '';
         $this->path_to = '';
         $this->appName = '';
-        $this->appVersion = '0.1';
+        $this->appVersion = '0.0.1';
         $this->orgName = '';
         $this->orgDomain = '';
         $this->templateIndex = -1;

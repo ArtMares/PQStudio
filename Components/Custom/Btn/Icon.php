@@ -58,7 +58,6 @@ class Icon extends Btn {
                 $this->click();
                 break;
             case \QEvent::EnabledChange:
-                qDebug('EnabledChange');
                 $this->updateStyle();
                 break;
         }
