@@ -19,8 +19,6 @@ class ListView extends \QScrollArea {
 
     protected $area;
 
-    protected $eventFilter;
-
     protected $firstShow = true;
 
     public function __construct($parent = null) {

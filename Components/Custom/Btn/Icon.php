@@ -62,7 +62,7 @@ class Icon extends Btn {
                 $this->updateStyle();
                 break;
         }
-        return parent::event($event);
+        parent::event($event);
     }
     
     protected function compose() {

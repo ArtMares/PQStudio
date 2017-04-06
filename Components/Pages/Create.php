@@ -23,17 +23,17 @@ class Create extends \QFrame {
     public function initComponents() {
         /** Задаем имя объекту */
         $this->objectName = 'CreatePage';
-
+        /** Задаем стиль для виджета */
         $this->core->style->set($this, 'CreatePage');
-
+        /** Создаем слайдер и задаем параметры */
         $this->slider = new Slider($this);
         $this->slider->setDuration(350);
         $this->slider->setLoop(true);
-        
+        /** Добавляем виджеты в слайдер */
         $this->slider->addWidget(MVC::v('Components/Pages/Create/Basic'));
         $this->slider->addWidget(MVC::v('Components/Pages/Create/Template'));
         $this->slider->addWidget(MVC::v('Components/Pages/Create/Settings'));
-
+        /** Создаем слой для виджета и задаем отступы */
         $this->setLayout(new \QHBoxLayout());
         $this->layout()->setContentsMargins(0, 0, 0, 0);
         $this->layout()->setSpacing(0);
@@ -49,6 +49,12 @@ class Create extends \QFrame {
 
     public function prev() {
         $this->slider->prev();
+    }
+    
+    public function reset() {
+        MVC::v('Components/Pages/Create/Basic')->reset();
+        MVC::v('Components/Pages/Create/Template')->reset();
+        MVC::v('Components/Pages/Create/Settings')->reset();
     }
 
 //    public function changeSlide($sender, $slideIndex) {

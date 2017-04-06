@@ -25,6 +25,7 @@ class Input extends \QLineEdit {
     
     /** @override focusInEvent */
     public function focusInEvent($event) {
+        echo __METHOD__.PHP_EOL;
         print_r($event);
         \QLineEdit::focusInEvent($event);
         $this->slot_focus();
@@ -32,6 +33,8 @@ class Input extends \QLineEdit {
     
     /** @override focusOutEvent */
     public function focusOutEvent($event) {
+        echo __METHOD__.PHP_EOL;
+        print_r($event);
         \QLineEdit::focusOutEvent($event);
         $this->slot_blur();
     }
