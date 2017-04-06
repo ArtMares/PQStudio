@@ -24,6 +24,14 @@ class Input extends \QLineEdit {
         $eventFilter->addEventType(\QEvent::FocusIn);
         $eventFilter->addEventType(\QEvent::FocusOut);
         $this->installEventFilter($eventFilter);
+        $eventFilter->onEvent = function($sender, $event) {
+            switch($event->type()) {
+                case \QEvent::FocusIn: $sender->slot_focus();
+                    break;
+                case \QEvent::FocusOut: $sender->slot_blur();
+                    break;
+            }
+        };
         
         $this->connect(SIGNAL('textChanged(string)'), $this, SLOT('slot_acceptInput(string)'));
     }
@@ -50,15 +58,6 @@ class Input extends \QLineEdit {
     
     protected function updateStyle() {
         $this->styleSheet = $this->styleSheet();
-    }
-    
-    public function eventFilter($sender, $event) {
-        switch($event->type()) {
-            case \QEvent::FocusIn: $sender->slot_focus();
-                break;
-            case \QEvent::FocusOut: $sender->slot_blur();
-                break;
-        }
     }
     
     public function slot_acceptInput($sender, $value) {

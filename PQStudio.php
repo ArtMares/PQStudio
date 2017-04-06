@@ -98,21 +98,6 @@ class PQStudio extends QFrame {
         ],
         [
             'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\InputValidate',
-            'init'  => false
-        ],
-        [
-            'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\ToolTip',
-            'init'  => false
-        ],
-        [
-            'title' => 'Collecting stones',
-            'class' => 'Components\\Custom\\ErrorToolTip',
-            'init'  => false
-        ],
-        [
-            'title' => 'Collecting stones',
             'class' => 'Components\\Custom\\Widget\\Slider',
             'init'  => false
         ],

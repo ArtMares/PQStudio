@@ -34,21 +34,9 @@ class Basic extends \QFrame {
         $this->ui['name']->setPlaceholderText(tr('Enter Project Name') . '...');
         $this->validator = new \QRegExpValidator(new \QRegExp('[0-9a-zA-Z\-\.\_]+'));
         $this->ui['name']->setValidator($this->validator);
-        $this->ui['name']->onTextChanged = function($sender, $value) {
-            $result = $this->checkProject($value);
-            if($result === true) {
-                $this->ui['NextBtn']->enabled = true;
-                $sender->valid();
-            } else {
-                $sender->invalid();
-                $this->ui['NextBtn']->enabled = false;
-            }
-        };
-        /** Задаем функцию для кастомного события onBlur */
-        $this->ui['name']->connect(SIGNAL('blurred()'), $this, SLOT('isValidPath()'));
-//        $this->ui['name']->onBlurred(function($sender) {
-//            if($this->core->variant->get($this->ui['name']->property('invalid')) === false) $this->ui['appName']->text = $sender->text;
-//        });
+        $this->ui['name']->connect(SIGNAL('textChanged(string)'), $this, SLOT('isValidProjectPath(string)'));
+        /** Задаем функцию для кастомного сигнала blurred() */
+        $this->ui['name']->connect(SIGNAL('blurred()'), $this, SLOT('slot_setAppName()'));
     
         /** Создаем QLabel для названия поля ввода */
         $labelPath = new \QLabel($this);
@@ -100,6 +88,7 @@ class Basic extends \QFrame {
         $this->ui['message']->text = '';
     
         $this->ui['BackBtn'] = new Btn\Back($this, tr('Back'));
+//        $this->ui['BackBtn']->connect(SIGNAL('clicked()'), MVC::v('Components/Widgets/Welcome'), SLOT('Back()'));
         $this->ui['BackBtn']->onClicked = function() {
             MVC::v('Components/Widgets/Welcome')->Back();
         };
@@ -206,9 +195,13 @@ class Basic extends \QFrame {
         $this->core->config->ini()->set('defaultProjectsPath', $this->model->path_to);
     }
     
-    public function isValidPath($sender) {
-        if($this->checkProject($sender->text)) {
-        
+    public function isValidProjectPath($sender, $value) {
+        if($this->checkProject($value)) {
+            $this->ui['NextBtn']->enabled = true;
+            $sender->valid();
+        } else {
+            $this->ui['NextBtn']->enabled = false;
+            $sender->invalid();
         }
     }
 
@@ -217,6 +210,11 @@ class Basic extends \QFrame {
             return true;
         }
         return false;
+    }
+    
+    public function slot_setAppName($sender) {
+        qDebug(__METHOD__);
+        if($this->ui['appName']->text() === '') $this->ui['appName']->text = $sender->text();
     }
     
     public function reset() {
