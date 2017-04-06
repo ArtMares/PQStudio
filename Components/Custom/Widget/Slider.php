@@ -46,24 +46,6 @@ class Slider extends \QWidget {
     public function __construct($parent = null) {
         parent::__construct($parent);
         
-        $this->eventFilter = new \PQEventFilter($this);
-        $this->eventFilter->addEventType(\QEvent::Show);
-        $this->eventFilter->addEventType(\QEvent::Resize);
-        $this->installEventFilter($this->eventFilter);
-        
-        $this->eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::Show:
-                    if($this->firstShow) {
-                        $this->firstShow = false;
-                        $this->resizeWidgets();
-                    }
-                case \QEvent::Resize:
-                    $this->resizeWidgets();
-                    break;
-            }
-        };
-        
         $this->hideAnimator = new \QPropertyAnimation($this);
         $this->hideAnimator->setDuration($this->duration);
         $this->hideAnimator->setPropertyName('pos');
@@ -85,6 +67,19 @@ class Slider extends \QWidget {
         $this->state = self::Stopped;
         
         $this->direction = self::RightToLeft;
+    }
+    
+    /** @override showEvent */
+    public function showEvent($e) {
+        if($this->firstShow) {
+            $this->firstShow = false;
+            $this->resizeWidgets();
+        }
+    }
+    
+    /** @override resizeEvent */
+    public function resizeEvent($e) {
+        $this->resizeWidgets();
     }
     
     public function addWidget($widget) {

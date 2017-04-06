@@ -216,7 +216,8 @@ class Basic extends \QFrame {
     
     public function slot_setAppName($sender) {
         qDebug(__METHOD__);
-        if($this->ui['appName']->text() === '') $this->ui['appName']->text = $sender->text();
+        $text = (string)$sender->text();
+        if($text === '') $this->ui['appName']->text = $text;
     }
     
     public function reset() {

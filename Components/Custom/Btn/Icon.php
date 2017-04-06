@@ -16,8 +16,6 @@ class Icon extends Btn {
     protected $textLabel;
 
     protected $icon;
-    
-    protected $eventFilter;
 
     public function __construct($parent, Char $icon, $text) {
         parent::__construct($parent);
@@ -47,25 +45,24 @@ class Icon extends Btn {
         $this->textLabel = new \QLabel($this);
         $this->textLabel->text = $text;
         $this->textLabel->objectName = 'Text';
-    
-        $this->eventFilter = new \PQEventFilter($this);
-        $this->eventFilter->addEventType(\QEvent::MouseButtonRelease);
-        $this->eventFilter->addEventType(\QEvent::EnabledChange);
-        $this->eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::MouseButtonRelease:
-                    $this->click();
-                    break;
-                case \QEvent::EnabledChange:
-                    qDebug('EnabledChange');
-                    $this->updateStyle();
-                    break;
-            }
-        };
         
-        $this->iconLabel->installEventFilter($this->eventFilter);
+        $this->iconLabel->installEventFilter($this);
         
         $this->compose();
+    }
+    
+    /** @override event */
+    public function event($event) {
+        switch($event->type()) {
+            case \QEvent::MouseButtonRelease:
+                $this->click();
+                break;
+            case \QEvent::EnabledChange:
+                qDebug('EnabledChange');
+                $this->updateStyle();
+                break;
+        }
+        return parent::event($event);
     }
     
     protected function compose() {

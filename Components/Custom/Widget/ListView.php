@@ -31,26 +31,25 @@ class ListView extends \QScrollArea {
         $this->area->layout()->setSpacing(0);
 
         $this->setWidget($this->area);
-
-        $this->eventFilter = new \PQEventFilter($this);
-        $this->eventFilter->addEventType(\QEvent::Show);
-        $this->eventFilter->addEventType(\QEvent::Resize);
-        $this->installEventFilter($this->eventFilter);
-
-        $this->eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::Show:
-                    if($this->firstShow) {
-                        $this->firstShow = false;
-                        $this->updateList();
-                        $this->resizeWidgets();
-                    }
-                    break;
-                case \QEvent::Resize:
+    }
+    
+    /** @override event */
+    public function event($e) {
+        switch($e->type()) {
+            case \QEvent::Show:
+                if($this->firstShow) {
+                    $this->firstShow = false;
+                    $this->updateList();
                     $this->resizeWidgets();
-                    break;
-            }
-        };
+                }
+                break;
+        }
+        return parent::event($e);
+    }
+    
+    /** @override resizeEvent */
+    public function resizeEvent($e) {
+        $this->resizeWidgets();
     }
 
     public function disableScroll($side) {

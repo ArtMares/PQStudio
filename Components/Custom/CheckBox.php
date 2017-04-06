@@ -9,8 +9,6 @@ use PQ\Core;
 
 class CheckBox extends Btn\Icon {
 
-    protected $eventFilter;
-
     protected $iconSize = 18;
 
     /**
@@ -31,17 +29,6 @@ class CheckBox extends Btn\Icon {
 
         $this->textLabel->setWordWrap(true);
 
-        $this->eventFilter = new \PQEventFilter($this);
-        $this->eventFilter->addEventType(\QEvent::EnabledChange);
-        $this->installEventFilter($this->eventFilter);
-        $this->eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::EnabledChange:
-                    $sender->styleSheet = $sender->styleSheet();
-                    break;
-            }
-        };
-
         /** Задаем возможность использовать кнопку как checkbox */
         $this->checkable = true;
 
@@ -51,6 +38,15 @@ class CheckBox extends Btn\Icon {
         /** Залаем стиль оформления */
         Core::getInstance()->style->set($this, 'CheckBox');
         $this->connect(SIGNAL('toggled(bool)'), $this, SLOT('slot_toggled(bool)'));
+    }
+    
+    public function event($event) {
+        switch($event->type()) {
+            case \QEvent::EnabledChange:
+                $this->updateStyle();
+                break;
+        }
+        return parent::event($event);
     }
 
     private function updateState($check) {

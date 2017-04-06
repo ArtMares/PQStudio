@@ -38,18 +38,12 @@ class ListWidget extends \QScrollArea {
         $this->setWidgetResizable(true);
         $this->setHorizontalScrollBarPolicy(\Qt::ScrollBarAlwaysOff);
         
-        $event = new \PQEventFilter($this);
-        $event->addEventType(\QEvent::Resize);
-        $this->installEventFilter($event);
-        $event->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::Resize:
-                    $this->list->setMinimumWidth($this->width());
-                    break;
-            }
-        };
-        
         Core::getInstance()->style->set($this, 'ListWidget');
+    }
+    
+    /** @override resizeEvent */
+    public function resizeEvent($e) {
+        $this->list->setMinimumWidth($this->width());
     }
     
     public function addWidget($widget) {

@@ -170,6 +170,8 @@ class PQStudio extends QFrame {
         $this->changeLang($this->core->config->ini()->get('language', QLocale::system()->name()), true);
         /** Задаем тему оформления */
         $this->core->style->setSkin((string)$this->core->config->ini()->get('theme', 'PQDark'));
+    
+        $this->core->storage->debug = (substr_count($this->core->var->av(0, $this->core->args()),'PQStudio-debug.exe') > 0 ? true : false);
     }
 
     private function changeLang($lang, $accept = false) {

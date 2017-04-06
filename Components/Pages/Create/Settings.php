@@ -40,13 +40,13 @@ class Settings extends \QFrame {
                 $this->checkInclude($include, $check);
             };
             $i++;
-            if($this->core->var->av(0, $this->core->args()) === 'PQStudio-debug.exe') if($i > 10) break;
+            if($this->core->storage->debug === true) if($i > 10) break;
         }
         
         $this->ui['search'] = new Input($this);
         $this->ui['search']->setPlaceholderText(tr('Search', '1') . '...');
         $this->ui['search']->onEditingFinished = function($sender) {
-            $text = $sender->text();
+            $text = (string)$sender->text();
             if($text !== $this->searchText) {
                 $this->searchText = $text;
                 $this->ui['scroll']->update($text);

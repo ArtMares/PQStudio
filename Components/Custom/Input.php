@@ -19,21 +19,21 @@ class Input extends \QLineEdit {
         parent::__construct($parent);
 
         Core::getInstance()->style->set($this, 'Input');
-
-        $eventFilter = new \PQEventFilter($this);
-        $eventFilter->addEventType(\QEvent::FocusIn);
-        $eventFilter->addEventType(\QEvent::FocusOut);
-        $this->installEventFilter($eventFilter);
-        $eventFilter->onEvent = function($sender, $event) {
-            switch($event->type()) {
-                case \QEvent::FocusIn: $sender->slot_focus();
-                    break;
-                case \QEvent::FocusOut: $sender->slot_blur();
-                    break;
-            }
-        };
         
         $this->connect(SIGNAL('textChanged(string)'), $this, SLOT('slot_acceptInput(string)'));
+    }
+    
+    /** @override focusInEvent */
+    public function focusInEvent($event) {
+        print_r($event);
+        \QLineEdit::focusInEvent($event);
+        $this->slot_focus();
+    }
+    
+    /** @override focusOutEvent */
+    public function focusOutEvent($event) {
+        \QLineEdit::focusOutEvent($event);
+        $this->slot_blur();
     }
     
     public function invalid() {
