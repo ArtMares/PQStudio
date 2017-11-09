@@ -1,3 +1,6 @@
 [submodule "src"]
 	path = src
 	url = git@github.com:ArtMares/PQStudio-src.git
+[submodule "PQCore"]
+	path = PQCore
+	url = git@github.com:ArtMares/PQCore.git
