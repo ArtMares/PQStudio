@@ -13,7 +13,7 @@ $core = \PQ\Core::getInstance();
 define('RELEASE_VERSION', 'testing');
 define('BUILD_VERSION', (string)113);
 
-$title = (new QString('%1 %2 [build: %3]'))->args(
+$title = (new QString('%1 %2 [build: %3]'))->arg(
     $core->applicationName(),
     $core->applicationVersion(),
     BUILD_VERSION);
@@ -166,21 +166,35 @@ class PQStudio extends QFrame {
     private $count = 0;
 
     private function initConfiguration() {
-        /** Задаем язык приложения */
+        /**
+         * Задаем язык приложения
+         * Set application language
+         */
         $this->changeLang($this->core->config->ini()->get('language', QLocale::system()->name()), true);
-        /** Задаем тему оформления */
+        /**
+         * Задаем тему оформления
+         * Set theme of the design
+         */
         $this->core->style->setSkin($this->core->config->ini()->get('theme', 'PQDark'));
         
         $this->core->storage->debug = (substr_count($this->core->var->av(0, $this->core->args()),'PQStudio-debug.exe') > 0 ? true : false);
     }
 
+    /**
+     * Метод изменения языка приложения
+     * @param $lang
+     * @param bool $accept
+     */
     private function changeLang($lang, $accept = false) {
         if($lang !== 'en_US') {
             if($accept === true) set_tr_lang($lang, 'languages');
         }
         $this->core->config->ini()->set('language', $lang);
     }
-    
+
+    /**
+     * Метод инициализации соединения по сокету
+     */
     private function initLocalSocket() {
         $socket = new QLocalSocket();
         $socket->abort();
@@ -246,7 +260,7 @@ class PQStudio extends QFrame {
         /** Создаем QLabel в который вставим фоновое изображение */
         $image = new QLabel($this);
         /** Загружаем изображение */
-        $pixmap = new QIcon($this->core->APP_PATH.'img/logo.svg');
+        $pixmap = new QIcon($this->core->APP_PATH . 'img/logo.svg');
         /** Добавляем изображение в QLabel с переданными шириной и высотой */
         $image->setPixmap($pixmap->pixmap($Width - 200, $Height - 30));
         /** Добавялем QLabel с изобаржением на слой */

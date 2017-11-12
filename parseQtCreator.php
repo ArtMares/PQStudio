@@ -37,12 +37,12 @@ class QtCreator {
             echo "Directory not found: $sourcePath".PHP_EOL;
             return false;
         }
-        $data = $this->readdir($sourcePath);
+        $data = $this->readDir($sourcePath);
         foreach($data as $dir) {
             if($dir['type'] === 'dir') {
                 $path = $this->is_dir($sourcePath.$dir['name']);
                 if(!$this->existWizard($path)) {
-                    $tmp = $this->readdir($path);
+                    $tmp = $this->readDir($path);
                     foreach($tmp as $_dir) {
                         $_path = $this->is_dir($path.$_dir['name']);
                         $this->existWizard($_path);
@@ -149,7 +149,7 @@ class QtCreator {
         return $path;
     }
     
-    private function readdir($path) {
+    private function readDir($path) {
         $data = array();
         if($dh = opendir($path)) {
             while(($file = readdir($dh)) !== false) {
